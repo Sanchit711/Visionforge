@@ -90,3 +90,23 @@ yarn-error.log*
 *.swo
 .DS_Store
 Thumbs.db
+
+# ----------------- Local Scratch & Temporary Dev Scripts -----------------
+scripts/build_visionforge_clone.py
+scripts/execute_clone.py
+scripts/test_clean.py
+scripts/verify_clone.py
+backend/check_db.py
+backend/create_initial_dataset.py
+backend/export_notebook.py
+backend/inspect_annotations.py
+backend/patch_service.py
+backend/run_accurate_tracker.py
+backend/test_fast_tracker.py
+backend/verify_coords.py
+train_and_compare_all_models.py
+train_comparison_models.py
+train_keyframe_70epochs.ipynb
+train_keyframe_70epochs_full.py
+full_video_quad_benchmark.py
+scratch/
