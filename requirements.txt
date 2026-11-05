@@ -1,0 +1,36 @@
+# VisionForge Studio - Core Python Dependencies
+# Licensed under GNU AGPLv3. Author: Sushant Gabhane (MSc IT - ID: D09)
+
+# API Framework & Web Server
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+python-multipart>=0.0.9
+
+# Database & ORM
+SQLAlchemy>=2.0.28
+
+# Authentication & Security
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.3.0
+
+# Computer Vision & Deep Learning
+ultralytics>=8.1.0
+opencv-python-headless>=4.9.0.80
+torch>=2.1.0
+torchvision>=0.16.0
+numpy>=1.24.0
+
+# Cloud & Orchestration
+kaggle>=1.6.0
+requests>=2.31.0
+pyyaml>=6.0.1
+
+# Telemetry & Monitoring
+psutil>=5.9.8
+GPUtil>=1.4.0
+
+# Testing & Quality Assurance
+pytest>=8.0.0
+pytest-asyncio>=0.23.0

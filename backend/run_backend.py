@@ -6,10 +6,10 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(backend_dir))
 
-# Add Aurelix packages if available
-aurelix_site = Path(r"C:\Users\Sanchit\Projects\Aurelix Annotate\.venv\Lib\site-packages")
-if aurelix_site.exists():
-    sys.path.insert(0, str(aurelix_site))
+# Optional: Local site-packages override if defined in environment
+custom_site = os.getenv("CUSTOM_SITE_PACKAGES")
+if custom_site and Path(custom_site).exists():
+    sys.path.insert(0, custom_site)
 
 import uvicorn
 import socket

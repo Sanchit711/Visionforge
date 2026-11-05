@@ -354,7 +354,7 @@ export const ModelRegistryView: React.FC = () => {
                   required
                   value={filePath}
                   onChange={(e) => setFilePath(e.target.value)}
-                  placeholder="C:\Users\Sanchit\Projects\AURELIX_Colab\weights\best.pt"
+                  placeholder="/path/to/weights/best.pt"
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
                 />
               </div>

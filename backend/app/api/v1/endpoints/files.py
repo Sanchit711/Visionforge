@@ -13,7 +13,6 @@ def get_raw_file(request: Request, path: str = Query(..., description="Absolute 
     allowed_roots = [
         settings.DATA_DIR.resolve(),
         settings.BASE_DIR.resolve(),
-        Path(r"C:\Users\Sanchit\Projects").resolve(),
     ]
     if not any(str(resolved).startswith(str(root)) for root in allowed_roots):
         raise HTTPException(status_code=403, detail="Access to specified path is forbidden")

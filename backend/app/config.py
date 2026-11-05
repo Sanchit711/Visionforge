@@ -40,8 +40,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = f"sqlite:///{DATA_DIR / 'visionforge.db'}"
 
     # External weights and models discovery
-    AURELIX_WEIGHTS_DIR: Path = Path(r"C:\Users\Sanchit\Projects\AURELIX_Colab\weights")
-    MHYRA_WEIGHTS_DIR: Path = Path(r"C:\Users\Sanchit\Projects\MhyraVision\checkpoints")
+    AURELIX_WEIGHTS_DIR: Path = Path(os.getenv("AURELIX_WEIGHTS_DIR", str(BASE_DIR / "weights" / "aurelix")))
+    MHYRA_WEIGHTS_DIR: Path = Path(os.getenv("MHYRA_WEIGHTS_DIR", str(BASE_DIR / "weights" / "mhyra")))
 
     # CORS
     CORS_ORIGINS: List[str] = [

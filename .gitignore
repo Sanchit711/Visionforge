@@ -49,6 +49,7 @@ raw_frames_svg/
 *.tflite
 *.bin
 *.safetensors
+*.part
 models/
 backend/models/
 runs/
