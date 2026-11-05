@@ -1,0 +1,91 @@
+# ==============================================================================
+# VisionForge Studio - Strict Confidentiality & Client Data Exclusion
+# ==============================================================================
+
+# ----------------- Client Video Footage & Proprietary Media -----------------
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+*.ts
+*.m4v
+
+# Client sample frames & debug snapshots
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tiff
+*.webp
+
+# ----------------- Client Datasets & Extracted Frame Storage -----------------
+data/
+backend/data/
+uploads/
+frames/
+datasets/
+checkpoints/
+exports/
+raw_frames_svg/
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# ----------------- Database & Client Review History -----------------
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ----------------- Model Weights (Trained IP & Heavy Binaries) -----------------
+*.pt
+*.pth
+*.onnx
+*.engine
+*.tflite
+*.bin
+*.safetensors
+models/
+backend/models/
+runs/
+
+# ----------------- Cloud Credentials & Secrets -----------------
+kaggle.json
+.env
+.env.*
+*.key
+*.pem
+credentials.json
+token.json
+
+# ----------------- Python & System Artifacts -----------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+ENV/
+env/
+
+# ----------------- Frontend Build & Dependencies -----------------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ----------------- IDE & OS Specific -----------------
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
