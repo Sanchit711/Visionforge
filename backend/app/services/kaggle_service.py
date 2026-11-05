@@ -87,8 +87,10 @@ class KaggleCloudService:
         Prepares and pushes the project's YOLO dataset to Kaggle as a private dataset.
         Uses kaggle.api.dataset_create_new or dataset_create_version.
         """
-        proj = db.query(Project).filter(Project.id == project_id).first()
         ds = db.query(DatasetVersion).filter(DatasetVersion.id == dataset_version_id).first()
+        proj = db.query(Project).filter(Project.id == project_id).first()
+        if ds and ds.project:
+            proj = ds.project
         if not proj or not ds:
             raise ValueError("Project or Dataset Version not found in database.")
 
@@ -311,7 +313,10 @@ print("==================================================================")
             raise PermissionError(auth["message"])
 
         username = auth["username"]
+        ds = db.query(DatasetVersion).filter(DatasetVersion.id == dataset_version_id).first()
         proj = db.query(Project).filter(Project.id == project_id).first()
+        if ds and ds.project:
+            proj = ds.project
         if not proj:
             raise ValueError("Project not found.")
 

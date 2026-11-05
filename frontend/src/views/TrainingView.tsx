@@ -33,10 +33,20 @@ import {
 import { canTrain } from '../utils/rbac';
 
 export const TrainingView: React.FC = () => {
-  const { activeProjectId, setStage, addNotification, currentUser } = useAppStore();
+  const {
+    activeProjectId,
+    activeProject,
+    projectsList,
+    setActiveProjectId,
+    setActiveProject,
+    setStage,
+    addNotification,
+    currentUser,
+  } = useAppStore();
   const hasTrainAccess = canTrain(currentUser?.role);
 
   const [datasets, setDatasets] = useState<any[]>([]);
+  const [allAvailableDatasets, setAllAvailableDatasets] = useState<any[]>([]);
   const [selectedDatasetId, setSelectedDatasetId] = useState('');
   const [experiments, setExperiments] = useState<any[]>([]);
   const [activeExperiment, setActiveExperiment] = useState<any | null>(null);
@@ -107,17 +117,41 @@ export const TrainingView: React.FC = () => {
   const [liveLogs, setLiveLogs] = useState('');
 
   const loadData = async () => {
-    if (!activeProjectId) return;
     try {
-      const dsList = await api.getDatasets(activeProjectId);
-      setDatasets(dsList);
-      if (dsList.length > 0 && !selectedDatasetId) {
-        setSelectedDatasetId(dsList[0].id);
+      let dsList: any[] = [];
+      if (activeProjectId) {
+        dsList = await api.getDatasets(activeProjectId);
       }
-      const expList = await api.getExperiments(activeProjectId);
-      setExperiments(expList);
-      if (expList.length > 0 && !activeExperiment) {
-        setActiveExperiment(expList[0]);
+      setDatasets(dsList);
+
+      // Fetch all available datasets across workspace
+      let allDs: any[] = [];
+      try {
+        allDs = await api.getDatasets();
+        setAllAvailableDatasets(allDs);
+      } catch (e) {
+        console.warn('Could not load all datasets', e);
+      }
+
+      if (dsList.length > 0) {
+        if (!selectedDatasetId || !dsList.some((d) => d.id === selectedDatasetId)) {
+          setSelectedDatasetId(dsList[0].id);
+        }
+      } else if (allDs.length > 0) {
+        // Fallback to first available dataset in workspace (e.g. SVG v1.0)
+        if (!selectedDatasetId || !allDs.some((d) => d.id === selectedDatasetId)) {
+          setSelectedDatasetId(allDs[0].id);
+        }
+      } else {
+        setSelectedDatasetId('');
+      }
+
+      if (activeProjectId) {
+        const expList = await api.getExperiments(activeProjectId);
+        setExperiments(expList);
+        if (expList.length > 0 && !activeExperiment) {
+          setActiveExperiment(expList[0]);
+        }
       }
       try {
         const kStatus = await api.getKaggleStatus();
@@ -475,7 +509,8 @@ export const TrainingView: React.FC = () => {
     }
   };
 
-  const selectedDsObj = datasets.find((d) => d.id === selectedDatasetId);
+  const combinedDatasets = datasets.length > 0 ? datasets : allAvailableDatasets;
+  const selectedDsObj = combinedDatasets.find((d) => d.id === selectedDatasetId);
 
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -643,10 +678,10 @@ export const TrainingView: React.FC = () => {
                   onChange={(e) => setSelectedDatasetId(e.target.value)}
                   className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-cyan-500 transition-colors"
                 >
-                  {datasets.length === 0 && <option value="">No dataset versions frozen yet</option>}
-                  {datasets.map((d) => (
+                  {combinedDatasets.length === 0 && <option value="">No dataset versions frozen yet</option>}
+                  {combinedDatasets.map((d) => (
                     <option key={d.id} value={d.id}>
-                      {d.version_name} ({d.total_images} frames &bull; {d.total_annotations} anns)
+                      {d.version_name} ({d.total_images} frames &bull; {d.total_annotations} anns){datasets.length === 0 ? ' [from workspace]' : ''}
                     </option>
                   ))}
                 </select>
@@ -654,6 +689,48 @@ export const TrainingView: React.FC = () => {
                   <p className="text-[10px] text-slate-400 mt-1 font-mono">
                     Train: {selectedDsObj.train_count} | Val: {selectedDsObj.val_count} | Test: {selectedDsObj.test_count} | Classes: package
                   </p>
+                )}
+
+                {datasets.length === 0 && (
+                  <div className="p-3 mt-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs space-y-2">
+                    <div className="flex items-center gap-1.5 font-semibold">
+                      <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                      <span>Current Project &quot;{activeProject?.name || 'Raw full frames'}&quot; has no frozen dataset</span>
+                    </div>
+                    <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                      Training requires a frozen YOLO dataset. Your annotated dataset <strong>v1.0 (126 frames)</strong> is ready in project <strong>&quot;SVG&quot;</strong>.
+                    </p>
+                    <div className="flex flex-wrap gap-2 pt-0.5">
+                      {projectsList.find((p) => p.name === 'SVG') && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const svgP = projectsList.find((p) => p.name === 'SVG');
+                            if (svgP) {
+                              setActiveProjectId(svgP.id);
+                              setActiveProject(svgP);
+                              addNotification({
+                                type: 'success',
+                                title: 'Switched to SVG Project',
+                                message: 'Loaded project with frozen YOLO dataset v1.0',
+                              });
+                            }
+                          }}
+                          className="px-3 py-1 bg-amber-500/25 hover:bg-amber-500/40 border border-amber-500/40 rounded-full font-semibold text-[11px] text-amber-100 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                        >
+                          <Sparkles className="w-3 h-3 text-amber-300" />
+                          <span>Switch to &quot;SVG&quot; Project (v1.0 Ready)</span>
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setStage('datasets')}
+                        className="px-3 py-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-semibold text-[11px] text-slate-200 flex items-center gap-1 transition-all active:scale-95"
+                      >
+                        <span>Open Datasets Studio</span>
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -759,6 +836,8 @@ export const TrainingView: React.FC = () => {
                     ? 'Packaging Dataset & Pushing Kernel...'
                     : !kaggleStatus.authenticated
                     ? 'Enter Kaggle API Key to Launch'
+                    : !selectedDatasetId
+                    ? '⚠️ Select or Freeze a Dataset to Launch'
                     : 'Launch Headless Cloud Training on Kaggle'}
                 </span>
               </button>

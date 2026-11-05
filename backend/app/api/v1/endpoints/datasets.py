@@ -13,8 +13,11 @@ from app.services.dataset_service import dataset_service
 router = APIRouter()
 
 @router.get("", response_model=List[DatasetVersionOut])
-def list_dataset_versions(project_id: str, db: Session = Depends(get_db)):
-    return db.query(DatasetVersion).filter(DatasetVersion.project_id == project_id).order_by(DatasetVersion.created_at.desc()).all()
+def list_dataset_versions(project_id: Optional[str] = None, db: Session = Depends(get_db)):
+    q = db.query(DatasetVersion)
+    if project_id:
+        q = q.filter(DatasetVersion.project_id == project_id)
+    return q.order_by(DatasetVersion.created_at.desc()).all()
 
 @router.get("/quality-summary", response_model=DatasetQualitySummary)
 def get_dataset_quality_summary(project_id: str, db: Session = Depends(get_db)):
