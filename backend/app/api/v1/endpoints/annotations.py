@@ -148,35 +148,19 @@ def ai_assist_infer(data: AIAssistRequest, db: Session = Depends(get_db)):
             refine_with_sam=data.refine_with_sam if data.refine_with_sam is not None else True,
         )
     elif data.provider in ["sam2", "sam"]:
-        if data.box_prompt or data.point_prompts:
-            preds = annotation_service.run_sam_inference(
-                image_path=frame.file_path,
-                box_prompt=data.box_prompt,
-                point_prompts=data.point_prompts,
-                point_labels=data.point_labels,
-                model_name=data.model_name or "sam2.1_t.pt",
-            )
-        else:
-            # Smart Auto-Segment without manual prompt: detect objects with Florence-2 & delineate with SAM 2
-            proj = db.query(Project).filter(Project.id == frame.project_id).first()
-            target_prompt = data.text_prompt or "package"
-            if not data.text_prompt and proj:
-                classes = getattr(proj, "classes", None) or getattr(proj, "classes_json", None) or []
-                if isinstance(classes, str):
-                    import json
-                    try: classes = json.loads(classes)
-                    except Exception: classes = []
-                if classes and len(classes) > 0:
-                    target_prompt = classes[0].get("name", "package")
-
-            preds = annotation_service.predict_florence(
-                frame_id=frame.id,
-                project_id=frame.project_id,
-                model_id=data.model_name or "microsoft/Florence-2-base",
-                prompt_text=target_prompt,
-                output_type=data.output_type or "polygon",
-                refine_with_sam=data.refine_with_sam if data.refine_with_sam is not None else True,
-            )
+        box_p = data.box_prompt
+        pt_p = data.point_prompts
+        pt_l = data.point_labels
+        if not box_p and not pt_p:
+            pt_p = [[0.5, 0.5]]
+            pt_l = [1]
+        preds = annotation_service.run_sam_inference(
+            image_path=frame.file_path,
+            box_prompt=box_p,
+            point_prompts=pt_p,
+            point_labels=pt_l,
+            model_name=data.model_name or "sam2.1_t.pt",
+        )
     else:
         # Default: Ultralytics YOLO
         preds = annotation_service.run_yolo_inference(

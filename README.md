@@ -38,25 +38,47 @@ VisionForge Studio consolidates your entire computer vision workflow into a sing
 - Python 3.11+
 - Node.js 20+
 
-### Starting VisionForge Studio Locally
-You can start the unified application in one command:
+### Quickstart (Clone & Run Anywhere)
 
-```powershell
-# Option A: Double click start_visionforge.bat or run:
-cd C:\Users\Sanchit\Projects\VisionForge\backend
-python run_backend.py
+#### Prerequisites
+- Python 3.10+ (Recommended Python 3.11)
+- Node.js 18+ (Node 20 recommended)
+
+#### 1. Clone & Install Dependencies
+```bash
+# Clone repository
+git clone https://github.com/SushantGabhane/VisionForge-Studio.git
+cd VisionForge-Studio
+
+# Install Python backend dependencies
+pip install -r requirements.txt
+
+# Install frontend dependencies & build Apple UI production bundle
+cd frontend
+npm install
+npm run build
+cd ..
 ```
 
-The application will be live at:
+#### 2. Launch VisionForge Studio
+```bash
+# On Windows: Double-click start_visionforge.bat OR run:
+python backend/run_backend.py
+```
+
+The application will launch on `0.0.0.0:8000` (accessible locally and on your LAN):
 - **Web Application:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
 - **Interactive Swagger API Docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **API Health / Overview:** [http://127.0.0.1:8000/api/v1/system/overview](http://127.0.0.1:8000/api/v1/system/overview)
+- **API Health / Telemetry:** [http://127.0.0.1:8000/api/v1/system/overview](http://127.0.0.1:8000/api/v1/system/overview)
+
+> [!NOTE]
+> On first launch, VisionForge Studio automatically initializes the database tables, seeds a ready-to-test demo project with a synthetic conveyor video, and auto-downloads AI model weights (such as SAM 2) on demand upon first request. No manual weight placement is required.
 
 ### Running Automated Test Suite
 To run the automated verification suite:
 
-```powershell
-cd C:\Users\Sanchit\Projects\VisionForge\backend
+```bash
+cd backend
 python -m pytest tests/test_visionforge.py -v
 ```
 
