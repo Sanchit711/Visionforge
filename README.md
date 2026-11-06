@@ -17,8 +17,17 @@
 
 ---
 
-### 🌐 GitHub Domain Tags & Search Keywords
-`computer-vision` &bull; `object-detection` &bull; `yolo` &bull; `yolov8` &bull; `yolov11` &bull; `florence-2` &bull; `sam-2` &bull; `segment-anything` &bull; `video-annotation` &bull; `dataset-engineering` &bull; `industrial-automation` &bull; `edge-ai` &bull; `onnx` &bull; `tensorrt` &bull; `openvino` &bull; `kaggle-api` &bull; `conveyor-inspection` &bull; `fastapi` &bull; `react` &bull; `pytorch`
+### 🌐 Verified Domain Capabilities & Search Tags
+[![Computer Vision](https://img.shields.io/badge/Domain-Computer_Vision-007ACC?style=for-the-badge&logo=opencv&logoColor=white)](https://github.com/topics/computer-vision)
+[![Object Detection](https://img.shields.io/badge/Task-Object_Detection-FF6F00?style=for-the-badge&logo=target&logoColor=white)](https://github.com/topics/object-detection)
+[![Ultralytics YOLO](https://img.shields.io/badge/Architecture-YOLOv8_%2F_v11_%2F_v26-00FFFF?style=for-the-badge&logo=ultralytics&logoColor=black)](https://github.com/topics/yolo)
+[![Florence-2](https://img.shields.io/badge/VLM-Florence--2_Grounding-FF1493?style=for-the-badge&logo=huggingface&logoColor=white)](https://github.com/topics/florence-2)
+[![Meta SAM 2](https://img.shields.io/badge/Masks-Meta_SAM_2.1-4267B2?style=for-the-badge&logo=meta&logoColor=white)](https://github.com/topics/segment-anything)
+[![Edge AI](https://img.shields.io/badge/Edge_Hardware-TensorRT_%2B_Jetson-76B900?style=for-the-badge&logo=nvidia&logoColor=white)](https://github.com/topics/edge-ai)
+[![ONNX Runtime](https://img.shields.io/badge/Exporter-ONNX_Runtime-005CED?style=for-the-badge&logo=onnx&logoColor=white)](https://github.com/topics/onnx)
+[![Kaggle Cloud](https://img.shields.io/badge/Compute-Kaggle_Dual--T4_GPU-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://github.com/topics/kaggle)
+[![FastAPI Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://github.com/topics/fastapi)
+[![React Frontend](https://img.shields.io/badge/Frontend-React_18_%2B_TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://github.com/topics/react)
 
 VisionForge Studio consolidates the entire industrial computer vision pipeline into a single cohesive, Apple-inspired workspace — eliminating fragmented handoffs between video trimmers, annotation tools (Roboflow), training scripts, Google Colab notebooks, and evaluation scripts.
 
@@ -125,8 +134,21 @@ Upon opening the web studio, the **Interactive Product Tour** automatically laun
 
 ## Complete End-to-End Operator Workflow
 
-```
-[1. Projects] ➔ [2. Video Lab] ➔ [3. Frame Studio] ➔ [4. AI Annotation] ➔ [5. Datasets] ➔ [6. Cloud Train] ➔ [7. Edge Export & Validation]
+```mermaid
+flowchart LR
+    A[1. Projects] --> B[2. Video Lab]
+    B --> C[3. Frame Studio]
+    C --> D[4. AI Annotation]
+    D --> E[5. Datasets]
+    E --> F[6. Cloud Train]
+    F --> G[7. Edge Export & Validation]
+    style A fill:#007ACC,stroke:#fff,color:#fff
+    style B fill:#009688,stroke:#fff,color:#fff
+    style C fill:#3B82F6,stroke:#fff,color:#fff
+    style D fill:#8B5CF6,stroke:#fff,color:#fff
+    style E fill:#F59E0B,stroke:#fff,color:#fff
+    style F fill:#EC4899,stroke:#fff,color:#fff
+    style G fill:#10B981,stroke:#fff,color:#fff
 ```
 
 1. **Step 1: Projects & Workspace**:
