@@ -12,6 +12,36 @@ from app.database import SessionLocal
 from app.models import Project, Frame, Annotation, DatasetVersion
 from app.schemas.schemas import DatasetQualitySummary, QualityAnomaly
 
+def force_rmtree(path: Path):
+    """Safely and forcefully deletes a directory on Windows, stripping ReadOnly attributes and bypassing file locks."""
+    if not path.exists():
+        return
+    import stat
+    def _handle_readonly(func, p, exc):
+        try:
+            os.chmod(p, stat.S_IWRITE)
+            func(p)
+        except Exception:
+            pass
+
+    try:
+        for root, dirs, files in os.walk(path):
+            for d in dirs:
+                try:
+                    os.chmod(os.path.join(root, d), stat.S_IWRITE)
+                except Exception:
+                    pass
+            for f in files:
+                try:
+                    os.chmod(os.path.join(root, f), stat.S_IWRITE)
+                except Exception:
+                    pass
+        os.chmod(path, stat.S_IWRITE)
+        shutil.rmtree(path, onerror=_handle_readonly)
+    except Exception:
+        import subprocess
+        subprocess.run(["cmd", "/c", "rmdir", "/s", "/q", str(path)], check=False)
+
 class DatasetService:
     @staticmethod
     def inspect_dataset_quality(project_id: str) -> DatasetQualitySummary:
@@ -178,7 +208,7 @@ class DatasetService:
             # Export Directory for Version
             version_dir = settings.DATASETS_DIR / project_id / version_name
             if version_dir.exists():
-                shutil.rmtree(version_dir)
+                force_rmtree(version_dir)
 
             for split in ["train", "val", "test"]:
                 (version_dir / "images" / split).mkdir(parents=True, exist_ok=True)
