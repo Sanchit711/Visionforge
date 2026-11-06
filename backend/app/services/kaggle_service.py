@@ -201,25 +201,34 @@ class KaggleCloudService:
 
         # Check if dataset already exists on Kaggle
         dataset_full_slug = f"{username}/{dataset_slug}"
-        print(f"[*] Uploading dataset {dataset_full_slug} to Kaggle...")
+        print(f"[*] Checking status of dataset {dataset_full_slug} on Kaggle...")
+        exists_on_kaggle = False
         try:
-            api.dataset_status(dataset_full_slug)
-            # Exists, create new version
-            api.dataset_create_version(
-                folder=str(dataset_folder),
-                version_notes=f"Auto-sync from VisionForge at {datetime.utcnow().isoformat()}",
-                dir_mode="zip"
-            )
-            action = "updated_version"
-        except Exception as e:
-            err_str = str(e).lower()
-            if "401" in err_str or "unauthorized" in err_str or "forbidden" in err_str:
-                raise PermissionError(
-                    f"Kaggle returned 401 Unauthorized for account @{username}. "
-                    "Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings "
-                    "or a fresh API token before datasets or GPU kernels can be created via API."
+            status_res = api.dataset_status(dataset_full_slug)
+            exists_on_kaggle = bool(status_res and "error" not in str(status_res).lower())
+        except Exception:
+            # 403 / 404 indicates dataset does not exist yet on Kaggle
+            exists_on_kaggle = False
+
+        if exists_on_kaggle:
+            print(f"[*] Dataset {dataset_full_slug} exists on Kaggle. Creating new version...")
+            try:
+                api.dataset_create_version(
+                    folder=str(dataset_folder),
+                    version_notes=f"Auto-sync from VisionForge at {datetime.utcnow().isoformat()}",
+                    dir_mode="zip"
                 )
-            # Does not exist, create new
+                action = "updated_version"
+            except Exception as e:
+                err_str = str(e).lower()
+                if "401" in err_str or "unauthorized" in err_str:
+                    raise PermissionError(
+                        f"Kaggle returned 401 Unauthorized for account @{username}. "
+                        "Please verify your API token or phone verification at https://www.kaggle.com/settings."
+                    )
+                raise
+        else:
+            print(f"[*] Dataset {dataset_full_slug} does not exist yet on Kaggle. Creating new private dataset...")
             try:
                 api.dataset_create_new(
                     folder=str(dataset_folder),
@@ -230,11 +239,10 @@ class KaggleCloudService:
                 action = "created_new"
             except Exception as e2:
                 err2_str = str(e2).lower()
-                if "401" in err2_str or "unauthorized" in err2_str or "forbidden" in err2_str:
+                if "401" in err2_str or "unauthorized" in err2_str:
                     raise PermissionError(
                         f"Kaggle returned 401 Unauthorized for account @{username}. "
-                        "Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings "
-                        "or a fresh API token before datasets or GPU kernels can be created via API."
+                        "Please verify your API token or phone verification at https://www.kaggle.com/settings."
                     )
                 raise
 
