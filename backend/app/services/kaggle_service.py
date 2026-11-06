@@ -43,8 +43,9 @@ class KaggleCloudService:
             if not has_creds:
                 return {
                     "authenticated": False,
+                    "requires_verification": False,
                     "username": None,
-                    "message": "Kaggle credentials not detected. Place kaggle.json in ~/.kaggle/ or set KAGGLE_USERNAME and KAGGLE_KEY.",
+                    "message": "Kaggle credentials not detected. Enter your Kaggle API key above.",
                 }
 
             from kaggle.api.kaggle_api_extended import KaggleApi
@@ -58,16 +59,36 @@ class KaggleCloudService:
                     data = json.load(f)
                     username = data.get("username")
 
-            return {
-                "authenticated": True,
-                "username": username or "kaggle_user",
-                "message": f"Successfully authenticated with Kaggle Cloud API as @{username}.",
-            }
+            # Validate real API permissions by testing a lightweight ping request
+            try:
+                api.kernels_list(mine=True, page_size=1)
+                return {
+                    "authenticated": True,
+                    "requires_verification": False,
+                    "username": username or "kaggle_user",
+                    "message": f"Successfully authenticated with Kaggle Cloud API as @{username} (Dual-T4 Cloud GPU Enabled).",
+                }
+            except Exception as test_err:
+                err_str = str(test_err).lower()
+                if "401" in err_str or "unauthorized" in err_str or "forbidden" in err_str:
+                    return {
+                        "authenticated": False,
+                        "requires_verification": True,
+                        "username": username,
+                        "message": f"Kaggle returned 401 Unauthorized for @{username}. Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings before allowing API uploads or GPU jobs.",
+                    }
+                return {
+                    "authenticated": False,
+                    "requires_verification": False,
+                    "username": username,
+                    "message": f"Kaggle API connectivity error: {str(test_err)}",
+                }
         except Exception as e:
             return {
                 "authenticated": False,
+                "requires_verification": False,
                 "username": None,
-                "message": f"Kaggle authentication error: {str(e)}",
+                "message": f"Kaggle configuration error: {str(e)}",
             }
 
     def sanitize_slug(self, text: str) -> str:
@@ -101,17 +122,26 @@ class KaggleCloudService:
         dataset_folder = self.staging_dir / "datasets" / dataset_slug
         dataset_folder.mkdir(parents=True, exist_ok=True)
 
-        # Unpack the exported YOLO zip so Kaggle hosts proper directories
-        print(f"[*] Extracting dataset {ds.zip_export_path} to {dataset_folder}...")
-        with zipfile.ZipFile(ds.zip_export_path, "r") as zf:
-            zf.extractall(dataset_folder)
+        # Unpack the exported YOLO zip so Kaggle hosts proper directories (skip if already extracted)
+        yaml_check = dataset_folder / "data.yaml"
+        if not yaml_check.exists():
+            print(f"[*] Extracting dataset {ds.zip_export_path} to {dataset_folder}...")
+            with zipfile.ZipFile(ds.zip_export_path, "r") as zf:
+                zf.extractall(dataset_folder)
+        else:
+            print(f"[*] Dataset already extracted in {dataset_folder}, skipping re-extraction.")
+
+        tot = ds.total_images or (ds.train_count + ds.val_count + ds.test_count) or 1
+        tr_pct = round((ds.train_count / tot) * 100) if ds.train_count else 70
+        va_pct = round((ds.val_count / tot) * 100) if ds.val_count else 20
+        te_pct = round((ds.test_count / tot) * 100) if ds.test_count else 10
 
         # Generate dataset-metadata.json
         metadata = {
             "title": f"VisionForge - {proj.name} ({ds.version_name})",
             "id": f"{username}/{dataset_slug}",
             "licenses": [{"name": "CC0-1.0"}],
-            "description": f"Automated industrial dataset export from VisionForge Studio. Project: {proj.name}, Split: {ds.train_ratio*100:.0f}/{ds.val_ratio*100:.0f}/{ds.test_ratio*100:.0f}."
+            "description": f"Automated industrial dataset export from VisionForge Studio. Project: {proj.name}, Split: {tr_pct}/{va_pct}/{te_pct}."
         }
         metadata_file = dataset_folder / "dataset-metadata.json"
         with open(metadata_file, "w", encoding="utf-8") as f:
@@ -133,15 +163,32 @@ class KaggleCloudService:
                 dir_mode="zip"
             )
             action = "updated_version"
-        except Exception:
+        except Exception as e:
+            err_str = str(e).lower()
+            if "401" in err_str or "unauthorized" in err_str or "forbidden" in err_str:
+                raise PermissionError(
+                    f"Kaggle returned 401 Unauthorized for account @{username}. "
+                    "Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings "
+                    "or a fresh API token before datasets or GPU kernels can be created via API."
+                )
             # Does not exist, create new
-            api.dataset_create_new(
-                folder=str(dataset_folder),
-                dir_mode="zip",
-                public=False,
-                quiet=False
-            )
-            action = "created_new"
+            try:
+                api.dataset_create_new(
+                    folder=str(dataset_folder),
+                    dir_mode="zip",
+                    public=False,
+                    quiet=False
+                )
+                action = "created_new"
+            except Exception as e2:
+                err2_str = str(e2).lower()
+                if "401" in err2_str or "unauthorized" in err2_str or "forbidden" in err2_str:
+                    raise PermissionError(
+                        f"Kaggle returned 401 Unauthorized for account @{username}. "
+                        "Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings "
+                        "or a fresh API token before datasets or GPU kernels can be created via API."
+                    )
+                raise
 
         return {
             "dataset_slug": dataset_slug,
@@ -352,10 +399,10 @@ print("==================================================================")
             "code_file": "train.py",
             "language": "python",
             "kernel_type": "script",
-            "is_private": "true",
-            "enable_gpu": "true",
-            "enable_tpu": "false",
-            "enable_internet": "true",
+            "is_private": True,
+            "enable_gpu": True,
+            "enable_tpu": False,
+            "enable_internet": True,
             "dataset_sources": [dataset_full_slug],
             "competition_sources": [],
             "kernel_sources": [],
@@ -371,7 +418,17 @@ print("==================================================================")
         api.authenticate()
 
         print(f"[*] Pushing training kernel {username}/{kernel_slug} to Kaggle GPU accelerator...")
-        api.kernel_push(str(kernel_folder))
+        try:
+            api.kernel_push(str(kernel_folder))
+        except Exception as kp_err:
+            kp_str = str(kp_err).lower()
+            if "401" in kp_str or "unauthorized" in kp_str or "forbidden" in kp_str:
+                raise PermissionError(
+                    f"Kaggle returned 401 Unauthorized for account @{username}. "
+                    "Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings "
+                    "or a fresh API token before GPU kernels can be dispatched."
+                )
+            raise
 
         # 6. Record Experiment in Database
         exp = Experiment(

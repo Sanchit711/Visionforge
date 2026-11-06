@@ -29,6 +29,7 @@ import {
   Lock,
   Zap,
   Key,
+  AlertCircle,
 } from 'lucide-react';
 import { canTrain } from '../utils/rbac';
 
@@ -55,7 +56,13 @@ export const TrainingView: React.FC = () => {
   const [trainingTarget, setTrainingTarget] = useState<'kaggle' | 'colab' | 'local'>('kaggle');
 
   // Kaggle Cloud Engine State (Apple UI Design)
-  const [kaggleStatus, setKaggleStatus] = useState<{ authenticated: boolean; username?: string; message: string }>({ authenticated: false, message: 'Checking...' });
+  const [kaggleStatus, setKaggleStatus] = useState<{
+    authenticated: boolean;
+    requires_verification?: boolean;
+    username?: string;
+    message: string;
+  }>({ authenticated: false, message: 'Checking...' });
+  const [kaggleLaunchError, setKaggleLaunchError] = useState<string | null>(null);
   const [kaggleModel, setKaggleModel] = useState('yolo26l.pt');
   const [kaggleEpochs, setKaggleEpochs] = useState(50);
   const [kaggleBatchSize, setKaggleBatchSize] = useState(8);
@@ -321,6 +328,7 @@ export const TrainingView: React.FC = () => {
     }
 
     setIsLaunchingKaggle(true);
+    setKaggleLaunchError(null);
     try {
       const res = await api.launchKaggleTrain({
         project_id: activeProjectId,
@@ -352,6 +360,7 @@ export const TrainingView: React.FC = () => {
 
       loadData();
     } catch (err: any) {
+      setKaggleLaunchError(err.message || 'Failed to dispatch Kaggle training job.');
       addNotification({
         type: 'error',
         title: 'Kaggle Launch Failed',
@@ -637,26 +646,80 @@ export const TrainingView: React.FC = () => {
                 {/* Kaggle Auth Status Pill */}
                 <div className="pt-1 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${kaggleStatus.authenticated ? 'bg-emerald-400 shadow-sm shadow-emerald-400' : 'bg-rose-400'}`} />
+                    <span className={`w-2 h-2 rounded-full ${
+                      kaggleStatus.authenticated
+                        ? 'bg-emerald-400 shadow-sm shadow-emerald-400'
+                        : kaggleStatus.requires_verification
+                        ? 'bg-amber-400 shadow-sm shadow-amber-400 animate-pulse'
+                        : 'bg-rose-400'
+                    }`} />
                     <span className="text-[11px] text-slate-300 font-medium">
                       {kaggleStatus.authenticated ? (
                         <>Connected as <strong className="text-cyan-300 font-mono">@{kaggleStatus.username}</strong></>
+                      ) : kaggleStatus.requires_verification ? (
+                        <span className="text-amber-300 font-medium">Phone Verification Required (@{kaggleStatus.username})</span>
                       ) : (
                         <span className="text-rose-300">API Credentials Required</span>
                       )}
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setShowKaggleCredsModal(true)}
-                    className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 flex items-center gap-1 transition-all active:scale-95"
-                  >
-                    <Key className="w-3 h-3 text-cyan-400" />
-                    <span>{kaggleStatus.authenticated ? 'Config API' : 'Enter API Key'}</span>
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    {kaggleStatus.requires_verification && (
+                      <a
+                        href="https://www.kaggle.com/settings"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 flex items-center gap-1 transition-all"
+                      >
+                        <ExternalLink className="w-2.5 h-2.5" />
+                        Verify SMS
+                      </a>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowKaggleCredsModal(true)}
+                      className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 flex items-center gap-1 transition-all active:scale-95"
+                    >
+                      <Key className="w-3 h-3 text-cyan-400" />
+                      <span>{kaggleStatus.authenticated ? 'Config API' : 'Enter API Key'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
+
+              {/* Phone Verification Warning Alert */}
+              {kaggleStatus.requires_verification && (
+                <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-2xl space-y-2">
+                  <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs">
+                    <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                    <span>Kaggle Account Requires Phone Verification</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                    Kaggle strictly requires SMS Phone Verification before enabling cloud GPU runners or dataset uploads via API. 
+                    Please complete phone verification at <strong className="text-amber-200">kaggle.com/settings</strong> (takes 30 seconds), or use Google Colab with zero setup.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <a
+                      href="https://www.kaggle.com/settings"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      Open Kaggle Settings ↗
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setTrainingTarget('colab')}
+                      className="px-3 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-200 border border-amber-500/40 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
+                    >
+                      <Cloud className="w-3 h-3 text-amber-400" />
+                      Switch to Google Colab Master System
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Dataset Version Selector */}
               <div>
@@ -823,6 +886,47 @@ export const TrainingView: React.FC = () => {
                 </div>
               </div>
 
+              {/* Launch Error Alert */}
+              {kaggleLaunchError && (
+                <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-2xl space-y-2">
+                  <div className="flex items-center justify-between text-rose-300 font-semibold text-xs">
+                    <span className="flex items-center gap-1.5">
+                      <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                      Kaggle Cloud Dispatch Error
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setKaggleLaunchError(null)}
+                      className="text-slate-400 hover:text-white text-[10px]"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-rose-200/90 leading-relaxed font-mono bg-black/40 p-2.5 rounded-xl border border-rose-500/20 break-words">
+                    {kaggleLaunchError}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <a
+                      href="https://www.kaggle.com/settings"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1 bg-white/10 hover:bg-white/15 text-white border border-white/20 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      Check Kaggle Settings
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setTrainingTarget('colab')}
+                      className="px-3 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-200 border border-amber-500/40 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
+                    >
+                      <Cloud className="w-3 h-3 text-amber-400" />
+                      Switch to Google Colab Master System
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Launch Button (Apple Pill Shape) */}
               <button
                 type="button"
@@ -834,6 +938,8 @@ export const TrainingView: React.FC = () => {
                 <span>
                   {isLaunchingKaggle
                     ? 'Packaging Dataset & Pushing Kernel...'
+                    : kaggleStatus.requires_verification
+                    ? '⚠️ Phone Verification Required on Kaggle'
                     : !kaggleStatus.authenticated
                     ? 'Enter Kaggle API Key to Launch'
                     : !selectedDatasetId
