@@ -163,17 +163,17 @@ async def lifespan(app: FastAPI):
             private_ws.name = "Admin Private Sandbox (Private)"
             private_ws.slug = "admin-private"
 
-        # Seed Acme shared workspace
-        acme_ws = db.query(Workspace).filter(Workspace.slug == "acme-assembly").first()
-        if not acme_ws:
-            acme_ws = Workspace(
-                tenant_id=acme_tenant.id,
-                name="Acme Assembly & Robotics (Shared)",
-                slug="acme-assembly",
+        # Seed partner shared workspace
+        partner_ws = db.query(Workspace).filter(Workspace.slug == "partner-assembly").first()
+        if not partner_ws:
+            partner_ws = Workspace(
+                tenant_id=partner_tenant.id,
+                name="Partner Assembly & Robotics (Shared)",
+                slug="partner-assembly",
                 description="Robotics inspection line workspace",
                 is_shared=True,
             )
-            db.add(acme_ws)
+            db.add(partner_ws)
             db.flush()
 
         db.commit()
