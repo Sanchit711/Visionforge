@@ -119,17 +119,17 @@ All test suites execute completely locally with synthetic fixtures and zero exte
 
 ---
 
-## License & Intellectual Property Terms
+## License & Dual-Licensing Terms
 
-This software is released under the **VisionForge Community Source-Available & Non-Commercial Research License (v1.0)**.
+VisionForge Studio is distributed under a **Dual-Licensing Model**:
 
-### Community Rights (Free for R&D):
-- The global Computer Vision, Machine Learning, and Academic Research community is granted a **royalty-free license** to view, clone, run, benchmark, study, and develop on VisionForge Studio for non-commercial research, university education, and personal development.
+1. **Free Open-Source & Research License (GNU AGPLv3)**:
+   - Free for the global Computer Vision, Machine Learning, and Academic Research community to view, run, benchmark, study, and develop for non-commercial research and university education.
+   - Any network deployment or cloud SaaS built upon this code must open-source 100% of its corresponding source code under the same GNU AGPLv3 terms (Section 13).
 
-### Commercial & Derivative Clone Restrictions:
-- **Commercial Usage Prohibited Without License**: Any deployment in revenue-generating industrial environments, commercial factories, commercial SaaS hosting, or monetized API services is strictly prohibited without a separate Commercial License.
-- **Anti-Clone Protection**: You may NOT copy, repackage, fork, or rebrand the source code to create, market, or operate a competing computer vision platform, commercial SaaS clone, or derivative product.
-- **Commercial License Inquiries**: To license VisionForge Studio for commercial factory automation, enterprise deployments, or hardware appliances, contact: `licensing@visionforge.ai`.
+2. **Commercial Enterprise License (Proprietary Industrial Use)**:
+   - For companies, industrial factories, automated packaging facilities, or commercial SaaS operators wishing to use VisionForge Studio without the open-source copyleft obligations of GNU AGPLv3.
+   - To obtain a Commercial Enterprise License or OEM agreement, contact: `licensing@visionforge.ai`.
 
 See the [`LICENSE`](LICENSE) file for the full legal text.
 

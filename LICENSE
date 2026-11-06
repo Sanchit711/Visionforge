@@ -1,68 +1,71 @@
-VISIONFORGE COMMUNITY SOURCE-AVAILABLE & NON-COMMERCIAL RESEARCH LICENSE
+VISIONFORGE DUAL LICENSE AGREEMENT
 Version 1.0 (November 2026)
 
-Copyright (C) 2026 VisionForge Studio Author & Contributors.
-All rights reserved.
+Copyright (C) 2026 VisionForge Studio Author & Contributors. All rights reserved.
+
+VisionForge Studio is dual-licensed under:
+  1. The GNU Affero General Public License v3.0 (GNU AGPLv3) for Open-Source, Academic, and Research Community Use.
+  2. The VisionForge Commercial Enterprise License for Proprietary, Industrial, and Commercial Deployments.
 
 ==============================================================================
-PREAMBLE
+PART 1: OPEN-SOURCE & ACADEMIC RESEARCH LICENSE (GNU AGPLv3)
 ==============================================================================
 
-VisionForge Studio ("the Software") is an industrial-grade computer vision suite 
-designed for video forensic tracking, dataset curation, and headless deep learning 
-training.
+VisionForge Studio is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-This license is designed to empower the global computer vision, AI, and academic 
-research community to study, test, benchmark, and advance computer vision for free, 
-while strictly protecting the author's proprietary source code against unauthorized 
-commercial exploitation, competitive cloning, code theft, and rebranding.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+Under the GNU AGPLv3:
+- The computer vision community, universities, students, and researchers may freely inspect, 
+  study, run, benchmark, modify, and improve VisionForge Studio for non-commercial research.
+- Any modified or derivative version, or any version operated over a computer network (e.g. as a 
+  cloud service, SaaS, or hosted API) MUST make 100% of its corresponding source code freely 
+  available to all users under the same GNU AGPLv3 terms (Section 13 Network Interaction clause).
+- You may NOT strip copyright headers, attribution, or author notices from the source code.
+
+For the full legal text of the GNU Affero General Public License v3.0, see:
+https://www.gnu.org/licenses/agpl-3.0.en.html
 
 ==============================================================================
-TERMS AND CONDITIONS
+PART 2: COMMERCIAL ENTERPRISE LICENSE (PROPRIETARY DEPLOYMENT)
 ==============================================================================
 
-1. PERMITTED NON-COMMERCIAL & RESEARCH USE
-Subject to the terms and restrictions of this License, the Licensor hereby grants 
-to any person obtaining a copy of this Software a free, non-exclusive, non-transferable, 
-worldwide license to:
-  a. Inspect, read, and review the source code for educational, research, and non-commercial development.
-  b. Compile, test, run, and execute the Software on local hardware or non-commercial cloud environments 
-     strictly for personal, non-monetized evaluation, academic research, and university study.
-  c. Create non-commercial benchmark evaluations, academic papers, and forensic research reports, provided 
-     that prominent citation and attribution to VisionForge Studio is included.
+Organizations, factories, logistics operators, and commercial software vendors wishing to 
+deploy VisionForge Studio in a proprietary commercial environment WITHOUT the copyleft 
+obligations of the GNU AGPLv3 (such as the obligation to publicly release private backend source 
+code, proprietary factory camera integrations, or internal business logic) must obtain a 
+valid, written Commercial Enterprise License executed directly with the Licensor.
 
-2. COMMERCIAL USE RESTRICTION (COMMERCIAL LICENSE REQUIRED)
-Any Commercial Use of the Software is strictly prohibited without a valid, written 
-Commercial License executed directly with the Licensor.
-"Commercial Use" includes, but is not limited to:
-  a. Deploying the Software or any part thereof in a revenue-generating production line, commercial warehouse, 
-     manufacturing plant, or commercial surveillance infrastructure.
-  b. Offering the Software, its APIs, or backend services as a hosted Software-as-a-Service (SaaS), 
-     Platform-as-a-Service (PaaS), or cloud API service for fee or commercial benefit.
-  c. Embedding, bundling, or distributing the Software or its weights with any commercial software package, 
-     hardware appliance, or enterprise solution sold to third parties.
-  d. Using the Software to perform fee-for-service annotation, tracking, or model training contracts.
+A Commercial Enterprise License is required if you intend to:
+  a. Deploy VisionForge Studio on a revenue-generating industrial conveyor line, automated packaging 
+     facility, warehouse robotics fleet, or commercial manufacturing plant.
+  b. Host or operate VisionForge Studio as a commercial Software-as-a-Service (SaaS), Platform-as-a-Service (PaaS), 
+     or paid API service for third parties.
+  c. Bundle, embed, or integrate VisionForge Studio or its trained checkpoints into proprietary hardware appliances, 
+     smart cameras, or commercial software suites sold or licensed to customers.
+  d. Avoid the viral open-source disclosure requirements of Section 13 of the GNU AGPLv3.
 
-To request or negotiate a Commercial Enterprise License, contact:
+==============================================================================
+ANTI-CLONE & CODE THEFT RESTRICTION
+==============================================================================
+
+Under neither license are you permitted to:
+  a. Repackage, rebrand, or publish verbatim copies or superficial clones of VisionForge Studio 
+     to market a competing commercial product or service.
+  b. Remove, obscure, or alter any copyright notices, license texts, or contributor headers.
+
+==============================================================================
+COMMERCIAL LICENSING INQUIRIES & CONTACT
+==============================================================================
+
+To discuss enterprise commercial licensing, custom industrial edge deployments (NVIDIA Jetson, 
+TensorRT, Intel OpenVINO), or OEM integration, please contact:
+
   Licensing Inquiries: licensing@visionforge.ai
-  GitHub Commercial Inquiries: https://github.com/VisionForge-Studio/VisionForge/issues
-
-3. STRICT PROHIBITION ON COMPETING CLONES & CODE THEFT
-You may NOT:
-  a. Copy, fork, repackage, rebrand, or redistribute the Software or substantial portions of its code to create, 
-     market, or distribute a competing computer vision suite, commercial clone, or derivative platform.
-  b. Strip, obscure, or remove any copyright notices, license files, author headers, or trademarks from the source code.
-  c. Sublicense, lease, rent, or sell the Software or derivative works thereof to any third party.
-
-4. ACADEMIC & RESEARCH CONTRIBUTIONS
-If you enhance, fix, or develop improvements to the Software for research purposes, you are encouraged to submit 
-Pull Requests to the upstream repository. Any contributed code accepted into the upstream repository becomes part 
-of the project under this License.
-
-5. DISCLAIMER OF WARRANTY & LIMITATION OF LIABILITY
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. IN NO EVENT 
-SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, 
-OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE.
+  GitHub Issues / Inquiries: https://github.com/Sanchit711/Visionforge/issues
