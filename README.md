@@ -1,14 +1,24 @@
 # VisionForge Studio
 
-[![License: Source-Available](https://img.shields.io/badge/License-Source--Available_(R%26D_Free)-blue.svg)](LICENSE)
+[![License: Dual AGPLv3 / Commercial](https://img.shields.io/badge/License-Dual_AGPLv3_%2F_Commercial-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-brightgreen.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/React-18-61dafb.svg)](https://react.dev/)
-[![YOLOv8](https://img.shields.io/badge/YOLO-Ultralytics-00ffff.svg)](https://ultralytics.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178c6.svg)](https://www.typescriptlang.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
+[![Ultralytics YOLO](https://img.shields.io/badge/YOLO-Ultralytics_v8%2Fv11-00ffff.svg)](https://ultralytics.com)
+[![Florence-2](https://img.shields.io/badge/Vision_Language-Microsoft_Florence--2-ff69b4.svg)](https://huggingface.co/microsoft/Florence-2-base)
+[![Meta SAM 2](https://img.shields.io/badge/Segmentation-Meta_SAM_2.1-4267b2.svg)](https://github.com/facebookresearch/sam2)
+[![ONNX Runtime](https://img.shields.io/badge/Inference-ONNX_Runtime_%2B_TensorRT-grey.svg)](https://onnxruntime.ai/)
 [![Kaggle Dual-T4 GPU](https://img.shields.io/badge/Cloud_Compute-2x_Tesla_T4_(32GB)-9900ff.svg)](https://www.kaggle.com)
 
 > **Enterprise Computer Vision Dataset Engineering, In-Motion Forensic Benchmarking & Headless Cloud Training Suite**  
-> *Industrial Vision Engineering & High-Speed Conveyor Inspection*
+> *Industrial Machine Vision, High-Speed Conveyor Tracking & Edge AI Deployment*
+
+---
+
+### 🌐 GitHub Domain Tags & Search Keywords
+`computer-vision` &bull; `object-detection` &bull; `yolo` &bull; `yolov8` &bull; `yolov11` &bull; `florence-2` &bull; `sam-2` &bull; `segment-anything` &bull; `video-annotation` &bull; `dataset-engineering` &bull; `industrial-automation` &bull; `edge-ai` &bull; `onnx` &bull; `tensorrt` &bull; `openvino` &bull; `kaggle-api` &bull; `conveyor-inspection` &bull; `fastapi` &bull; `react` &bull; `pytorch`
 
 VisionForge Studio consolidates the entire industrial computer vision pipeline into a single cohesive, Apple-inspired workspace — eliminating fragmented handoffs between video trimmers, annotation tools (Roboflow), training scripts, Google Colab notebooks, and evaluation scripts.
 
