@@ -12,24 +12,31 @@
 [![ONNX Runtime](https://img.shields.io/badge/Inference-ONNX_Runtime_%2B_TensorRT-grey.svg)](https://onnxruntime.ai/)
 [![Kaggle Dual-T4 GPU](https://img.shields.io/badge/Cloud_Compute-2x_Tesla_T4_(32GB)-9900ff.svg)](https://www.kaggle.com)
 
-> **Enterprise Computer Vision Dataset Engineering, In-Motion Forensic Benchmarking & Headless Cloud Training Suite**  
-> *Industrial Machine Vision, High-Speed Conveyor Tracking & Edge AI Deployment*
+> **The One-Stop AI/ML Development Studio for Computer Vision**  
+> *Frictionless Data-to-Model Engineering: Smart Selective Frame Extraction, AI-Assisted Annotation, 1-Click Cloud Training & Visual Multi-Model Comparison.*
+
+VisionForge Studio replaces the fragmented chaos of modern computer vision development. Instead of roaming across 10 disconnected tools—juggling ffmpeg terminal commands, OpenCV blur scripts, Roboflow/CVAT, Kaggle/Colab notebooks, TensorBoard tabs, and custom evaluation scripts—VisionForge unites the entire ML development lifecycle into a single, cohesive, Apple-inspired workbench.
 
 ---
 
-### 🌐 Verified Domain Capabilities & Search Tags
-[![Computer Vision](https://img.shields.io/badge/Domain-Computer_Vision-007ACC?style=for-the-badge&logo=opencv&logoColor=white)](https://github.com/topics/computer-vision)
-[![Object Detection](https://img.shields.io/badge/Task-Object_Detection-FF6F00?style=for-the-badge&logo=target&logoColor=white)](https://github.com/topics/object-detection)
-[![Ultralytics YOLO](https://img.shields.io/badge/Architecture-YOLOv8_%2F_v11_%2F_v26-00FFFF?style=for-the-badge&logo=ultralytics&logoColor=black)](https://github.com/topics/yolo)
-[![Florence-2](https://img.shields.io/badge/VLM-Florence--2_Grounding-FF1493?style=for-the-badge&logo=huggingface&logoColor=white)](https://github.com/topics/florence-2)
-[![Meta SAM 2](https://img.shields.io/badge/Masks-Meta_SAM_2.1-4267B2?style=for-the-badge&logo=meta&logoColor=white)](https://github.com/topics/segment-anything)
-[![Edge AI](https://img.shields.io/badge/Edge_Hardware-TensorRT_%2B_Jetson-76B900?style=for-the-badge&logo=nvidia&logoColor=white)](https://github.com/topics/edge-ai)
-[![ONNX Runtime](https://img.shields.io/badge/Exporter-ONNX_Runtime-005CED?style=for-the-badge&logo=onnx&logoColor=white)](https://github.com/topics/onnx)
-[![Kaggle Cloud](https://img.shields.io/badge/Compute-Kaggle_Dual--T4_GPU-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://github.com/topics/kaggle)
-[![FastAPI Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://github.com/topics/fastapi)
-[![React Frontend](https://img.shields.io/badge/Frontend-React_18_%2B_TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://github.com/topics/react)
+### 🌐 Core Developer Capabilities
+[![Computer Vision](https://img.shields.io/badge/Domain-Computer_Vision-007ACC?style=flat-square&logo=opencv&logoColor=white)](https://github.com/topics/computer-vision)
+[![Selective Frames](https://img.shields.io/badge/Frame_Studio-Laplacian_%2B_pHash_Decimation-FF6F00?style=flat-square&logo=target&logoColor=white)](https://github.com/topics/video-annotation)
+[![AI Annotation](https://img.shields.io/badge/AI_Annotation-Florence--2_%2B_SAM_2.1-FF1493?style=flat-square&logo=huggingface&logoColor=white)](https://github.com/topics/florence-2)
+[![YOLO Models](https://img.shields.io/badge/Models-YOLOv8_%2F_YOLOv11-00FFFF?style=flat-square&logo=ultralytics&logoColor=black)](https://github.com/topics/yolo)
+[![Cloud Training](https://img.shields.io/badge/Cloud_Compute-Kaggle_Dual--T4_GPU-20BEFF?style=flat-square&logo=kaggle&logoColor=white)](https://github.com/topics/kaggle)
+[![Model Comparison](https://img.shields.io/badge/Validation-Side--by--Side_Model_Comparison-10B981?style=flat-square&logo=speedtest&logoColor=white)](https://github.com/topics/object-detection)
+[![Edge Export](https://img.shields.io/badge/Deployment-1--Click_ONNX_Export-76B900?style=flat-square&logo=nvidia&logoColor=white)](https://github.com/topics/edge-ai)
 
-VisionForge Studio consolidates the entire industrial computer vision pipeline into a single cohesive, Apple-inspired workspace — eliminating fragmented handoffs between video trimmers, annotation tools (Roboflow), training scripts, Google Colab notebooks, and evaluation scripts.
+---
+
+### 💡 Why VisionForge? The "One-Stop" Developer Experience
+* **Selective Frame Extraction**: Ingest raw video, set an ROI crop, and let automated Laplacian sharpness filters and perceptual hash deduplication curate only the sharp, non-redundant frames (saves up to 90% of storage and labeling time).
+* **AI-Assisted Annotation**: Zero-shot prompt grounding with **Microsoft Florence-2**, pixel-exact boundary masks with **Meta SAM 2**, and **rigid-body keyframe trajectory interpolation** that tracks objects across frames with physical dimensions locked.
+* **Leak-Proof Dataset Engineering**: Enforce contiguous chronological/temporal chunk splitting (`split_strategy="temporal"`), preventing consecutive video frames from bleeding between Train and Val sets.
+* **1-Click Headless Cloud Training**: Push training runs directly to remote cloud GPUs (Kaggle Dual Tesla T4s) with live streaming loss curves, learning rate dynamics, and validation mAP50 telemetry—without touching notebooks.
+* **Side-by-Side Model Comparison**: Compare multiple trained checkpoints simultaneously on synchronized video playback, measuring real latency (ms), throughput (FPS), and sub-pixel stability.
+* **1-Click Edge Export**: Download optimized ONNX weights with dynamic batching directly in your browser.
 
 ---
 
