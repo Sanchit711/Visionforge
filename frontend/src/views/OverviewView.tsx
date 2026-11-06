@@ -86,15 +86,15 @@ export const OverviewView: React.FC = () => {
             <div
               key={i}
               onClick={() => setStage(k.stage as any)}
-              className="group cursor-pointer bg-slate-900/80 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 transition-all duration-200 flex flex-col justify-between shadow-lg"
+              className="group cursor-pointer bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.07] hover:border-white/[0.16] backdrop-blur-xl rounded-[20px] p-4 transition-all duration-200 flex flex-col justify-between shadow-sm hover:shadow-md"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-slate-400 tracking-tight">{k.label}</span>
-                <div className={`w-7 h-7 rounded-lg bg-gradient-to-tr ${k.color} flex items-center justify-center text-white shadow-sm`}>
+                <span className="text-[11px] font-medium text-[#86868b] tracking-tight">{k.label}</span>
+                <div className={`w-7 h-7 rounded-full bg-gradient-to-tr ${k.color} flex items-center justify-center text-white shadow-sm`}>
                   <Icon className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-white tracking-tight mt-3">{k.value}</div>
+              <div className="text-2xl font-semibold text-white tracking-tight mt-3">{k.value}</div>
             </div>
           );
         })}
@@ -103,18 +103,18 @@ export const OverviewView: React.FC = () => {
       {/* Main Row: End-to-End Pipeline & Hardware Telemetry */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* End-to-End Workflow Pipeline Tracker */}
-        <div className="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
+        <div className="lg:col-span-2 bg-white/[0.03] border border-white/[0.07] backdrop-blur-2xl rounded-[24px] p-6 shadow-sm flex flex-col">
+          <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
             <div>
-              <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-brand-400" />
+              <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#0071e3]" />
                 Unified Vision Pipeline Flow
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">Continuous handoff from raw video to deployed model weights</p>
+              <p className="text-xs text-[#86868b] mt-0.5">Continuous handoff from raw video to deployed model weights</p>
             </div>
             <button
               onClick={() => setStage('projects')}
-              className="text-xs font-semibold text-brand-400 hover:text-brand-300 flex items-center gap-1"
+              className="text-xs font-medium text-[#0071e3] hover:text-blue-400 flex items-center gap-1 transition-colors"
             >
               Manage Projects <ArrowRight className="w-3.5 h-3.5" />
             </button>
@@ -125,17 +125,17 @@ export const OverviewView: React.FC = () => {
               <div
                 key={idx}
                 onClick={() => setStage(stg.stage as any)}
-                className="cursor-pointer bg-slate-850/60 hover:bg-slate-800/80 border border-slate-800 hover:border-brand-500/50 rounded-xl p-3.5 transition-all flex flex-col justify-between group"
+                className="cursor-pointer bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] hover:border-white/[0.18] rounded-[18px] p-4 transition-all flex flex-col justify-between group"
               >
                 <div>
-                  <div className="text-xs font-bold text-slate-200 group-hover:text-brand-400 transition-colors">
+                  <div className="text-xs font-semibold text-slate-200 group-hover:text-white transition-colors">
                     {stg.name}
                   </div>
-                  <div className="text-[11px] text-slate-400 mt-1 leading-snug">{stg.desc}</div>
+                  <div className="text-[11px] text-[#86868b] mt-1 leading-snug">{stg.desc}</div>
                 </div>
-                <div className="mt-3 flex items-center justify-between text-[10px] text-brand-400 font-semibold">
+                <div className="mt-3 flex items-center justify-between text-[10px] text-[#0071e3] font-medium">
                   <span>Enter Stage</span>
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             ))}
@@ -143,13 +143,13 @@ export const OverviewView: React.FC = () => {
         </div>
 
         {/* Real Hardware & Compute Telemetry */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+        <div className="bg-white/[0.03] border border-white/[0.07] backdrop-blur-2xl rounded-[24px] p-6 shadow-sm flex flex-col">
+          <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
+            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
               <Activity className="w-4 h-4 text-emerald-400" />
               Hardware Telemetry
             </h2>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               Live Real-Time
             </span>
           </div>
@@ -225,23 +225,23 @@ export const OverviewView: React.FC = () => {
       {/* Bottom Row: Recent Projects & Recent Training Runs */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Projects */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <FolderKanban className="w-4 h-4 text-brand-400" />
+        <div className="bg-white/[0.03] border border-white/[0.07] backdrop-blur-2xl rounded-[24px] p-6 shadow-sm">
+          <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+              <FolderKanban className="w-4 h-4 text-[#0071e3]" />
               Active Projects
             </h3>
             <button
               onClick={() => setStage('projects')}
-              className="text-xs font-semibold text-brand-400 hover:text-brand-300 flex items-center gap-1"
+              className="text-xs font-medium text-[#0071e3] hover:text-blue-400 flex items-center gap-1 transition-colors"
             >
               View All <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="divide-y divide-slate-800/60 mt-2">
+          <div className="divide-y divide-white/[0.05] mt-2">
             {recent_projects.length === 0 ? (
-              <div className="py-8 text-center text-xs text-slate-500">No projects created yet.</div>
+              <div className="py-8 text-center text-xs text-[#86868b]">No projects created yet.</div>
             ) : (
               recent_projects.map((p: any) => (
                 <div
@@ -250,13 +250,13 @@ export const OverviewView: React.FC = () => {
                     setActiveProject(p);
                     setStage('video_lab');
                   }}
-                  className="py-3 px-2 flex items-center justify-between hover:bg-slate-850/50 rounded-xl cursor-pointer transition-colors"
+                  className="py-3 px-3 flex items-center justify-between hover:bg-white/[0.04] rounded-xl cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="text-xs font-bold text-white hover:text-brand-400 transition-colors">
+                    <div className="text-xs font-semibold text-white hover:text-[#0071e3] transition-colors">
                       {p.name}
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">
+                    <div className="text-[11px] text-[#86868b] mt-0.5">
                       {p.video_count} videos &bull; {p.frame_count} frames &bull; {p.annotation_count} annotations
                     </div>
                   </div>
@@ -270,49 +270,49 @@ export const OverviewView: React.FC = () => {
         </div>
 
         {/* Recent Training Runs */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-indigo-400" />
+        <div className="bg-white/[0.03] border border-white/[0.07] backdrop-blur-2xl rounded-[24px] p-6 shadow-sm">
+          <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-[#6366f1]" />
               Recent Training Experiments
             </h3>
             <button
               onClick={() => setStage('experiments')}
-              className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+              className="text-xs font-medium text-[#0071e3] hover:text-blue-400 flex items-center gap-1 transition-colors"
             >
               View All <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="divide-y divide-slate-800/60 mt-2">
+          <div className="divide-y divide-white/[0.05] mt-2">
             {recent_experiments.length === 0 ? (
-              <div className="py-8 text-center text-xs text-slate-500">No training runs recorded yet.</div>
+              <div className="py-8 text-center text-xs text-[#86868b]">No training runs recorded yet.</div>
             ) : (
               recent_experiments.map((e: any) => (
                 <div
                   key={e.id}
                   onClick={() => setStage('training')}
-                  className="py-3 px-2 flex items-center justify-between hover:bg-slate-850/50 rounded-xl cursor-pointer transition-colors"
+                  className="py-3 px-3 flex items-center justify-between hover:bg-white/[0.04] rounded-xl cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="text-xs font-bold text-white flex items-center gap-2">
+                    <div className="text-xs font-semibold text-white flex items-center gap-2">
                       <span>{e.name}</span>
-                      <span className="font-mono text-[10px] text-slate-400">({e.model_variant})</span>
+                      <span className="font-mono text-[10px] text-[#86868b]">({e.model_variant})</span>
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">
+                    <div className="text-[11px] text-[#86868b] mt-0.5">
                       Epoch {e.current_epoch} / {e.total_epochs} &bull; Best mAP50:{' '}
-                      <span className="text-emerald-400 font-mono font-semibold">
+                      <span className="text-emerald-400 font-mono font-medium">
                         {e.best_map50 ? `${(e.best_map50 * 100).toFixed(1)}%` : 'N/A'}
                       </span>
                     </div>
                   </div>
                   <span
-                    className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded font-mono ${
+                    className={`text-[10px] uppercase font-medium px-2 py-0.5 rounded-full font-mono ${
                       e.status === 'completed'
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : e.status === 'running'
                         ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20 animate-pulse'
-                        : 'bg-slate-800 text-slate-400'
+                        : 'bg-white/[0.05] text-[#86868b]'
                     }`}
                   >
                     {e.status}

@@ -281,16 +281,16 @@ export const Header: React.FC = () => {
   const privateWorkspaces = workspacesList.filter((w) => !w.is_shared);
 
   return (
-    <header className="h-16 border-b border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#0d121f]/95 backdrop-blur-md px-6 flex items-center justify-between z-20 transition-colors">
+    <header className="h-16 border-b border-black/5 dark:border-white/[0.08] bg-white/80 dark:bg-[#0c0e14]/80 backdrop-blur-2xl px-6 flex items-center justify-between z-20 transition-colors">
       {/* Left: Breadcrumb & Stage Title */}
       <div className="flex items-center gap-4 min-w-0">
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 flex-shrink-0">
-          <span className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors">VisionForge</span>
+        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-[#86868b] flex-shrink-0">
+          <span className="hover:text-slate-900 dark:hover:text-white transition-colors">VisionForge</span>
           <span>/</span>
-          <span className="text-brand-500 dark:text-brand-400 font-medium capitalize">{currentStage.replace('_', ' ')}</span>
+          <span className="text-[#0071e3] font-medium capitalize">{currentStage.replace('_', ' ')}</span>
         </div>
-        <div className="h-4 w-px bg-slate-300 dark:bg-slate-800 flex-shrink-0" />
-        <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 truncate">
+        <div className="h-4 w-px bg-slate-300 dark:bg-white/[0.1] flex-shrink-0" />
+        <h1 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 truncate">
           {stageTitles[currentStage] || currentStage}
         </h1>
       </div>
@@ -301,18 +301,18 @@ export const Header: React.FC = () => {
         <div className="relative" ref={workspaceMenuRef}>
           <button
             onClick={() => setShowWorkspaceMenu(!showWorkspaceMenu)}
-            className="flex items-center gap-2 bg-slate-100 dark:bg-slate-850 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-1.5 shadow-sm transition-colors text-left"
+            className="flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 shadow-sm transition-all text-left"
             title="Switch Workspace (Shared Team or Private)"
           >
             {currentWorkspace?.is_shared ? (
-              <Share2 className="w-4 h-4 text-brand-500 dark:text-brand-400 flex-shrink-0" />
+              <Share2 className="w-3.5 h-3.5 text-[#0071e3] flex-shrink-0" />
             ) : (
-              <Lock className="w-4 h-4 text-purple-400 flex-shrink-0" />
+              <Lock className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
             )}
             <div className="flex flex-col min-w-0 max-w-[140px] sm:max-w-[190px]">
-              <span className="text-[10px] uppercase font-bold text-slate-400 leading-none flex items-center gap-1">
+              <span className="text-[10px] uppercase font-semibold text-[#86868b] leading-none flex items-center gap-1">
                 Workspace
-                <span className="text-[9px] px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300">
                   {currentWorkspace?.is_shared ? 'Shared' : 'Private'}
                 </span>
               </span>
@@ -320,7 +320,7 @@ export const Header: React.FC = () => {
                 {currentWorkspace ? currentWorkspace.name : 'SVG Production & Conveyor Lab'}
               </span>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#86868b] flex-shrink-0" />
           </button>
 
           {showWorkspaceMenu && (
@@ -407,10 +407,10 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Project Selector Dropdown */}
-        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-850/90 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-1.5 shadow-sm">
-          <Folder className="w-4 h-4 text-brand-500 dark:text-brand-400 flex-shrink-0" />
+        <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 shadow-sm">
+          <Folder className="w-3.5 h-3.5 text-[#0071e3] flex-shrink-0" />
           <div className="flex flex-col min-w-0">
-            <span className="text-[10px] uppercase font-bold text-slate-400 leading-none">Project</span>
+            <span className="text-[10px] uppercase font-semibold text-[#86868b] leading-none">Project</span>
             <select
               value={activeProjectId || ''}
               onChange={(e) => {
@@ -433,10 +433,10 @@ export const Header: React.FC = () => {
         <div className="relative" ref={userMenuRef}>
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
-            className="flex items-center gap-2 bg-slate-100 dark:bg-slate-850 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800 rounded-xl px-2.5 py-1.5 shadow-sm transition-colors text-left"
+            className="flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300 dark:border-white/[0.08] rounded-full px-2.5 py-1.5 shadow-sm transition-all text-left"
             title="User Profile & Role Context"
           >
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-sm">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#0071e3] to-[#6366f1] flex items-center justify-center text-white text-xs font-semibold flex-shrink-0 shadow-sm">
               {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
             </div>
             <div className="hidden md:flex flex-col min-w-0 max-w-[110px]">
@@ -444,14 +444,14 @@ export const Header: React.FC = () => {
                 {currentUser ? currentUser.name : 'Sanchit'}
               </span>
               <span
-                className={`text-[9px] font-bold uppercase tracking-wider px-1 py-0.2 rounded border w-fit leading-tight mt-0.5 ${getRoleBadgeStyle(
+                className={`text-[9px] font-medium uppercase tracking-wider px-1.5 py-0.2 rounded-full border w-fit leading-tight mt-0.5 ${getRoleBadgeStyle(
                   currentUser?.role || 'admin'
                 )}`}
               >
                 {currentUser?.role || 'admin'}
               </span>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#86868b] flex-shrink-0" />
           </button>
 
           {showUserMenu && (
@@ -567,19 +567,19 @@ export const Header: React.FC = () => {
         {/* Command Palette Trigger */}
         <button
           onClick={() => setCommandPaletteOpen(true)}
-          className="hidden xl:flex items-center gap-2 bg-slate-100 dark:bg-slate-850/60 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800/80 rounded-xl px-3 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+          className="hidden xl:flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 text-xs text-slate-600 dark:text-[#86868b] hover:text-slate-900 dark:hover:text-white transition-all"
           title="Command Palette (Ctrl+K)"
         >
-          <Search className="w-3.5 h-3.5 text-slate-400" />
+          <Search className="w-3.5 h-3.5 text-[#86868b]" />
           <span>Search</span>
-          <kbd className="px-1.5 py-0.5 text-[10px] bg-slate-200 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700 font-mono">
+          <kbd className="px-1.5 py-0.5 text-[10px] bg-slate-200 dark:bg-white/[0.08] rounded-full border border-slate-300 dark:border-white/[0.1] font-mono text-slate-400">
             Ctrl+K
           </kbd>
         </button>
 
         {/* Compute Telemetry Badge */}
         {telemetry && (
-          <div className="hidden lg:flex items-center gap-2.5 bg-slate-100 dark:bg-slate-850/80 border border-slate-300 dark:border-slate-800/90 rounded-xl px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
+          <div className="hidden lg:flex items-center gap-2.5 bg-slate-100 dark:bg-white/[0.04] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 text-xs text-slate-700 dark:text-slate-300">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -588,7 +588,7 @@ export const Header: React.FC = () => {
               {telemetry.cuda_available ? 'CUDA GPU' : 'Host CPU'}
             </span>
             <span className="text-slate-400 dark:text-slate-600">|</span>
-            <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400">
+            <span className="font-mono text-[11px] text-slate-500 dark:text-[#86868b]">
               RAM {telemetry.ram_percent}%
             </span>
           </div>
@@ -597,7 +597,7 @@ export const Header: React.FC = () => {
         {/* Theme Toggle (Dark / Light) */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-xl bg-slate-100 dark:bg-slate-850 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm active:scale-95"
+          className="p-2 rounded-full bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm active:scale-95"
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
         >
           {theme === 'dark' ? (

@@ -3,7 +3,6 @@ import { useAppStore } from '../stores/useAppStore';
 import { api } from '../services/api';
 import {
   Flame,
-  Shield,
   ShieldCheck,
   Lock,
   Mail,
@@ -11,13 +10,11 @@ import {
   Building2,
   ArrowRight,
   Sparkles,
-  CheckCircle2,
-  Cpu,
-  Eye,
   KeyRound,
-  Layers,
   AlertCircle,
-  HelpCircle,
+  CheckCircle2,
+  ChevronRight,
+  Layers,
 } from 'lucide-react';
 
 interface DemoUser {
@@ -42,6 +39,7 @@ export const LoginView: React.FC = () => {
   const [regRole, setRegRole] = useState('engineer');
   const [tenantId, setTenantId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [activeQuickLoginEmail, setActiveQuickLoginEmail] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [demoUsers, setDemoUsers] = useState<DemoUser[]>([]);
 
@@ -54,8 +52,8 @@ export const LoginView: React.FC = () => {
       role: 'admin',
       role_title: 'Organization Administrator',
       badge_color: 'emerald',
-      description: 'Root authority: Full access to all 13 stages, user invites, model promotion & runtimes.',
-      tenant_name: 'SVG Global Enterprise',
+      description: 'Root governance across tenants, workspaces, models & runtimes.',
+      tenant_name: 'SVG Enterprise Global',
       password_hint: 'password123',
     },
     {
@@ -65,8 +63,8 @@ export const LoginView: React.FC = () => {
       role: 'engineer',
       role_title: 'ML Systems Engineer',
       badge_color: 'purple',
-      description: 'Pipeline control: YOLO training runs, Colab GPU launcher, checkpoint analysis & staging.',
-      tenant_name: 'SVG Global Enterprise',
+      description: 'YOLO fine-tuning, Colab/Kaggle Dual-T4 GPU runs & checkpoints.',
+      tenant_name: 'SVG Enterprise Global',
       password_hint: 'password123',
     },
     {
@@ -74,10 +72,10 @@ export const LoginView: React.FC = () => {
       name: 'Marcus Vance',
       email: 'marcus@visionforge.ai',
       role: 'reviewer',
-      role_title: 'Dataset QA Lead & Reviewer',
+      role_title: 'Dataset QA Lead',
       badge_color: 'indigo',
-      description: 'Quality assurance: Approves polygon masks, freezes dataset versions & runs benchmarks.',
-      tenant_name: 'SVG Global Enterprise',
+      description: 'Dataset quality audit, annotation review & split version freezing.',
+      tenant_name: 'SVG Enterprise Global',
       password_hint: 'password123',
     },
     {
@@ -87,8 +85,8 @@ export const LoginView: React.FC = () => {
       role: 'annotator',
       role_title: 'Annotation Specialist',
       badge_color: 'amber',
-      description: 'High-speed labeling: SAM 2 interactive segmentation & conveyor video tracking.',
-      tenant_name: 'SVG Global Enterprise',
+      description: 'High-speed labeling, SAM 2 segmentation & trajectory tracking.',
+      tenant_name: 'SVG Enterprise Global',
       password_hint: 'password123',
     },
     {
@@ -98,8 +96,8 @@ export const LoginView: React.FC = () => {
       role: 'viewer',
       role_title: 'Auditor & Observer',
       badge_color: 'cyan',
-      description: 'Read-only audit: Inspects metrics, dataset distributions & forensic model scores.',
-      tenant_name: 'SVG Global Enterprise',
+      description: 'Read-only access to metrics, telemetry & forensic scorecards.',
+      tenant_name: 'SVG Enterprise Global',
       password_hint: 'password123',
     },
     {
@@ -107,16 +105,15 @@ export const LoginView: React.FC = () => {
       name: 'David Kim',
       email: 'david@acmerobotics.com',
       role: 'admin',
-      role_title: 'Acme Robotics Admin',
+      role_title: 'Acme Robotics Partner',
       badge_color: 'blue',
-      description: 'External multi-tenant partner: Isolated Acme workspace & robotics pipeline.',
+      description: 'Isolated partner tenant: Acme robotics line & conveyor inspection.',
       tenant_name: 'Acme Robotics & Automation',
       password_hint: 'password123',
     },
   ];
 
   useEffect(() => {
-    // Load dynamic demo users and tenants
     api
       .getDemoUsers()
       .then((users) => {
@@ -143,39 +140,50 @@ export const LoginView: React.FC = () => {
     const targetPass = customPass !== undefined ? customPass : password;
 
     if (!targetEmail) {
-      setErrorMessage('Please enter your email address.');
+      setErrorMessage('Please enter your work email.');
       return;
     }
 
     setLoading(true);
+    if (customEmail) setActiveQuickLoginEmail(customEmail);
+
     try {
-      const res = await api.authLogin({ email: targetEmail, password: targetPass });
+      const res = await api.authLogin({
+        email: targetEmail,
+        password: targetPass || 'password123',
+      });
+
       login(res.user, res.token);
       addNotification({
         type: 'success',
-        title: 'Authentication Successful',
-        message: `Welcome to VisionForge Studio, ${res.user.name} (${res.user.role.toUpperCase()})`,
+        title: `Welcome, ${res.user.name}`,
+        message: `Signed in with ${res.user.role.toUpperCase()} privileges`,
       });
     } catch (err: any) {
-      setErrorMessage(err.message || 'Invalid email or password.');
+      setErrorMessage(err.message || 'Authentication failed. Please verify credentials.');
     } finally {
       setLoading(false);
+      setActiveQuickLoginEmail(null);
     }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
-    if (!name.trim() || !email.trim()) {
-      setErrorMessage('Please provide your full name and work email.');
+
+    if (!name.trim()) {
+      setErrorMessage('Please enter your full name.');
+      return;
+    }
+    if (!email.trim()) {
+      setErrorMessage('Please enter your work email.');
       return;
     }
 
     setLoading(true);
     try {
-      const targetTenantId = tenantId || (tenantsList.length > 0 ? tenantsList[0].id : '');
       const res = await api.authRegister({
-        tenant_id: targetTenantId,
+        tenant_id: tenantId,
         name: name.trim(),
         email: email.trim(),
         password: password || 'password123',
@@ -189,7 +197,7 @@ export const LoginView: React.FC = () => {
         message: `Created ${res.user.name} with ${regRole.toUpperCase()} permissions`,
       });
     } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to create account.');
+      setErrorMessage(err.message || 'Failed to provision account.');
     } finally {
       setLoading(false);
     }
@@ -197,315 +205,307 @@ export const LoginView: React.FC = () => {
 
   const activeDemoList = demoUsers.length > 0 ? demoUsers : fallbackDemoUsers;
 
-  const getRoleCardBorder = (role: string) => {
+  const getRoleDotColor = (role: string) => {
     switch (role?.toLowerCase()) {
       case 'admin':
-        return 'hover:border-emerald-500/50 hover:bg-emerald-500/5 group-hover:text-emerald-400';
+        return 'bg-emerald-400';
       case 'engineer':
-        return 'hover:border-purple-500/50 hover:bg-purple-500/5 group-hover:text-purple-400';
+        return 'bg-purple-400';
       case 'reviewer':
-        return 'hover:border-indigo-500/50 hover:bg-indigo-500/5 group-hover:text-indigo-400';
+        return 'bg-indigo-400';
       case 'annotator':
-        return 'hover:border-amber-500/50 hover:bg-amber-500/5 group-hover:text-amber-400';
+        return 'bg-amber-400';
       case 'viewer':
       default:
-        return 'hover:border-cyan-500/50 hover:bg-cyan-500/5 group-hover:text-cyan-400';
+        return 'bg-sky-400';
     }
   };
 
-  const getRoleBadgeStyle = (role: string) => {
-    switch (role?.toLowerCase()) {
-      case 'admin':
-        return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-      case 'engineer':
-        return 'bg-purple-500/15 text-purple-400 border-purple-500/30';
-      case 'reviewer':
-        return 'bg-indigo-500/15 text-indigo-400 border-indigo-500/30';
-      case 'annotator':
-        return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
-      case 'viewer':
-      default:
-        return 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30';
-    }
+  const getRolePill = (role: string, title: string) => {
+    let colorClass = 'bg-sky-500/10 text-sky-300 border-sky-500/20';
+    if (role === 'admin') colorClass = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20';
+    else if (role === 'engineer') colorClass = 'bg-purple-500/10 text-purple-300 border-purple-500/20';
+    else if (role === 'reviewer') colorClass = 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20';
+    else if (role === 'annotator') colorClass = 'bg-amber-500/10 text-amber-300 border-amber-500/20';
+
+    return (
+      <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium border ${colorClass}`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${getRoleDotColor(role)}`} />
+        <span>{title}</span>
+      </span>
+    );
   };
 
   return (
-    <div className="min-h-screen w-screen flex flex-col justify-between bg-[#080c14] text-slate-100 relative overflow-x-hidden selection:bg-brand-500 selection:text-white">
-      {/* Dynamic Background Glows */}
-      <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-gradient-to-b from-brand-600/20 via-indigo-600/10 to-transparent blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-150px] right-[-100px] w-[600px] h-[400px] bg-purple-600/10 blur-[150px] pointer-events-none" />
+    <div className="min-h-screen w-screen bg-[#07090e] text-[#f5f5f7] flex flex-col justify-between relative overflow-x-hidden selection:bg-[#0071e3] selection:text-white">
+      {/* Apple-style Soft Ambient Lighting */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[360px] bg-gradient-to-b from-[#0071e3]/12 via-[#6366f1]/06 to-transparent blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-0 right-10 w-[500px] h-[300px] bg-purple-600/08 blur-[180px] pointer-events-none" />
 
-      {/* Top Brand Bar */}
-      <header className="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between z-10">
+      {/* Top Apple Minimalist Navigation */}
+      <header className="w-full max-w-6xl mx-auto px-6 pt-6 pb-2 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
-            <Flame className="w-6 h-6 text-white" />
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#0071e3] to-[#6366f1] flex items-center justify-center shadow-lg shadow-blue-500/15">
+            <Flame className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-lg tracking-tight text-white">VisionForge</span>
-              <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-brand-500/15 text-brand-400 border border-brand-500/30">
-                v2.4 Enterprise
+              <span className="font-semibold text-[17px] tracking-tight text-white">VisionForge</span>
+              <span className="text-[10px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">
+                Enterprise
               </span>
             </div>
-            <span className="text-xs text-slate-400 font-medium">Autonomous Vision & YOLO MLOps Studio</span>
+            <span className="text-[11px] text-[#86868b] tracking-normal">Industrial Computer Vision & YOLO Studio</span>
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-full">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>RBAC Enforcement Active</span>
+        <div className="hidden sm:flex items-center gap-2.5 text-xs text-[#86868b] bg-white/[0.03] backdrop-blur-md border border-white/[0.08] px-3.5 py-1.5 rounded-full shadow-sm">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="text-slate-300">RBAC Enforcement Active</span>
           <span className="text-slate-600">•</span>
-          <span className="text-slate-300 font-mono">SOC2 Type II</span>
+          <span className="font-mono text-[11px] text-slate-400">GNU AGPLv3</span>
         </div>
       </header>
 
-      {/* Main Content: Split Grid */}
-      <main className="w-full max-w-7xl mx-auto px-6 py-4 flex-1 flex flex-col justify-center z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* Main Stage: Balanced Grid */}
+      <main className="w-full max-w-6xl mx-auto px-6 py-6 flex-1 flex items-center justify-center z-10">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
           
-          {/* Left Column: Enterprise Login Card */}
-          <div className="lg:col-span-5 flex flex-col">
-            <div className="bg-slate-900/85 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl shadow-black/80 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-500" />
+          {/* Left Column: Glassmorphic Sign In Card */}
+          <div className="lg:col-span-5 flex flex-col justify-center">
+            <div className="bg-[#11131a]/80 backdrop-blur-2xl border border-white/[0.1] rounded-[28px] p-7 sm:p-8 shadow-2xl shadow-black/60 relative overflow-hidden flex flex-col justify-between">
+              
+              {/* Subtle Apple Top Edge Highlight */}
+              <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-              {/* Tabs: Sign In / Register */}
-              <div className="flex items-center p-1 bg-slate-950/80 rounded-xl border border-slate-800 mb-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTab('signin');
-                    setErrorMessage('');
-                  }}
-                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                    tab === 'signin'
-                      ? 'bg-brand-600 text-white shadow-md'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  Enterprise Sign In
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTab('register');
-                    setErrorMessage('');
-                  }}
-                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                    tab === 'register'
-                      ? 'bg-brand-600 text-white shadow-md'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  Create Team Account
-                </button>
-              </div>
-
-              {/* Form Heading */}
-              <div className="mb-6">
-                <h2 className="text-xl font-black text-white tracking-tight">
-                  {tab === 'signin' ? 'Sign into your Workspace' : 'Provision Team Member Account'}
-                </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  {tab === 'signin'
-                    ? 'Enter your credentials or click any RBAC profile on the right.'
-                    : 'Assign granular permission tier and organization tenant.'}
-                </p>
-              </div>
-
-              {/* Error Banner */}
-              {errorMessage && (
-                <div className="mb-5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-2.5 text-xs text-rose-300 animate-in fade-in">
-                  <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
-
-              {/* Sign In Form */}
-              {tab === 'signin' ? (
-                <form onSubmit={(e) => handleLogin(e)} className="space-y-4">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                      Work Email Address
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="sanchit@visionforge.ai"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-brand-500 transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                        Password
-                      </label>
-                      <span className="text-[10px] text-slate-500 font-mono">Demo: password123</span>
-                    </div>
-                    <div className="relative">
-                      <KeyRound className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••••••"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-brand-500 transition-colors"
-                      />
-                    </div>
-                  </div>
-
+              <div>
+                {/* Segmented Pill Tabs */}
+                <div className="flex p-1 bg-black/40 rounded-full border border-white/[0.08] mb-6">
                   <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                    type="button"
+                    onClick={() => {
+                      setTab('signin');
+                      setErrorMessage('');
+                    }}
+                    className={`flex-1 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
+                      tab === 'signin'
+                        ? 'bg-[#0071e3] text-white shadow-md'
+                        : 'text-[#86868b] hover:text-white'
+                    }`}
                   >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Verifying Session Token...
-                      </span>
-                    ) : (
-                      <>
-                        <span>Authenticate & Launch Studio</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
+                    Sign In
                   </button>
-                </form>
-              ) : (
-                /* Registration Form */
-                <form onSubmit={handleRegister} className="space-y-4">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                      Full Name
-                    </label>
-                    <div className="relative">
-                      <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Jordan Miller"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-brand-500 transition-colors"
-                      />
-                    </div>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTab('register');
+                      setErrorMessage('');
+                    }}
+                    className={`flex-1 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
+                      tab === 'register'
+                        ? 'bg-[#0071e3] text-white shadow-md'
+                        : 'text-[#86868b] hover:text-white'
+                    }`}
+                  >
+                    Create Account
+                  </button>
+                </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                      Work Email
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="jordan@visionforge.ai"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-brand-500 transition-colors"
-                      />
-                    </div>
-                  </div>
+                {/* Heading */}
+                <div className="mb-5">
+                  <h1 className="text-2xl font-semibold tracking-tight text-white">
+                    {tab === 'signin' ? 'Sign in to Workspace' : 'Create Team Account'}
+                  </h1>
+                  <p className="text-xs text-[#86868b] mt-1.5 leading-relaxed">
+                    {tab === 'signin'
+                      ? 'Enter your credentials or choose any role on the right for instant access.'
+                      : 'Provision a new team member with specific role-based permissions.'}
+                  </p>
+                </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                      Tenant Organization
-                    </label>
-                    <div className="relative">
-                      <Building2 className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                {/* Error Banner */}
+                {errorMessage && (
+                  <div className="mb-4 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/25 flex items-start gap-2.5 text-xs text-rose-300 animate-in fade-in">
+                    <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
+                {/* Sign In Form */}
+                {tab === 'signin' ? (
+                  <form onSubmit={(e) => handleLogin(e)} className="space-y-4">
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-400 mb-1.5 tracking-tight">
+                        Work Email
+                      </label>
+                      <div className="relative">
+                        <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="sanchit@visionforge.ai"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-[11px] font-medium text-slate-400 tracking-tight">
+                          Password
+                        </label>
+                        <span className="text-[10px] text-slate-500 font-mono">Demo: password123</span>
+                      </div>
+                      <div className="relative">
+                        <KeyRound className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="password"
+                          required
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="••••••••••••"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-3 rounded-full bg-[#0071e3] hover:bg-[#0077ed] active:scale-[0.98] text-white text-xs font-medium transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                    >
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Authenticating...
+                        </span>
+                      ) : (
+                        <>
+                          <span>Sign In to Studio</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </>
+                      )}
+                    </button>
+                  </form>
+                ) : (
+                  /* Registration Form */
+                  <form onSubmit={handleRegister} className="space-y-3.5">
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                        Full Name
+                      </label>
+                      <div className="relative">
+                        <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Jordan Miller"
+                          className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-[#0071e3] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                        Work Email
+                      </label>
+                      <div className="relative">
+                        <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="jordan@visionforge.ai"
+                          className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-[#0071e3] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                        Organization Workspace
+                      </label>
+                      <div className="relative">
+                        <Building2 className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <select
+                          value={tenantId}
+                          onChange={(e) => setTenantId(e.target.value)}
+                          className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#14161f] border border-white/[0.08] text-white text-xs focus:outline-none focus:border-[#0071e3]"
+                        >
+                          {tenantsList.map((t) => (
+                            <option key={t.id} value={t.id} className="bg-slate-900 text-white">
+                              {t.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                        RBAC Role
+                      </label>
                       <select
-                        value={tenantId}
-                        onChange={(e) => setTenantId(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white text-xs focus:outline-none focus:border-brand-500 cursor-pointer"
+                        value={regRole}
+                        onChange={(e) => setRegRole(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#14161f] border border-white/[0.08] text-white text-xs focus:outline-none focus:border-[#0071e3]"
                       >
-                        {tenantsList.map((t) => (
-                          <option key={t.id} value={t.id} className="bg-slate-900 text-white">
-                            {t.name} ({t.plan?.toUpperCase() || 'ENTERPRISE'})
-                          </option>
-                        ))}
+                        <option value="admin">Administrator (Full Access)</option>
+                        <option value="engineer">ML Engineer (Training & Colab)</option>
+                        <option value="reviewer">QA Reviewer (Datasets & Verification)</option>
+                        <option value="annotator">Annotation Specialist (SAM 2 & Labels)</option>
+                        <option value="viewer">Auditor (Read-Only Telemetry)</option>
                       </select>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                      Assigned RBAC Role
-                    </label>
-                    <select
-                      value={regRole}
-                      onChange={(e) => setRegRole(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white text-xs focus:outline-none focus:border-brand-500 cursor-pointer font-semibold"
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white text-xs font-medium transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 disabled:opacity-50 mt-1"
                     >
-                      <option value="admin" className="bg-slate-900">Administrator (Root Pipeline & All Stages)</option>
-                      <option value="engineer" className="bg-slate-900">ML Systems Engineer (Training, Colab & Models)</option>
-                      <option value="reviewer" className="bg-slate-900">Dataset QA Reviewer (Annotation Approval & Splits)</option>
-                      <option value="annotator" className="bg-slate-900">Annotation Specialist (SAM 2 & Conveyor Tracking)</option>
-                      <option value="viewer" className="bg-slate-900">Auditor / Viewer (Read-Only Metrics & Forensic Log)</option>
-                    </select>
-                  </div>
+                      {loading ? 'Creating...' : 'Register Team Member'}
+                    </button>
+                  </form>
+                )}
+              </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-brand-600 hover:from-emerald-500 hover:to-brand-500 text-white text-xs font-bold transition-all shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Provisioning User...
-                      </span>
-                    ) : (
-                      <>
-                        <span>Register & Enter Workspace</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-
-              {/* Security Hint */}
-              <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+              {/* Security Footnote */}
+              <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-[#86868b]">
                 <div className="flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-brand-400" />
-                  <span>Encrypted SHA-256 Auth</span>
+                  <Lock className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Encrypted Session</span>
                 </div>
-                <span className="text-slate-400 font-mono">VisionForge v2.4</span>
+                <span>v2.4 Enterprise</span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: 1-Click RBAC Profile Switcher Cards */}
-          <div className="lg:col-span-7 flex flex-col space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          {/* Right Column: Sleek 1-Click Role Switcher */}
+          <div className="lg:col-span-7 flex flex-col justify-center space-y-4">
+            
+            <div className="flex items-center justify-between">
               <div>
-                <span className="text-[11px] font-mono uppercase tracking-widest text-brand-400 font-bold px-2.5 py-0.5 rounded-full bg-brand-500/10 border border-brand-500/20">
-                  Role-Based Access Control
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#0071e3] font-semibold">
+                  Quick Access
                 </span>
-                <h3 className="text-lg font-bold text-white mt-1.5 tracking-tight flex items-center gap-2">
-                  <span>Quick Test Login by Role</span>
-                  <Sparkles className="w-4 h-4 text-brand-400" />
-                </h3>
+                <h2 className="text-xl font-semibold tracking-tight text-white mt-0.5">
+                  Sign in by Role
+                </h2>
               </div>
-              <span className="text-xs text-slate-400">
-                Click any profile to instantly test permission boundaries
+              <span className="text-[12px] text-[#86868b]">
+                Click any profile to test permissions instantly
               </span>
             </div>
 
-            {/* Grid of Seeded Profiles */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+            {/* 2x3 Grid of Compact Apple Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {activeDemoList.map((user) => {
-                const badgeStyle = getRoleBadgeStyle(user.role);
-                const borderHover = getRoleCardBorder(user.role);
+                const isThisLoading = loading && activeQuickLoginEmail === user.email;
 
                 return (
                   <button
@@ -515,65 +515,78 @@ export const LoginView: React.FC = () => {
                       setPassword(user.password_hint || 'password123');
                       handleLogin(undefined, user.email, user.password_hint || 'password123');
                     }}
-                    className={`group text-left p-4 rounded-2xl bg-slate-900/70 border border-slate-800 backdrop-blur-md transition-all duration-200 flex flex-col justify-between ${borderHover}`}
+                    disabled={loading}
+                    className="group text-left p-4 rounded-[20px] bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.98] border border-white/[0.07] hover:border-white/[0.18] backdrop-blur-xl transition-all duration-200 flex flex-col justify-between shadow-sm hover:shadow-lg disabled:opacity-50"
                   >
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${badgeStyle}`}>
-                          {user.role_title}
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-400 opacity-80 group-hover:opacity-100">
-                          1-Click Login →
+                      {/* Top Role Badge */}
+                      <div className="flex items-center justify-between mb-2.5">
+                        {getRolePill(user.role, user.role_title)}
+                        <span className="text-[10px] text-[#86868b] group-hover:text-white flex items-center gap-0.5 transition-colors">
+                          {isThisLoading ? (
+                            <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          ) : (
+                            <>
+                              <span>Log in</span>
+                              <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                            </>
+                          )}
                         </span>
                       </div>
 
-                      <div className="text-sm font-bold text-white group-hover:text-white flex items-center gap-2">
-                        <span>{user.name}</span>
-                        <span className="text-xs text-slate-400 font-normal">({user.email})</span>
+                      {/* Name & Email */}
+                      <div className="text-[14px] font-semibold text-white tracking-tight">
+                        {user.name}
+                      </div>
+                      <div className="text-[11px] text-[#86868b] font-mono truncate">
+                        {user.email}
                       </div>
 
-                      <p className="text-[11px] text-slate-400 mt-2 leading-relaxed">
+                      {/* Description */}
+                      <p className="text-[11px] text-slate-400 mt-2 line-clamp-2 leading-relaxed">
                         {user.description}
                       </p>
                     </div>
 
-                    <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
-                      <span className="truncate max-w-[170px]">{user.tenant_name}</span>
-                      <span className="font-mono text-brand-400 font-medium">PW: password123</span>
+                    {/* Bottom Tenant & Password Info */}
+                    <div className="mt-3 pt-2.5 border-t border-white/[0.05] flex items-center justify-between text-[10px] text-[#86868b]">
+                      <span className="truncate max-w-[160px]">{user.tenant_name}</span>
+                      <span className="font-mono text-slate-400">PW: password123</span>
                     </div>
                   </button>
                 );
               })}
             </div>
 
-            {/* Granular Permission Summary Pill */}
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400">
-              <div className="flex items-center gap-2.5">
-                <ShieldCheck className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                <span>
-                  <strong className="text-slate-200">Granular Permission Matrix:</strong> Stages and mutating actions are locked according to active user role.
+            {/* Apple-style Info Banner */}
+            <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between gap-3 text-xs text-[#86868b]">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <span className="text-[12px] text-slate-300">
+                  <strong>Granular RBAC Enforced:</strong> Views and mutation actions adapt to the active role.
                 </span>
               </div>
-              <span className="text-[11px] font-mono text-brand-400 bg-brand-500/10 px-2 py-1 rounded-md border border-brand-500/20 whitespace-nowrap">
-                Strict RBAC Active
+              <span className="text-[10px] font-mono text-[#0071e3] bg-[#0071e3]/10 px-2 py-0.5 rounded-full border border-[#0071e3]/20 shrink-0">
+                Active
               </span>
             </div>
+
           </div>
 
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 border-t border-slate-800/60 z-10">
+      {/* Clean Minimalist Footer */}
+      <footer className="w-full max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#86868b] border-t border-white/[0.06] z-10">
         <div>
-          <span>© 2026 VisionForge Studio Inc. All rights reserved.</span>
+          <span>© 2026 VisionForge Studio. Developed by Sushant Gabhane (MSc IT - ID: D09).</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <span>Enterprise Tenant Isolation</span>
           <span>•</span>
-          <span>Salted SHA-256 Credentials</span>
+          <span>Salted SHA-256</span>
           <span>•</span>
-          <span>Colab & Edge YOLO Inference</span>
+          <span>GNU AGPLv3</span>
         </div>
       </footer>
     </div>

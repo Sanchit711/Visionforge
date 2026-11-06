@@ -60,22 +60,22 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`relative flex flex-col border-r border-slate-800 bg-[#0d121f] transition-all duration-300 z-30 select-none ${
+      className={`relative flex flex-col border-r border-white/[0.08] bg-[#0c0e14]/95 backdrop-blur-2xl transition-all duration-300 z-30 select-none ${
         sidebarCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-slate-800/80">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.06]">
         <div className="flex items-center gap-3 overflow-hidden cursor-pointer" onClick={() => setStage('overview')}>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-brand-500/20 flex-shrink-0">
-            <Flame className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0071e3] to-[#6366f1] flex items-center justify-center shadow-lg shadow-blue-500/15 flex-shrink-0">
+            <Flame className="w-5 h-5 text-white" />
           </div>
           {!sidebarCollapsed && (
             <div className="flex flex-col truncate">
-              <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
-                VisionForge <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-400 border border-brand-500/30">STUDIO</span>
+              <span className="font-semibold text-[15px] tracking-tight text-white flex items-center gap-1.5">
+                VisionForge <span className="text-[10px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">STUDIO</span>
               </span>
-              <span className="text-[11px] text-slate-400 truncate">Computer Vision Suite</span>
+              <span className="text-[11px] text-[#86868b] truncate">Computer Vision Suite</span>
             </div>
           )}
         </div>
@@ -83,28 +83,28 @@ export const Sidebar: React.FC = () => {
 
       {/* Active Workspace & User Role Banner */}
       {!sidebarCollapsed && (
-        <div className="px-3.5 py-2.5 mx-3 mt-3 rounded-xl bg-slate-850/80 border border-slate-800/80 flex flex-col gap-1.5 shadow-sm">
+        <div className="px-3.5 py-3 mx-3 mt-3 rounded-2xl bg-white/[0.03] border border-white/[0.07] backdrop-blur-md flex flex-col gap-1.5 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Tenant Workspace</span>
-            <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-brand-500/10 text-brand-400 border border-brand-500/20">
+            <span className="text-[10px] uppercase font-semibold text-[#86868b] tracking-wider">Workspace</span>
+            <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-300 border border-white/[0.08]">
               {currentTenant?.plan || 'ENTERPRISE'}
             </span>
           </div>
-          <div className="text-xs font-bold text-white truncate">
+          <div className="text-xs font-semibold text-white truncate">
             {currentTenant ? currentTenant.name : 'SVG Enterprise Global'}
           </div>
 
-          <div className="pt-1.5 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-            <span className="text-slate-400">User Role:</span>
-            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${roleDef.badgeClass}`}>
+          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[11px]">
+            <span className="text-[#86868b]">Role:</span>
+            <span className={`text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border ${roleDef.badgeClass}`}>
               {roleDef.badge}
             </span>
           </div>
 
           {activeProject && (
-            <div className="pt-1 border-t border-slate-800/40 flex items-center justify-between text-[11px]">
-              <span className="text-slate-400">Project:</span>
-              <span className="font-semibold text-brand-300 truncate max-w-[125px]">{activeProject.name}</span>
+            <div className="pt-1.5 border-t border-white/[0.04] flex items-center justify-between text-[11px]">
+              <span className="text-[#86868b]">Project:</span>
+              <span className="font-medium text-slate-200 truncate max-w-[130px]">{activeProject.name}</span>
             </div>
           )}
         </div>
@@ -124,7 +124,7 @@ export const Sidebar: React.FC = () => {
           return (
             <React.Fragment key={item.id}>
               {showCategoryHeader && (
-                <div className="pt-3 pb-1 px-3 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                <div className="pt-3 pb-1 px-3 text-[10px] uppercase font-semibold text-[#86868b] tracking-wider">
                   {item.category}
                 </div>
               )}
@@ -135,20 +135,20 @@ export const Sidebar: React.FC = () => {
                     ? `${item.label}${!isAllowed ? ' (Locked by Role)' : ''}`
                     : undefined
                 }
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs transition-all duration-150 group relative ${
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition-all duration-200 group relative ${
                   isActive
-                    ? 'bg-gradient-to-r from-brand-600/90 to-indigo-600/90 text-white shadow-lg shadow-brand-600/20 font-semibold'
+                    ? 'bg-[#0071e3] text-white shadow-md shadow-blue-500/20 font-medium'
                     : isAllowed
-                    ? 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                    : 'text-slate-500 hover:text-slate-400 hover:bg-slate-850/40 opacity-70'
+                    ? 'text-slate-300 hover:text-white hover:bg-white/[0.05]'
+                    : 'text-slate-600 hover:text-slate-500 hover:bg-white/[0.02] opacity-60'
                 }`}
               >
                 <Icon
-                  className={`w-4 h-4 flex-shrink-0 transition-transform group-hover:scale-110 ${
+                  className={`w-4 h-4 flex-shrink-0 transition-transform group-hover:scale-105 ${
                     isActive
                       ? 'text-white'
                       : isAllowed
-                      ? 'text-slate-400 group-hover:text-brand-400'
+                      ? 'text-[#86868b] group-hover:text-white'
                       : 'text-slate-600'
                   }`}
                 />
@@ -158,11 +158,11 @@ export const Sidebar: React.FC = () => {
 
                 {/* Lock icon if role is restricted */}
                 {!sidebarCollapsed && !isAllowed && (
-                  <Lock className="w-3 h-3 text-slate-500/80 flex-shrink-0" />
+                  <Lock className="w-3 h-3 text-slate-600 flex-shrink-0" />
                 )}
 
                 {isActive && (
-                  <span className="absolute right-2 w-1.5 h-1.5 rounded-full bg-white shadow-sm shadow-white/80" />
+                  <span className="absolute right-2.5 w-1.5 h-1.5 rounded-full bg-white" />
                 )}
               </button>
             </React.Fragment>
@@ -171,10 +171,10 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Collapse Toggle Footer */}
-      <div className="p-3 border-t border-slate-800/80 flex items-center justify-between">
+      <div className="p-3 border-t border-white/[0.06] flex items-center justify-between">
         <button
           onClick={toggleSidebar}
-          className="w-full flex items-center justify-center p-2 rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors text-xs gap-2"
+          className="w-full flex items-center justify-center p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] text-[#86868b] hover:text-white transition-all text-xs gap-2"
         >
           {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <><ChevronLeft className="w-4 h-4" /> <span>Collapse Sidebar</span></>}
         </button>
