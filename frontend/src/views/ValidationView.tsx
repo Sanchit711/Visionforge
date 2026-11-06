@@ -628,10 +628,10 @@ export const ValidationView: React.FC = () => {
               </select>
             </div>
 
-            {/* Models to Benchmark (Up to 4) */}
+            {/* Models to Benchmark (1 to 4) */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs text-slate-300 font-semibold">
-                <span>Select Models (2 to 4)</span>
+                <span>Select Models (1 to 4)</span>
                 <span className="font-mono text-purple-400">{selectedVideoModels.length}/4</span>
               </div>
               <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -659,8 +659,8 @@ export const ValidationView: React.FC = () => {
                         <span className="truncate">{opt.label}</span>
                       </div>
                       {isSelected && (
-                        <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded-full ${color?.bg} ${color?.text} font-bold`}>
-                          Pane {colorIdx + 1}
+                        <span className={`text-[10px] uppercase px-2 py-0.5 rounded-full ${color?.bg} ${color?.text} font-bold font-mono`}>
+                          {selectedVideoModels.length === 1 ? 'ONESHOT' : `Pane ${colorIdx + 1}`}
                         </span>
                       )}
                     </div>
@@ -696,7 +696,13 @@ export const ValidationView: React.FC = () => {
               className="w-full py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-full text-xs font-bold shadow-lg shadow-purple-900/40 flex items-center justify-center gap-2 transition-all active:scale-98 disabled:opacity-50"
             >
               <Video className="w-4 h-4 text-purple-200" />
-              <span>{runningVideoBench ? 'Synthesizing Multi-Split Video...' : 'Launch In-Motion Video Benchmark'}</span>
+              <span>
+                {runningVideoBench
+                  ? 'Synthesizing Benchmark Video...'
+                  : selectedVideoModels.length === 1
+                  ? 'Launch Oneshot Video Benchmark'
+                  : 'Launch In-Motion Video Benchmark'}
+              </span>
             </button>
           </div>
 
@@ -741,22 +747,30 @@ export const ValidationView: React.FC = () => {
                     <div className="flex items-center justify-between text-xs text-slate-300 font-semibold">
                       <span className="flex items-center gap-1.5">
                         <Activity className="w-4 h-4 text-purple-400" />
-                        Synchronized Multi-Pane Video Player
+                        {videoBenchResult.models_evaluated === 1 ? 'Oneshot Full Stream Player' : 'Synchronized Multi-Pane Video Player'}
                       </span>
                       <a
-                        href={videoBenchResult.comparison_video_url}
-                        download={`benchmark_${videoBenchResult.video_filename}`}
-                        className="text-purple-400 hover:text-purple-300 text-[11px] flex items-center gap-1"
+                        href={`${videoBenchResult.comparison_video_url}&download=true`}
+                        download={
+                          videoBenchResult.comparison_video_path
+                            ? videoBenchResult.comparison_video_path.split(/[/\\]/).pop()
+                            : `benchmark_${videoBenchResult.video_filename}`
+                        }
+                        className="px-3.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-purple-900/30 transition-all active:scale-95"
                       >
-                        <Download className="w-3 h-3" /> Download MP4
+                        <Download className="w-3.5 h-3.5 text-purple-200" />
+                        <span>Download MP4</span>
                       </a>
                     </div>
 
-                    <div className="aspect-video bg-black rounded-2xl overflow-hidden border border-white/10 shadow-2xl flex items-center justify-center">
+                    <div className="aspect-video bg-black rounded-2xl overflow-hidden border border-white/10 shadow-2xl flex items-center justify-center relative">
                       <video
+                        key={videoBenchResult.comparison_video_url}
                         controls
                         autoPlay
                         loop
+                        playsInline
+                        preload="auto"
                         src={videoBenchResult.comparison_video_url}
                         className="w-full h-full object-contain"
                       />

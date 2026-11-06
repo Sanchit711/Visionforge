@@ -190,6 +190,16 @@ class DatasetService:
                         val_frames.extend(vframes)
                     else:
                         test_frames.extend(vframes)
+            elif split_strategy == "temporal":
+                # Contiguous temporal chunk split: sorts by frame_index to eliminate adjacent frame leakage
+                sorted_frames = sorted(list(frames), key=lambda x: (x.video_id or "", x.frame_index if x.frame_index is not None else 0))
+                n_total = len(sorted_frames)
+                n_train = int(round(n_total * train_ratio))
+                n_val = int(round(n_total * val_ratio))
+
+                train_frames = sorted_frames[:n_train]
+                val_frames = sorted_frames[n_train:n_train + n_val]
+                test_frames = sorted_frames[n_train + n_val:]
             else:
                 shuffled = list(frames)
                 random.shuffle(shuffled)

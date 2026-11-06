@@ -6,9 +6,9 @@ from fastapi.testclient import TestClient
 
 backend_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_dir))
-aurelix_site = Path(r"C:\Users\Sanchit\Projects\Aurelix Annotate\.venv\Lib\site-packages")
-if aurelix_site.exists():
-    sys.path.insert(0, str(aurelix_site))
+custom_site = os.getenv("CUSTOM_SITE_PACKAGES")
+if custom_site and Path(custom_site).exists():
+    sys.path.insert(0, custom_site)
 
 from app.main import app
 from app.config import settings
@@ -347,7 +347,7 @@ def test_auth_and_workspaces_lifecycle():
     with TestClient(app) as client:
         # 1. Login with seeded admin
         login_res = client.post("/api/v1/auth/login", json={
-            "email": "sanchit@visionforge.ai",
+            "email": "admin@visionforge.ai",
             "password": "password123"
         })
         assert login_res.status_code == 200
@@ -359,7 +359,7 @@ def test_auth_and_workspaces_lifecycle():
         # 2. Check /api/v1/auth/me with Bearer token
         me_res = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
         assert me_res.status_code == 200
-        assert me_res.json()["user"]["email"] == "sanchit@visionforge.ai"
+        assert me_res.json()["user"]["email"] == "admin@visionforge.ai"
 
         # 3. Check /api/v1/auth/roles (RBAC matrix)
         roles_res = client.get("/api/v1/auth/roles")

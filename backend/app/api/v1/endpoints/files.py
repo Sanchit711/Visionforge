@@ -7,7 +7,11 @@ from app.config import settings
 router = APIRouter()
 
 @router.api_route("/raw", methods=["GET", "HEAD"])
-def get_raw_file(request: Request, path: str = Query(..., description="Absolute or relative file path")):
+def get_raw_file(
+    request: Request,
+    path: str = Query(..., description="Absolute or relative file path"),
+    download: bool = Query(False, description="Whether to trigger file download attachment")
+):
     resolved = Path(path).resolve()
     # Security check: ensure path is within allowed directories
     allowed_roots = [
@@ -20,9 +24,10 @@ def get_raw_file(request: Request, path: str = Query(..., description="Absolute 
     if not resolved.exists() or not resolved.is_file():
         raise HTTPException(status_code=404, detail="File not found")
 
+    content_type = "video/mp4" if resolved.suffix.lower() == ".mp4" else "application/octet-stream"
+
     if request.method == "HEAD":
         file_size = resolved.stat().st_size
-        content_type = "video/mp4" if resolved.suffix.lower() == ".mp4" else "application/octet-stream"
         return Response(
             status_code=200,
             headers={
@@ -32,4 +37,16 @@ def get_raw_file(request: Request, path: str = Query(..., description="Absolute 
             },
         )
 
-    return FileResponse(str(resolved))
+    if download:
+        return FileResponse(
+            str(resolved),
+            filename=resolved.name,
+            media_type="application/octet-stream",
+            headers={"Content-Disposition": f'attachment; filename="{resolved.name}"'}
+        )
+
+    return FileResponse(
+        str(resolved),
+        media_type=content_type,
+        headers={"Accept-Ranges": "bytes"}
+    )

@@ -102,10 +102,10 @@ export const LoginModal: React.FC = () => {
   };
 
   const quickLoginUsers = [
-    { name: 'Sanchit', role: 'admin', email: 'sanchit@visionforge.ai', label: 'Admin (Full Access)' },
+    { name: 'Admin', role: 'admin', email: 'admin@visionforge.ai', label: 'Admin (Full Access)' },
     { name: 'Marcus', role: 'reviewer', email: 'marcus@visionforge.ai', label: 'Reviewer (QA & Audit)' },
     { name: 'Elena', role: 'annotator', email: 'elena@visionforge.ai', label: 'Annotator (Labeling & Track)' },
-    { name: 'David', role: 'engineer', email: 'david@acmerobotics.com', label: 'ML Engineer (YOLO Train)' },
+    { name: 'Alex', role: 'engineer', email: 'engineer@visionforge.ai', label: 'ML Engineer (YOLO Train)' },
   ];
 
   return (
@@ -219,7 +219,7 @@ export const LoginModal: React.FC = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="e.g. sanchit@visionforge.ai"
+                    placeholder="e.g. admin@visionforge.ai"
                     className="w-full bg-slate-900 border border-slate-800 focus:border-brand-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition-colors"
                   />
                 </div>

@@ -1,5 +1,5 @@
 # VisionForge Studio - Backend Dependencies
-# Licensed under GNU AGPLv3. Author: Sushant Gabhane (MSc IT - ID: D09)
+# Licensed under VisionForge Community Source-Available License (v1.0)
 
 # API Framework & Web Server
 fastapi>=0.110.0

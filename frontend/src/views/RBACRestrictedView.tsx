@@ -115,10 +115,10 @@ export const RBACRestrictedView: React.FC<Props> = ({ attemptedStage }) => {
 
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => handleQuickSwitch('sanchit@visionforge.ai')}
+              onClick={() => handleQuickSwitch('admin@visionforge.ai')}
               className="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-medium transition-all"
             >
-              Switch to Admin (Sanchit)
+              Switch to Organization Admin
             </button>
             <button
               onClick={() => handleQuickSwitch('alex@visionforge.ai')}

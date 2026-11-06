@@ -2,7 +2,7 @@
 title VisionForge Studio Launcher
 echo ========================================================
 echo        VisionForge Studio - Industrial AI/ML Suite
-echo    Licensed under GNU AGPLv3. Author: Sushant Gabhane
+echo    Licensed under VisionForge Community License (v1.0)
 echo ========================================================
 echo.
 

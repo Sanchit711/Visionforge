@@ -1,6 +1,6 @@
 """
 VisionForge Studio - In-Motion Video Benchmark & Multi-Split Video Synthesizer
-Licensed under GNU AGPLv3. Copyright (c) Sushant Gabhane (MSc IT - ID: D09)
+Licensed under VisionForge Community Source-Available License (v1.0). Copyright (c) VisionForge Studio. All rights reserved.
 
 Performs frame-by-frame temporal stress tests on raw conveyor videos:
 - Ingress detection frame/latency
@@ -49,6 +49,30 @@ class VideoBenchmarkService:
         candidate2 = Path("data/models") / model_identifier
         if candidate2.is_file():
             return candidate2
+        # Check recursive candidates
+        for cand in (settings.DATA_DIR / "models").glob(f"**/{model_identifier}"):
+            if cand.is_file():
+                return cand
+        for cand in Path("data/models").glob(f"**/{model_identifier}"):
+            if cand.is_file():
+                return cand
+        # Lookup in Database if model_identifier is an ID or registered name
+        try:
+            from app.database import SessionLocal
+            from app.models import RegisteredModel
+            db = SessionLocal()
+            rm = db.query(RegisteredModel).filter(
+                (RegisteredModel.id == model_identifier) |
+                (RegisteredModel.name == model_identifier) |
+                (RegisteredModel.file_path.like(f"%{model_identifier}%"))
+            ).first()
+            if rm and Path(rm.file_path).is_file():
+                resolved = Path(rm.file_path)
+                db.close()
+                return resolved
+            db.close()
+        except Exception:
+            pass
         return p
 
     def run_video_benchmark(
@@ -118,9 +142,13 @@ class VideoBenchmarkService:
 
         num_models = len(loaded_models)
         if generate_video:
+            # Layout: 1 model -> 1x1 full single pane (oneshot full HUD)
             # Layout: 2 models -> 1x2 split (target_w * 2, target_h)
             # Layout: 3-4 models -> 2x2 split (target_w * 2, target_h * 2)
-            if num_models <= 2:
+            if num_models == 1:
+                composite_w = target_w
+                composite_h = target_h
+            elif num_models == 2:
                 composite_w = target_w * 2
                 composite_h = target_h
             else:
@@ -143,20 +171,22 @@ class VideoBenchmarkService:
                 break
 
             processed_panes = []
+            # Pre-resize once per video frame to pane dimensions (640x360) for 2.5x faster CPU inference & low memory
+            pane_base = cv2.resize(frame, (target_w, target_h))
 
             for m_info in loaded_models:
                 m = m_info["model"]
                 color = m_info["color"]
 
                 t0 = time.perf_counter()
-                res = m.predict(source=frame, conf=conf_threshold, iou=iou_threshold, verbose=False)
+                res = m.predict(source=pane_base, imgsz=640, conf=conf_threshold, iou=iou_threshold, verbose=False)
                 t1 = time.perf_counter()
 
                 latency_ms = (t1 - t0) * 1000
                 m_info["latencies"].append(latency_ms)
 
                 # Annotate frame copy
-                pane = cv2.resize(frame, (target_w, target_h))
+                pane = pane_base.copy()
                 detected_in_frame = False
 
                 if len(res) > 0 and res[0].boxes is not None and len(res[0].boxes) > 0:
@@ -171,15 +201,11 @@ class VideoBenchmarkService:
                     conf = float(primary_box.conf[0].item())
                     xyxy = primary_box.xyxy[0].tolist()
 
-                    # Scale to target pane dimensions
-                    scale_x = target_w / orig_w
-                    scale_y = target_h / orig_h
-
                     px1, py1, px2, py2 = (
-                        int(xyxy[0] * scale_x),
-                        int(xyxy[1] * scale_y),
-                        int(xyxy[2] * scale_x),
-                        int(xyxy[3] * scale_y),
+                        int(xyxy[0]),
+                        int(xyxy[1]),
+                        int(xyxy[2]),
+                        int(xyxy[3]),
                     )
 
                     cx = (px1 + px2) / 2.0
@@ -194,7 +220,7 @@ class VideoBenchmarkService:
 
                     # Roller bleed check: if detection is outside package transit zone (e.g., upper/lower 10% bounds)
                     # or if specified by user ROI
-                    norm_y = (xyxy[1] + xyxy[3]) / (2.0 * orig_h)
+                    norm_y = (xyxy[1] + xyxy[3]) / (2.0 * target_h)
                     if norm_y < 0.15 or norm_y > 0.85:
                         m_info["roller_bleed_count"] += 1
 
@@ -225,9 +251,7 @@ class VideoBenchmarkService:
             if writer is not None:
                 # Composite panes into grid
                 if num_models == 1:
-                    # Duplicate or pad for dual view
-                    dummy = np.zeros_like(processed_panes[0])
-                    composite = np.hstack([processed_panes[0], dummy])
+                    composite = processed_panes[0]
                 elif num_models == 2:
                     composite = np.hstack([processed_panes[0], processed_panes[1]])
                 elif num_models == 3:
@@ -247,6 +271,22 @@ class VideoBenchmarkService:
         cap.release()
         if writer is not None:
             writer.release()
+            # Transcode with ffmpeg for seamless HTML5 browser compatibility (H.264 / yuv420p)
+            try:
+                import subprocess
+                h264_path = out_video_path.with_name(f"{out_video_path.stem}_web.mp4")
+                cmd = [
+                    "ffmpeg", "-y", "-i", str(out_video_path),
+                    "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
+                    "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+                    str(h264_path)
+                ]
+                proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
+                if proc.returncode == 0 and h264_path.is_file():
+                    out_video_path.unlink(missing_ok=True)
+                    h264_path.rename(out_video_path)
+            except Exception:
+                pass
 
         # Compile forensic scorecard
         model_scores = []
@@ -324,7 +364,7 @@ class VideoBenchmarkService:
             "# VisionForge Studio: In-Motion Temporal Video Benchmark Audit",
             f"**Source Video**: `{video_name}` ({frames} frames @ {fps:.1f} FPS)",
             f"**Generated**: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}",
-            "**License**: GNU AGPLv3 | **Author**: Sushant Gabhane (MSc IT - ID: D09)",
+            "**License**: VisionForge Community Source-Available (v1.0)",
             "",
             "---",
             "",

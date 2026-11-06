@@ -289,6 +289,9 @@ export const ModelRegistryView: React.FC = () => {
                           addNotification({ type: 'info', title: 'Exporting ONNX', message: 'Converting checkpoint to ONNX...' });
                           const exp = await api.exportModel(m.id, 'onnx');
                           addNotification({ type: 'success', title: 'Export Complete', message: `Exported to ${exp.export_format.toUpperCase()} (${exp.file_size_mb || 'FP16'} MB)` });
+                          if (exp.download_url) {
+                            window.open(exp.download_url, '_blank');
+                          }
                         } catch (err: any) {
                           addNotification({ type: 'error', title: 'Export Failed', message: err.message });
                         }

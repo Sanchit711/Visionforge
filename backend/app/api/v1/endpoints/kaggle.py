@@ -1,7 +1,7 @@
 # ==============================================================================
 # VisionForge Studio - Industrial Computer Vision & Video Forensic Suite
-# Copyright (C) 2026 Sushant Gabhane (MSc IT - ID: D09)
-# Licensed under GNU Affero General Public License v3.0 (GNU AGPLv3)
+# Copyright (C) 2026 VisionForge Studio. All rights reserved.
+# Licensed under VisionForge Community Source-Available License (v1.0)
 # ==============================================================================
 
 import os
@@ -37,6 +37,11 @@ class KaggleCredentialsRequest(BaseModel):
 def get_kaggle_status():
     """Checks whether the backend has authenticated access to the Kaggle REST API."""
     return kaggle_service.get_auth_status()
+
+@router.get("/telemetry")
+def get_kaggle_telemetry(db: Session = Depends(get_db)):
+    """Live telemetry stream for Kaggle cloud training, dataset sync, and GPU metrics."""
+    return kaggle_service.get_live_telemetry(db=db)
 
 @router.post("/credentials")
 def save_kaggle_credentials(data: KaggleCredentialsRequest):

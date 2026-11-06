@@ -33,7 +33,7 @@ export const LoginView: React.FC = () => {
   const { login, addNotification, tenantsList, setTenantsList } = useAppStore();
 
   const [tab, setTab] = useState<'signin' | 'register'>('signin');
-  const [email, setEmail] = useState('sanchit@visionforge.ai');
+  const [email, setEmail] = useState('admin@visionforge.ai');
   const [password, setPassword] = useState('password123');
   const [name, setName] = useState('');
   const [regRole, setRegRole] = useState('engineer');
@@ -47,8 +47,8 @@ export const LoginView: React.FC = () => {
   const fallbackDemoUsers: DemoUser[] = [
     {
       id: 'demo-admin',
-      name: 'Sanchit',
-      email: 'sanchit@visionforge.ai',
+      name: 'Admin',
+      email: 'admin@visionforge.ai',
       role: 'admin',
       role_title: 'Organization Administrator',
       badge_color: 'emerald',
@@ -102,13 +102,13 @@ export const LoginView: React.FC = () => {
     },
     {
       id: 'demo-partner',
-      name: 'David Kim',
-      email: 'david@acmerobotics.com',
+      name: 'Industrial Partner',
+      email: 'partner@visionforge.ai',
       role: 'admin',
-      role_title: 'Acme Robotics Partner',
+      role_title: 'External Partner Admin',
       badge_color: 'blue',
-      description: 'Isolated partner tenant: Acme robotics line & conveyor inspection.',
-      tenant_name: 'Acme Robotics & Automation',
+      description: 'Isolated partner tenant: Factory line & automated conveyor inspection.',
+      tenant_name: 'Industrial Robotics Global',
       password_hint: 'password123',
     },
   ];
@@ -345,7 +345,7 @@ export const LoginView: React.FC = () => {
                           required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="sanchit@visionforge.ai"
+                          placeholder="admin@visionforge.ai"
                           className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-slate-600 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3] transition-all"
                         />
                       </div>
@@ -579,14 +579,14 @@ export const LoginView: React.FC = () => {
       {/* Clean Minimalist Footer */}
       <footer className="w-full max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#86868b] border-t border-white/[0.06] z-10">
         <div>
-          <span>© 2026 VisionForge Studio. Developed by Sushant Gabhane (MSc IT - ID: D09).</span>
+          <span>© 2026 VisionForge Studio. All rights reserved. Industrial Computer Vision Suite.</span>
         </div>
         <div className="flex items-center gap-3">
           <span>Enterprise Tenant Isolation</span>
           <span>•</span>
           <span>Salted SHA-256</span>
           <span>•</span>
-          <span>GNU AGPLv3</span>
+          <span>Community Source-Available License</span>
         </div>
       </footer>
     </div>

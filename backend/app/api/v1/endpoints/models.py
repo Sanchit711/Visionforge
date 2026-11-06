@@ -127,6 +127,7 @@ def export_registered_model(model_id: str, format: str = "onnx", db: Session = D
             "model_id": model_id,
             "export_format": format,
             "exported_file_path": str(exported_path),
+            "download_url": f"/api/v1/files/raw?path={str(exported_path)}&download=true",
             "file_size_mb": round(os.path.getsize(exported_path) / (1024 * 1024), 2) if os.path.exists(exported_path) else None,
             "message": f"Successfully exported to {format.upper()} for edge deployment."
         }

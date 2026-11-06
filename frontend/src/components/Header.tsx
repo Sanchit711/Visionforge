@@ -441,7 +441,7 @@ export const Header: React.FC = () => {
             </div>
             <div className="hidden md:flex flex-col min-w-0 max-w-[110px]">
               <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate leading-none">
-                {currentUser ? currentUser.name : 'Sanchit'}
+                {currentUser ? currentUser.name : 'Admin'}
               </span>
               <span
                 className={`text-[9px] font-medium uppercase tracking-wider px-1.5 py-0.2 rounded-full border w-fit leading-tight mt-0.5 ${getRoleBadgeStyle(
@@ -463,10 +463,10 @@ export const Header: React.FC = () => {
                   </div>
                   <div className="flex flex-col min-w-0">
                     <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                      {currentUser?.name || 'Sanchit'}
+                      {currentUser?.name || 'Admin'}
                     </span>
                     <span className="text-[11px] text-slate-400 truncate">
-                      {currentUser?.email || 'sanchit@visionforge.ai'}
+                      {currentUser?.email || 'admin@visionforge.ai'}
                     </span>
                   </div>
                 </div>

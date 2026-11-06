@@ -1,16 +1,7 @@
 # ==============================================================================
 # VisionForge Studio - Industrial Computer Vision & Video Forensic Suite
-# Copyright (C) 2026 Sushant Gabhane (MSc IT - ID: D09)
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU Affero General Public License for more details.
+# Copyright (C) 2026 VisionForge Studio. All rights reserved.
+# Licensed under VisionForge Community Source-Available License (v1.0)
 # ==============================================================================
 
 import os
@@ -51,32 +42,35 @@ async def lifespan(app: FastAPI):
             db.flush()
 
         # Demo secondary workspace
-        acme_tenant = db.query(Tenant).filter(Tenant.slug == "acme-robotics").first()
-        if not acme_tenant:
-            acme_tenant = Tenant(
-                name="Acme Robotics & Inspection",
-                slug="acme-robotics",
+        partner_tenant = db.query(Tenant).filter(Tenant.slug == "partner-robotics").first()
+        if not partner_tenant:
+            partner_tenant = Tenant(
+                name="Robotics Partner Lab",
+                slug="partner-robotics",
                 plan="pro",
                 settings_json={"industry": "Autonomous Robotics", "retention_days": 30},
             )
-            db.add(acme_tenant)
+            db.add(partner_tenant)
             db.flush()
 
-        # Seed primary admin user (Sanchit)
-        admin_user = db.query(User).filter(User.email == "sanchit@visionforge.ai").first()
+        # Seed primary admin user (VisionForge Admin)
+        admin_user = db.query(User).filter((User.email == "admin@visionforge.ai") | (User.role == "admin")).first()
         if not admin_user:
             admin_user = User(
                 tenant_id=default_tenant.id,
-                name="Sanchit",
-                email="sanchit@visionforge.ai",
+                name="Admin",
+                email="admin@visionforge.ai",
                 password_hash=hash_password("password123"),
                 role="admin",
                 avatar_url="",
             )
             db.add(admin_user)
             db.flush()
-        elif not admin_user.password_hash:
-            admin_user.password_hash = hash_password("password123")
+        else:
+            admin_user.name = "Admin"
+            admin_user.email = "admin@visionforge.ai"
+            if not admin_user.password_hash:
+                admin_user.password_hash = hash_password("password123")
 
         # Seed additional workspace team members with default passwords
         if not db.query(User).filter(User.email == "alex@visionforge.ai").first():
@@ -111,11 +105,11 @@ async def lifespan(app: FastAPI):
                 password_hash=hash_password("password123"),
                 role="viewer",
             ))
-        if not db.query(User).filter(User.email == "david@acmerobotics.com").first():
+        if not db.query(User).filter(User.email == "partner@visionforge.ai").first():
             db.add(User(
-                tenant_id=acme_tenant.id,
-                name="David Kim",
-                email="david@acmerobotics.com",
+                tenant_id=partner_tenant.id,
+                name="Industrial Partner",
+                email="partner@visionforge.ai",
                 password_hash=hash_password("password123"),
                 role="admin",
             ))
@@ -153,18 +147,21 @@ async def lifespan(app: FastAPI):
             db.add(qa_shared_ws)
             db.flush()
 
-        private_ws = db.query(Workspace).filter(Workspace.slug == "sanchit-private").first()
+        private_ws = db.query(Workspace).filter((Workspace.slug == "admin-private") | (~Workspace.is_shared)).first()
         if not private_ws:
             private_ws = Workspace(
                 tenant_id=default_tenant.id,
-                name="Sanchit's Private Sandbox (Private)",
-                slug="sanchit-private",
+                name="Admin Private Sandbox (Private)",
+                slug="admin-private",
                 description="Personal isolated workspace for experimental models and test videos",
                 is_shared=False,
                 owner_user_id=admin_user.id,
             )
             db.add(private_ws)
             db.flush()
+        else:
+            private_ws.name = "Admin Private Sandbox (Private)"
+            private_ws.slug = "admin-private"
 
         # Seed Acme shared workspace
         acme_ws = db.query(Workspace).filter(Workspace.slug == "acme-assembly").first()

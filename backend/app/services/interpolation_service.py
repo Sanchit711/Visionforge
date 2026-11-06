@@ -1,11 +1,10 @@
 """
 ========================================================================================
 VisionForge Studio - Enterprise Keyframe Interpolation & Trajectory Engine
-Copyright (C) 2026 Sushant Gabhane (MSc IT - Roll/ID: D09)
-Licensed under the GNU Affero General Public License v3.0 (GNU AGPLv3)
+Copyright (C) 2026 VisionForge Studio. All rights reserved.
+Licensed under VisionForge Community Source-Available License (v1.0)
 ========================================================================================
 
-Author: Sushant Gabhane (MSc IT Project Research)
 Domain: Industrial Computer Vision & Conveyor Automation
 Description:
     A high-throughput, mathematically rigorous Keyframe Interpolation Engine designed

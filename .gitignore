@@ -110,3 +110,6 @@ train_keyframe_70epochs.ipynb
 train_keyframe_70epochs_full.py
 full_video_quad_benchmark.py
 scratch/
+kernel.errors.txt
+backend/test_perf.py
+backend/app/services/audit_*.py

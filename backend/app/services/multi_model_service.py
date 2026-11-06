@@ -1,6 +1,6 @@
 """
 VisionForge Studio - Multi-Model (.pt) Forensic Inspector & Comparison Generator
-Licensed under GNU AGPLv3. Copyright (c) Sushant Gabhane (MSc IT - ID: D09)
+Licensed under VisionForge Community Source-Available License (v1.0). Copyright (c) VisionForge Studio. All rights reserved.
 
 Provides deep weights introspection (parameters, layers, GFLOPs, disk size),
 static validation benchmarking across frames (mAP50, mAP50-95, precision, recall),
@@ -47,12 +47,32 @@ class MultiModelService:
         if candidate2.is_file():
             return candidate2
 
-        # Check in project root
-        candidate3 = Path(model_identifier)
-        if candidate3.is_file():
-            return candidate3
+        # Check recursive candidates
+        for cand in (settings.DATA_DIR / "models").glob(f"**/{model_identifier}"):
+            if cand.is_file():
+                return cand
+        for cand in Path("data/models").glob(f"**/{model_identifier}"):
+            if cand.is_file():
+                return cand
 
-        # Default fallback
+        # Lookup in Database if model_identifier is an ID or registered name
+        try:
+            from app.database import SessionLocal
+            from app.models import RegisteredModel
+            db = SessionLocal()
+            rm = db.query(RegisteredModel).filter(
+                (RegisteredModel.id == model_identifier) |
+                (RegisteredModel.name == model_identifier) |
+                (RegisteredModel.file_path.like(f"%{model_identifier}%"))
+            ).first()
+            if rm and Path(rm.file_path).is_file():
+                resolved = Path(rm.file_path)
+                db.close()
+                return resolved
+            db.close()
+        except Exception:
+            pass
+
         return p
 
     def get_or_load_model(self, model_identifier: str) -> Any:
@@ -222,7 +242,7 @@ class MultiModelService:
             "# VisionForge Studio: Multi-Model Forensic Audit Report",
             f"**Evaluation Scope**: Static validation on {num_frames} frames",
             f"**Generated**: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}",
-            "**License**: GNU AGPLv3 | **Author**: Sushant Gabhane (MSc IT - ID: D09)",
+            "**License**: VisionForge Community Source-Available (v1.0)",
             "",
             "---",
             "",
