@@ -38,10 +38,20 @@ class KaggleCloudService:
         are properly mapped to KAGGLE_API_TOKEN environment variable so kaggle-api
         uses Bearer OAuth authentication instead of failing on legacy Basic Auth.
         """
-        kaggle_json_path = pathlib.Path.home() / ".kaggle" / "kaggle.json"
-        username = os.environ.get("KAGGLE_USERNAME")
-        key = os.environ.get("KAGGLE_KEY")
-        token = os.environ.get("KAGGLE_API_TOKEN")
+        k_dir = pathlib.Path.home() / ".kaggle"
+        access_token_file = k_dir / "access_token"
+        kaggle_json_path = k_dir / "kaggle.json"
+
+        token = None
+        username = None
+
+        if access_token_file.exists():
+            try:
+                t = access_token_file.read_text(encoding="utf-8").strip()
+                if t:
+                    token = t
+            except Exception:
+                pass
 
         if kaggle_json_path.exists():
             try:
@@ -49,30 +59,38 @@ class KaggleCloudService:
                     data = json.load(f)
                     file_user = data.get("username", "").strip()
                     file_key = data.get("key", "").strip()
-                    if not username and file_user:
+                    if file_user:
                         username = file_user
-                        os.environ["KAGGLE_USERNAME"] = file_user
-                    if not key and file_key:
-                        key = file_key
+                    if file_key and not token:
+                        token = file_key
             except Exception:
                 pass
 
-        active_key = token or key or ""
-        if active_key:
-            # Modern Kaggle token format starts with KGAT or is long
-            if active_key.startswith("KGAT") or len(active_key) > 32:
-                os.environ["KAGGLE_API_TOKEN"] = active_key
-            else:
-                os.environ["KAGGLE_KEY"] = active_key
+        if not token:
+            token = os.environ.get("KAGGLE_API_TOKEN") or os.environ.get("KAGGLE_KEY")
+        if not username:
+            username = os.environ.get("KAGGLE_USERNAME") or "sanchittghone"
 
-        return {"username": username, "key": active_key}
+        if token:
+            # Modern Kaggle token format starts with KGAT or is long
+            if token.startswith("KGAT") or len(token) > 32:
+                os.environ["KAGGLE_API_TOKEN"] = token
+                # Remove legacy key to prevent basic auth conflicts
+                os.environ.pop("KAGGLE_KEY", None)
+            else:
+                os.environ["KAGGLE_KEY"] = token
+        if username:
+            os.environ["KAGGLE_USERNAME"] = username
+
+        return {"username": username, "key": token}
 
     def get_auth_status(self) -> Dict[str, Any]:
         """Validates whether Kaggle API credentials are authenticated and operational."""
         try:
             creds = self.ensure_kaggle_env()
             kaggle_json_path = pathlib.Path.home() / ".kaggle" / "kaggle.json"
-            has_creds = kaggle_json_path.exists() or bool(creds.get("key"))
+            access_token_file = pathlib.Path.home() / ".kaggle" / "access_token"
+            has_creds = access_token_file.exists() or kaggle_json_path.exists() or bool(creds.get("key"))
             if not has_creds:
                 return {
                     "authenticated": False,
@@ -463,7 +481,7 @@ print("==================================================================")
 
         # 6. Record Experiment in Database
         exp = Experiment(
-            project_id=project_id,
+            project_id=proj.id,
             dataset_version_id=dataset_version_id,
             name=experiment_name,
             model_variant=model_variant,
@@ -486,7 +504,7 @@ print("==================================================================")
 
         # Activity Log
         log = ActivityLog(
-            project_id=project_id,
+            project_id=proj.id,
             stage="training",
             action="Dispatched Kaggle Cloud Training",
             details={
@@ -503,10 +521,11 @@ print("==================================================================")
         return {
             "status": "queued",
             "experiment_id": exp.id,
+            "project_id": proj.id,
             "kernel_slug": f"{username}/{kernel_slug}",
             "kernel_url": f"https://www.kaggle.com/code/{username}/{kernel_slug}",
             "dataset_full_slug": dataset_full_slug,
-            "message": f"Successfully launched training kernel @{username}/{kernel_slug} on Kaggle Cloud GPU!"
+            "message": f"Successfully launched training kernel @{username}/{kernel_slug} on Kaggle Dual-T4 GPU cluster!"
         }
 
     def get_kernel_execution_status(self, kernel_slug: str) -> Dict[str, Any]:

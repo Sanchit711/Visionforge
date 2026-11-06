@@ -52,9 +52,13 @@ def save_kaggle_credentials(data: KaggleCredentialsRequest):
 
         # Set environment variables for the current process
         clean_key = data.key.strip()
-        os.environ["KAGGLE_USERNAME"] = data.username.strip()
+        clean_user = data.username.strip()
+        os.environ["KAGGLE_USERNAME"] = clean_user
         if clean_key.startswith("KGAT") or len(clean_key) > 32:
             os.environ["KAGGLE_API_TOKEN"] = clean_key
+            os.environ.pop("KAGGLE_KEY", None)
+            # Write access_token file natively supported by kaggle-api
+            (kaggle_dir / "access_token").write_text(clean_key, encoding="utf-8")
         else:
             os.environ["KAGGLE_KEY"] = clean_key
 

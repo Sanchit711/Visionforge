@@ -764,6 +764,27 @@ export const TrainingView: React.FC = () => {
                       Training requires a frozen YOLO dataset. Your annotated dataset <strong>v1.0 (126 frames)</strong> is ready in project <strong>&quot;SVG&quot;</strong>.
                     </p>
                     <div className="flex flex-wrap gap-2 pt-0.5">
+                      {projectsList.find((p) => p.name === 'Raw full frames') && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const rawP = projectsList.find((p) => p.name === 'Raw full frames');
+                            if (rawP) {
+                              setActiveProjectId(rawP.id);
+                              setActiveProject(rawP);
+                              addNotification({
+                                type: 'success',
+                                title: 'Switched to Raw full frames',
+                                message: 'Loaded project with full 3,394 conveyor frames dataset',
+                              });
+                            }
+                          }}
+                          className="px-3 py-1 bg-cyan-500/25 hover:bg-cyan-500/40 border border-cyan-500/40 rounded-full font-semibold text-[11px] text-cyan-100 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                        >
+                          <Sparkles className="w-3 h-3 text-cyan-300" />
+                          <span>Switch to &quot;Raw full frames&quot; (3,394 Frames Ready)</span>
+                        </button>
+                      )}
                       {projectsList.find((p) => p.name === 'SVG') && (
                         <button
                           type="button"
