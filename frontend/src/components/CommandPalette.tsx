@@ -19,6 +19,7 @@ import {
   Play,
   FileCode,
   ArrowRight,
+  Compass,
 } from 'lucide-react';
 
 interface CommandItem {
@@ -31,7 +32,7 @@ interface CommandItem {
 }
 
 export const CommandPalette: React.FC = () => {
-  const { commandPaletteOpen, setCommandPaletteOpen, setStage, toggleTheme } = useAppStore();
+  const { commandPaletteOpen, setCommandPaletteOpen, setStage, toggleTheme, setProductTourOpen } = useAppStore();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -127,6 +128,16 @@ export const CommandPalette: React.FC = () => {
       category: 'Navigation',
       icon: Settings,
       action: () => setStage('settings'),
+    },
+    {
+      id: 'act-tour',
+      title: 'Take Interactive Product Tour',
+      category: 'Help & Onboarding',
+      icon: Compass,
+      action: () => {
+        setCommandPaletteOpen(false);
+        setProductTourOpen(true);
+      },
     },
     {
       id: 'act-theme',

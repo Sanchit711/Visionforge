@@ -22,6 +22,7 @@ import {
   User,
   Briefcase,
   Share2,
+  Compass,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -47,6 +48,7 @@ export const Header: React.FC = () => {
     theme,
     toggleTheme,
     setCommandPaletteOpen,
+    setProductTourOpen,
     setLoginModalOpen,
     setRolesModalOpen,
     login,
@@ -563,6 +565,16 @@ export const Header: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* Product Tour Trigger */}
+        <button
+          onClick={() => setProductTourOpen(true)}
+          className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 rounded-full px-3 py-1.5 text-xs font-medium transition-all shadow-sm active:scale-95"
+          title="Start Interactive Product Tour"
+        >
+          <Compass className="w-3.5 h-3.5 text-blue-500" />
+          <span className="hidden sm:inline">Tour</span>
+        </button>
 
         {/* Command Palette Trigger */}
         <button

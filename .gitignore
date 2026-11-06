@@ -9,8 +9,12 @@
 *.mkv
 *.webm
 *.flv
-*.ts
 *.m4v
+*.m2ts
+# Exclude MPEG transport stream video while preserving frontend TypeScript files
+*.ts
+!frontend/**/*.ts
+!frontend/**/*.tsx
 
 # Client sample frames & debug snapshots
 *.jpg
