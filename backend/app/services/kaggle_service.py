@@ -30,16 +30,49 @@ class KaggleCloudService:
     def __init__(self):
         self.staging_dir = settings.DATA_DIR / "kaggle_staging"
         self.staging_dir.mkdir(parents=True, exist_ok=True)
+        self.ensure_kaggle_env()
+
+    def ensure_kaggle_env(self) -> Dict[str, Any]:
+        """
+        Ensures that modern Kaggle Personal/Granular Access Tokens (KGAT-...) 
+        are properly mapped to KAGGLE_API_TOKEN environment variable so kaggle-api
+        uses Bearer OAuth authentication instead of failing on legacy Basic Auth.
+        """
+        kaggle_json_path = pathlib.Path.home() / ".kaggle" / "kaggle.json"
+        username = os.environ.get("KAGGLE_USERNAME")
+        key = os.environ.get("KAGGLE_KEY")
+        token = os.environ.get("KAGGLE_API_TOKEN")
+
+        if kaggle_json_path.exists():
+            try:
+                with open(kaggle_json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    file_user = data.get("username", "").strip()
+                    file_key = data.get("key", "").strip()
+                    if not username and file_user:
+                        username = file_user
+                        os.environ["KAGGLE_USERNAME"] = file_user
+                    if not key and file_key:
+                        key = file_key
+            except Exception:
+                pass
+
+        active_key = token or key or ""
+        if active_key:
+            # Modern Kaggle token format starts with KGAT or is long
+            if active_key.startswith("KGAT") or len(active_key) > 32:
+                os.environ["KAGGLE_API_TOKEN"] = active_key
+            else:
+                os.environ["KAGGLE_KEY"] = active_key
+
+        return {"username": username, "key": active_key}
 
     def get_auth_status(self) -> Dict[str, Any]:
         """Validates whether Kaggle API credentials are authenticated and operational."""
         try:
-            # Check ~/.kaggle/kaggle.json or env vars
+            creds = self.ensure_kaggle_env()
             kaggle_json_path = pathlib.Path.home() / ".kaggle" / "kaggle.json"
-            env_user = os.environ.get("KAGGLE_USERNAME")
-            env_key = os.environ.get("KAGGLE_KEY")
-
-            has_creds = kaggle_json_path.exists() or (bool(env_user) and bool(env_key))
+            has_creds = kaggle_json_path.exists() or bool(creds.get("key"))
             if not has_creds:
                 return {
                     "authenticated": False,
@@ -48,16 +81,12 @@ class KaggleCloudService:
                     "message": "Kaggle credentials not detected. Enter your Kaggle API key above.",
                 }
 
+            self.ensure_kaggle_env()
             from kaggle.api.kaggle_api_extended import KaggleApi
             api = KaggleApi()
             api.authenticate()
 
-            # Retrieve active username
-            username = env_user
-            if kaggle_json_path.exists() and not username:
-                with open(kaggle_json_path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    username = data.get("username")
+            username = api.get_config_value("username") or creds.get("username") or "sanchittghone"
 
             # Validate real API permissions by testing a lightweight ping request
             try:
@@ -65,7 +94,7 @@ class KaggleCloudService:
                 return {
                     "authenticated": True,
                     "requires_verification": False,
-                    "username": username or "kaggle_user",
+                    "username": username,
                     "message": f"Successfully authenticated with Kaggle Cloud API as @{username} (Dual-T4 Cloud GPU Enabled).",
                 }
             except Exception as test_err:
@@ -147,6 +176,7 @@ class KaggleCloudService:
         with open(metadata_file, "w", encoding="utf-8") as f:
             json.dump(metadata, f, indent=2)
 
+        self.ensure_kaggle_env()
         from kaggle.api.kaggle_api_extended import KaggleApi
         api = KaggleApi()
         api.authenticate()
@@ -413,6 +443,7 @@ print("==================================================================")
             json.dump(kernel_metadata, f, indent=2)
 
         # 5. Push Kernel via Kaggle API
+        self.ensure_kaggle_env()
         from kaggle.api.kaggle_api_extended import KaggleApi
         api = KaggleApi()
         api.authenticate()
@@ -481,6 +512,7 @@ print("==================================================================")
     def get_kernel_execution_status(self, kernel_slug: str) -> Dict[str, Any]:
         """Fetches the real-time execution status of a Kaggle kernel from the API."""
         try:
+            self.ensure_kaggle_env()
             from kaggle.api.kaggle_api_extended import KaggleApi
             api = KaggleApi()
             api.authenticate()
@@ -521,6 +553,7 @@ print("==================================================================")
         extracts best.pt and results.csv, updates the Experiment record,
         and registers the model in VisionForge Model Registry.
         """
+        self.ensure_kaggle_env()
         from kaggle.api.kaggle_api_extended import KaggleApi
         api = KaggleApi()
         api.authenticate()

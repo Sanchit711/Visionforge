@@ -51,8 +51,12 @@ def save_kaggle_credentials(data: KaggleCredentialsRequest):
             json.dump({"username": data.username.strip(), "key": data.key.strip()}, f, indent=2)
 
         # Set environment variables for the current process
+        clean_key = data.key.strip()
         os.environ["KAGGLE_USERNAME"] = data.username.strip()
-        os.environ["KAGGLE_KEY"] = data.key.strip()
+        if clean_key.startswith("KGAT") or len(clean_key) > 32:
+            os.environ["KAGGLE_API_TOKEN"] = clean_key
+        else:
+            os.environ["KAGGLE_KEY"] = clean_key
 
         # Re-verify
         auth = kaggle_service.get_auth_status()
