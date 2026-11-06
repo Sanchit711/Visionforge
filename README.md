@@ -8,7 +8,7 @@
 [![Kaggle Dual-T4 GPU](https://img.shields.io/badge/Cloud_Compute-2x_Tesla_T4_(32GB)-9900ff.svg)](https://www.kaggle.com)
 
 > **Enterprise Computer Vision Dataset Engineering, In-Motion Forensic Benchmarking & Headless Cloud Training Suite**  
-> *Academic Research & Industrial Vision Engineering — MSc IT (Roll/ID: D09)*
+> *Industrial Vision Engineering & High-Speed Conveyor Inspection*
 
 VisionForge Studio consolidates the entire industrial computer vision pipeline into a single cohesive, Apple-inspired workspace — eliminating fragmented handoffs between video trimmers, annotation tools (Roboflow), training scripts, Google Colab notebooks, and evaluation scripts.
 
@@ -57,8 +57,8 @@ VisionForge Studio consolidates the entire industrial computer vision pipeline i
 ### 1. Clone & Setup Environment
 ```bash
 # Clone repository
-git clone https://github.com/VisionForge-Studio/VisionForge.git
-cd VisionForge
+git clone https://github.com/Sanchit711/Visionforge.git
+cd Visionforge
 
 # Install Python backend dependencies
 pip install -r requirements.txt
@@ -87,9 +87,64 @@ python backend/run_backend.py
 ```
 
 Access the interface in your browser:
-- **VisionForge Web Studio**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **VisionForge Web Studio**: [http://127.0.0.1:8000](http://127.0.0.1:8000) (or `http://localhost:5173` if running Vite dev server)
 - **Interactive REST API Docs (Swagger)**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - **Live System Telemetry**: [http://127.0.0.1:8000/api/v1/system/overview](http://127.0.0.1:8000/api/v1/system/overview)
+
+### Default Seeded User Accounts
+The database automatically seeds mock enterprise team members for instant local testing:
+| Role | Email | Password | Permissions |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@visionforge.ai` | `password123` | Full administrative rights & config |
+| **Engineer** | `alex@visionforge.ai` | `password123` | Datasets, model training & exports |
+| **Reviewer** | `marcus@visionforge.ai` | `password123` | Annotation validation & forensics |
+| **Annotator** | `elena@visionforge.ai` | `password123` | Bounding box labeling & SAM 2 |
+| **Viewer** | `sarah@visionforge.ai` | `password123` | Read-only dashboards |
+
+*(You can also switch users in 1 click using the User Pill in the top header).*
+
+---
+
+## Interactive Product Tour
+Upon opening the web studio, the **Interactive Product Tour** automatically launches for new visitors. You can re-open it at any time:
+- Click the **"Tour"** capsule button in the top header navigation.
+- Or press **`Ctrl+K`** and select **"Take Interactive Product Tour"**.
+- Navigate using **`→`** (Next), **`←`** (Previous), or **`Esc`** (Close).
+
+---
+
+## Complete End-to-End Operator Workflow
+
+```
+[1. Projects] ➔ [2. Video Lab] ➔ [3. Frame Studio] ➔ [4. AI Annotation] ➔ [5. Datasets] ➔ [6. Cloud Train] ➔ [7. Edge Export & Validation]
+```
+
+1. **Step 1: Projects & Workspace**:
+   - Select the pre-seeded demo project (*"VisionForge Demo - Traffic & Workplace Safety"*) or click **"+ New Project"** to define custom inspection classes (e.g. `bearing`, `defect`, `circuit_board`).
+2. **Step 2: Video Lab**:
+   - The pre-generated demo video is already loaded. To add your own, drag and drop an MP4/AVI/MKV video into the dropzone.
+   - Adjust the **Region of Interest (ROI)** bounding box on the video canvas to focus on the conveyor belt and crop out ambient factory distractions.
+3. **Step 3: Frame Studio**:
+   - Click **"Extract Frames"**.
+   - Enable **Laplacian Blur Filtering** to automatically discard motion-blurred frames.
+   - Enable **Perceptual Hash Deduplication** to decimate redundant, static conveyor frames (typically saves 80-90% storage).
+4. **Step 4: AI-Assisted Annotation**:
+   - Select extracted frames on the timeline.
+   - **Zero-Shot Grounding**: Type text prompt (e.g. `"conveyor item"`) using **Microsoft Florence-2** for auto-labeling.
+   - **Interactive Masks**: Click objects using **Meta SAM 2** (+ for object, - for background).
+   - **Rigid-Body Keyframe Interpolation**: Set a box on Frame $A$, step forward to Frame $B$, and click **Interpolate Trajectory** to automatically label all intermediate frames with physical dimensions locked.
+5. **Step 5: Dataset Studio & Temporal Partitioning**:
+   - Select **Contiguous Temporal Chunk Splitting** (`split_strategy="temporal"`). This groups chronological sequences together with a safety buffer, guaranteeing zero train/val frame leakage.
+   - Click **"Freeze Immutable Dataset Snapshot"** (formats standard YOLO `data.yaml` and bounding coordinates).
+6. **Step 6: Headless Cloud GPU Training (Kaggle Dual-T4)**:
+   - Go to `Training Center` -> paste your Kaggle API credentials (one-time setup).
+   - Select your frozen dataset snapshot and architecture (`yolo26l`, `yolov8n`, etc.).
+   - Click **"Launch Headless Cloud Training"**.
+   - Watch real-time loss curves, learning rate warmup, and validation mAP50 telemetry stream back live.
+   - Upon completion, click **"Ingest Model Weights"** to automatically import `best.pt`.
+7. **Step 7: Model Registry & In-Motion Forensics**:
+   - In **Model Registry**: Click **"Download ONNX"** for instant 1-click browser download (compiled 50.8 MB weights).
+   - In **Validation Lab**: Run the **Synchronized Quad-Split Video Benchmark** to evaluate your model side-by-side with previous checkpoints under real conveyor motion, checking sub-pixel jitter ($\sigma < 0.8\text{px}$) and roller bleed suppression.
 
 ---
 
@@ -144,6 +199,6 @@ If you use VisionForge Studio in academic research, forensic computer vision stu
   author = {VisionForge Research & Development Team},
   title = {VisionForge Studio: Enterprise Industrial Computer Vision Dataset Engineering and In-Motion Forensic Suite},
   year = {2026},
-  url = {https://github.com/VisionForge-Studio/VisionForge}
+  url = {https://github.com/Sanchit711/Visionforge}
 }
 ```
