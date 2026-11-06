@@ -11,6 +11,8 @@
 [![Meta SAM 2](https://img.shields.io/badge/Segmentation-Meta_SAM_2.1-4267b2.svg)](https://github.com/facebookresearch/sam2)
 [![ONNX Runtime](https://img.shields.io/badge/Inference-ONNX_Runtime_%2B_TensorRT-grey.svg)](https://onnxruntime.ai/)
 [![Kaggle Dual-T4 GPU](https://img.shields.io/badge/Cloud_Compute-2x_Tesla_T4_(32GB)-9900ff.svg)](https://www.kaggle.com)
+[![GitHub Stars](https://img.shields.io/github/stars/Sanchit711/Visionforge?style=social)](https://github.com/Sanchit711/Visionforge)
+[![GitHub Forks](https://img.shields.io/github/forks/Sanchit711/Visionforge?style=social)](https://github.com/Sanchit711/Visionforge)
 
 > **The One-Stop AI/ML Development Studio for Computer Vision**  
 > *Frictionless Data-to-Model Engineering: Smart Selective Frame Extraction, AI-Assisted Annotation, 1-Click Cloud Training & Visual Multi-Model Comparison.*
@@ -241,3 +243,11 @@ If you use VisionForge Studio in academic research, forensic computer vision stu
   url = {https://github.com/Sanchit711/Visionforge}
 }
 ```
+
+---
+
+## 🌟 Star History & Community Support
+
+If VisionForge saves you time or streamlines your computer vision workflow, please give us a **Star on GitHub**! It helps the project grow and stay actively maintained.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Sanchit711/Visionforge&type=Date)](https://star-history.com/#Sanchit711/Visionforge&Date)
