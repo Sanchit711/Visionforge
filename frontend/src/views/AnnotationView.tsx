@@ -1252,10 +1252,10 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={() => { setTool('bbox'); setSelectedAnnId(null); }}
               title="Bounding Box Tool (B)"
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active:scale-[0.98] ${
                 tool === 'bbox'
-                  ? 'bg-blue-600 text-white shadow-[0_2px_10px_rgba(37,99,235,0.4)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-[#0071e3] text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/[0.06]'
               }`}
             >
               <Square className="w-3.5 h-3.5" />
@@ -1265,10 +1265,10 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={() => { setTool('polygon'); setSelectedAnnId(null); }}
               title="Polygon Tool (P)"
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active:scale-[0.98] ${
                 tool === 'polygon'
-                  ? 'bg-blue-600 text-white shadow-[0_2px_10px_rgba(37,99,235,0.4)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-[#0071e3] text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/[0.06]'
               }`}
             >
               <Pentagon className="w-3.5 h-3.5" />
@@ -1278,10 +1278,10 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={() => { setTool('sam_point'); setSelectedAnnId(null); }}
               title="SAM 2 Point (S) - Click object to generate segment mask"
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active:scale-[0.98] ${
                 tool === 'sam_point'
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-[0_2px_12px_rgba(99,102,241,0.4)]'
-                  : 'text-indigo-300 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-xs'
+                  : 'text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-white hover:bg-indigo-50/70 dark:hover:bg-white/[0.06]'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -1291,10 +1291,10 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={() => { setTool('sam_box'); setSelectedAnnId(null); }}
               title="SAM 2 Box (X) - Drag box around object to fit tight contour"
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active:scale-[0.98] ${
                 tool === 'sam_box'
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-[0_2px_12px_rgba(99,102,241,0.4)]'
-                  : 'text-indigo-300 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-xs'
+                  : 'text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-white hover:bg-indigo-50/70 dark:hover:bg-white/[0.06]'
               }`}
             >
               <Wand2 className="w-3.5 h-3.5" />
@@ -1304,10 +1304,10 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={() => setTool('select')}
               title="Select / Move Tool (V)"
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all duration-200 ${
+              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all duration-200 active:scale-[0.98] ${
                 tool === 'select'
-                  ? 'bg-blue-600 text-white shadow-[0_2px_10px_rgba(37,99,235,0.4)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-[#0071e3] text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/[0.06]'
               }`}
             >
               <MousePointer className="w-3.5 h-3.5" />
@@ -1317,10 +1317,10 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={() => setTool('pan')}
               title="Pan Tool (H or Middle Mouse)"
-              className={`p-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+              className={`p-1.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-[0.98] ${
                 tool === 'pan'
-                  ? 'bg-blue-600 text-white shadow-[0_2px_10px_rgba(37,99,235,0.4)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-[#0071e3] text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/[0.06]'
               }`}
             >
               <Hand className="w-3.5 h-3.5" />
@@ -1332,7 +1332,7 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={handleUndo}
               disabled={historyStep <= 0}
-              className="p-1.5 text-slate-400 hover:text-white disabled:opacity-30 rounded-xl hover:bg-white/[0.06] transition-colors"
+              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-30 rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors"
               title="Undo (Ctrl+Z / ⌘Z)"
             >
               <Undo2 className="w-4 h-4" />
@@ -1341,21 +1341,21 @@ export const AnnotationView: React.FC = () => {
             <button
               onClick={handleRedo}
               disabled={historyStep >= history.length - 1}
-              className="p-1.5 text-slate-400 hover:text-white disabled:opacity-30 rounded-xl hover:bg-white/[0.06] transition-colors"
+              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-30 rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors"
               title="Redo (Ctrl+Y / ⇧⌘Z)"
             >
               <Redo2 className="w-4 h-4" />
             </button>
 
-            <div className="h-4 w-px bg-white/[0.1] mx-1" />
+            <div className="h-4 w-px bg-slate-300 dark:bg-white/[0.1] mx-1" />
 
             <button
               onClick={() => setShowCrosshairs(!showCrosshairs)}
               title="Laser Crosshair Alignment (C)"
               className={`p-1.5 rounded-xl transition-all ${
                 showCrosshairs
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border border-cyan-500/40 shadow-xs'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
               }`}
             >
               <Crosshair className="w-4 h-4" />
@@ -1367,8 +1367,8 @@ export const AnnotationView: React.FC = () => {
               title="Toggle Conveyor Belt Inspection Corridor (ROI)"
               className={`px-2 py-1 rounded-xl text-xs flex items-center gap-1.5 border transition-all ${
                 showConveyorRoi
-                  ? 'bg-blue-600/20 text-blue-300 border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.3)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.06] border-transparent'
+                  ? 'bg-blue-600/20 text-blue-600 dark:text-blue-300 border-blue-500/40 shadow-xs'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] border-transparent'
               }`}
             >
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -1376,9 +1376,9 @@ export const AnnotationView: React.FC = () => {
             </button>
 
             {/* Quick Confidence Filter Slider */}
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs">
-              <Filter className="w-3.5 h-3.5 text-slate-400" />
-              <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">Conf:</span>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-[#e5e5ea] dark:border-white/[0.08] text-xs">
+              <Filter className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono hidden sm:inline">Conf:</span>
               <input
                 type="range"
                 min="0.10"
@@ -1386,10 +1386,10 @@ export const AnnotationView: React.FC = () => {
                 step="0.05"
                 value={minConfidenceFilter}
                 onChange={(e) => setMinConfidenceFilter(parseFloat(e.target.value))}
-                className="w-14 h-1 accent-blue-500 bg-white/10 rounded-lg cursor-pointer"
+                className="w-14 h-1 accent-[#0071e3] bg-slate-200 dark:bg-white/10 rounded-lg cursor-pointer"
                 title={`Filter detections below ${Math.round(minConfidenceFilter * 100)}% confidence`}
               />
-              <span className="text-[10px] font-mono text-blue-400 min-w-[28px]">
+              <span className="text-[10px] font-mono text-[#0071e3] min-w-[28px] font-bold">
                 {Math.round(minConfidenceFilter * 100)}%
               </span>
             </div>
@@ -1399,7 +1399,7 @@ export const AnnotationView: React.FC = () => {
                 setZoom(1.0);
                 setPanOffset({ x: 0, y: 0 });
               }}
-              className="px-2.5 py-1 bg-white/[0.06] hover:bg-white/[0.1] text-slate-200 rounded-xl text-xs font-mono font-medium border border-white/[0.06] transition-all"
+              className="px-2.5 py-1 bg-white dark:bg-white/[0.06] hover:bg-slate-100 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 rounded-xl text-xs font-mono font-medium border border-[#e5e5ea] dark:border-white/[0.06] transition-all shadow-xs"
               title="Reset Zoom to 100%"
             >
               {Math.round(zoom * 100)}%
@@ -1408,7 +1408,7 @@ export const AnnotationView: React.FC = () => {
             {polygonPoints.length >= 3 && (
               <button
                 onClick={handleFinishPolygon}
-                className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-[0_2px_12px_rgba(16,185,129,0.35)] animate-pulse"
+                className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-emerald-600/30 animate-pulse"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Close Polygon</span>
@@ -1417,24 +1417,24 @@ export const AnnotationView: React.FC = () => {
           </div>
 
           {/* Right Frame Navigator Pill */}
-          <div className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded-2xl border border-white/[0.08]">
+          <div className="flex items-center gap-1 bg-[#f5f5f7] dark:bg-black/40 px-2 py-1 rounded-2xl border border-[#e5e5ea] dark:border-white/[0.08]">
             <button
               onClick={() => currentFrameIndex > 0 && setCurrentFrameIndex(currentFrameIndex - 1)}
               disabled={currentFrameIndex <= 0}
-              className="p-1 text-slate-400 hover:text-white disabled:opacity-20 rounded-lg hover:bg-white/[0.08] transition-colors"
+              className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-20 rounded-lg hover:bg-white dark:hover:bg-white/[0.08] transition-colors"
               title="Previous Frame (A or ←)"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span className="text-xs font-mono text-slate-200 px-2 min-w-[70px] text-center font-medium">
+            <span className="text-xs font-mono text-[#1d1d1f] dark:text-slate-200 px-2 min-w-[70px] text-center font-medium">
               {frames.length > 0 ? `${currentFrameIndex + 1} / ${frames.length}` : '0 / 0'}
             </span>
 
             <button
               onClick={() => currentFrameIndex < frames.length - 1 && setCurrentFrameIndex(currentFrameIndex + 1)}
               disabled={currentFrameIndex >= frames.length - 1}
-              className="p-1 text-slate-400 hover:text-white disabled:opacity-20 rounded-lg hover:bg-white/[0.08] transition-colors"
+              className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-20 rounded-lg hover:bg-white dark:hover:bg-white/[0.08] transition-colors"
               title="Next Frame (D or →)"
             >
               <ChevronRight className="w-4 h-4" />
@@ -1763,29 +1763,29 @@ export const AnnotationView: React.FC = () => {
 
           {/* Apple-Style Precision Inspector HUD (Appears when box is selected) */}
           {selectedAnnId && selectedAnnotation && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 bg-[#0c121e]/90 border border-white/[0.12] backdrop-blur-2xl px-4 py-2.5 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex items-center gap-3 text-xs text-white animate-in fade-in slide-in-from-bottom-2 duration-150">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 bg-white/95 dark:bg-[#0c121e]/90 border border-[#e5e5ea] dark:border-white/[0.12] backdrop-blur-2xl px-4 py-2.5 rounded-2xl shadow-xl dark:shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex items-center gap-3 text-xs text-[#1d1d1f] dark:text-white animate-in fade-in slide-in-from-bottom-2 duration-150">
               {/* Object Tag & Color Pill */}
-              <div className="flex items-center gap-2 pr-2.5 border-r border-white/[0.1]">
+              <div className="flex items-center gap-2 pr-2.5 border-r border-[#e5e5ea] dark:border-white/[0.1]">
                 <span
-                  className="w-2.5 h-2.5 rounded-full ring-2 ring-white/20"
+                  className="w-2.5 h-2.5 rounded-full ring-2 ring-black/10 dark:ring-white/20"
                   style={{
                     backgroundColor:
                       classes.find((c: any) => c.id === selectedAnnotation.class_id)?.color || '#0071e3',
                   }}
                 />
-                <span className="font-bold text-slate-100">{selectedAnnotation.class_name}</span>
-                <span className="text-[10px] text-slate-400 font-mono bg-white/[0.08] px-1.5 py-0.5 rounded-md">
+                <span className="font-bold text-[#1d1d1f] dark:text-slate-100">{selectedAnnotation.class_name}</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono bg-[#f5f5f7] dark:bg-white/[0.08] px-1.5 py-0.5 rounded-md border border-[#e5e5ea] dark:border-transparent">
                   {Math.round((selectedAnnotation.confidence || 1.0) * 100)}%
                 </span>
               </div>
 
               {/* Position Nudge D-Pad */}
               {selectedAnnotation.annotation_type === 'bbox' && (
-                <div className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded-xl border border-white/[0.06]">
-                  <span className="text-[10px] font-mono text-slate-400 mr-0.5">Nudge:</span>
+                <div className="flex items-center gap-1 bg-[#f6f3f5] dark:bg-black/40 px-2 py-1 rounded-xl border border-[#e5e5ea] dark:border-white/[0.06]">
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mr-0.5">Nudge:</span>
                   <button
                     onClick={() => handleNudge(nudgeCoarse ? -0.01 : -0.002, 0)}
-                    className="w-5 h-5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] flex items-center justify-center text-slate-200 transition-colors"
+                    className="w-5 h-5 rounded-lg bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] flex items-center justify-center text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent transition-colors"
                     title="Nudge Left (Left Arrow)"
                   >
                     ◄
@@ -1793,14 +1793,14 @@ export const AnnotationView: React.FC = () => {
                   <div className="flex flex-col gap-0.5">
                     <button
                       onClick={() => handleNudge(0, nudgeCoarse ? -0.01 : -0.002)}
-                      className="w-5 h-2.5 rounded bg-white/[0.08] hover:bg-white/[0.15] flex items-center justify-center text-[7px] text-slate-200 transition-colors"
+                      className="w-5 h-2.5 rounded bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] flex items-center justify-center text-[7px] text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent transition-colors"
                       title="Nudge Up (Up Arrow)"
                     >
                       ▲
                     </button>
                     <button
                       onClick={() => handleNudge(0, nudgeCoarse ? 0.01 : 0.002)}
-                      className="w-5 h-2.5 rounded bg-white/[0.08] hover:bg-white/[0.15] flex items-center justify-center text-[7px] text-slate-200 transition-colors"
+                      className="w-5 h-2.5 rounded bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] flex items-center justify-center text-[7px] text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent transition-colors"
                       title="Nudge Down (Down Arrow)"
                     >
                       ▼
@@ -1808,7 +1808,7 @@ export const AnnotationView: React.FC = () => {
                   </div>
                   <button
                     onClick={() => handleNudge(nudgeCoarse ? 0.01 : 0.002, 0)}
-                    className="w-5 h-5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] flex items-center justify-center text-slate-200 transition-colors"
+                    className="w-5 h-5 rounded-lg bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] flex items-center justify-center text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent transition-colors"
                     title="Nudge Right (Right Arrow)"
                   >
                     ►
@@ -1817,8 +1817,8 @@ export const AnnotationView: React.FC = () => {
                     onClick={() => setNudgeCoarse(!nudgeCoarse)}
                     className={`px-1.5 py-0.5 rounded-lg text-[9px] font-mono ml-1 font-bold transition-colors ${
                       nudgeCoarse
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                        : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                        ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30'
+                        : 'bg-blue-500/20 text-blue-600 dark:text-blue-300 border border-blue-500/30'
                     }`}
                     title="Toggle Step Size: Fine (0.2%) vs Coarse (1.0%)"
                   >
@@ -1829,18 +1829,18 @@ export const AnnotationView: React.FC = () => {
 
               {/* Scale Pill */}
               {selectedAnnotation.annotation_type === 'bbox' && (
-                <div className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded-xl border border-white/[0.06]">
-                  <span className="text-[10px] font-mono text-slate-400 mr-0.5">Scale:</span>
+                <div className="flex items-center gap-1 bg-[#f6f3f5] dark:bg-black/40 px-2 py-1 rounded-xl border border-[#e5e5ea] dark:border-white/[0.06]">
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mr-0.5">Scale:</span>
                   <button
                     onClick={() => handleScaleBox(0.95)}
-                    className="px-1.5 py-0.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-[10px] font-bold text-slate-200 transition-colors"
+                    className="px-1.5 py-0.5 rounded-lg bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-[10px] font-bold text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent transition-colors"
                     title="Shrink box 5%"
                   >
                     -5%
                   </button>
                   <button
                     onClick={() => handleScaleBox(1.05)}
-                    className="px-1.5 py-0.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-[10px] font-bold text-slate-200 transition-colors"
+                    className="px-1.5 py-0.5 rounded-lg bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-[10px] font-bold text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent transition-colors"
                     title="Expand box 5%"
                   >
                     +5%
@@ -1860,10 +1860,10 @@ export const AnnotationView: React.FC = () => {
               </button>
 
               {/* Utility Action Buttons */}
-              <div className="flex items-center gap-1 pl-2 border-l border-white/[0.1]">
+              <div className="flex items-center gap-1 pl-2 border-l border-[#e5e5ea] dark:border-white/[0.1]">
                 <button
                   onClick={handleDuplicateToNextFrame}
-                  className="p-1.5 text-slate-300 hover:text-white hover:bg-white/[0.08] rounded-xl transition-colors"
+                  className="p-1.5 text-slate-500 dark:text-slate-300 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.08] rounded-xl transition-colors"
                   title="Clone to Next Frame (Ctrl+D / ⌘D)"
                 >
                   <Copy className="w-3.5 h-3.5" />
@@ -1871,7 +1871,7 @@ export const AnnotationView: React.FC = () => {
 
                 <button
                   onClick={() => handleDeleteAnnotation(selectedAnnId)}
-                  className="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/20 rounded-xl transition-colors"
+                  className="p-1.5 text-rose-500 hover:text-rose-600 dark:hover:text-rose-300 hover:bg-rose-500/20 rounded-xl transition-colors"
                   title="Delete Box (Backspace / Del)"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -1879,7 +1879,7 @@ export const AnnotationView: React.FC = () => {
 
                 <button
                   onClick={() => setSelectedAnnId(null)}
-                  className="p-1.5 text-slate-400 hover:text-white hover:bg-white/[0.08] rounded-xl transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.08] rounded-xl transition-colors"
                   title="Deselect (Esc)"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -1910,13 +1910,13 @@ export const AnnotationView: React.FC = () => {
       </div>
 
       {/* Right Sidebar: AI Studio & Enterprise Inspector */}
-      <div className="w-84 border-l border-white/[0.08] bg-[#0c121e]/95 backdrop-blur-2xl flex flex-col justify-between p-4 space-y-4 overflow-y-auto">
+      <div className="w-84 border-l border-[#e5e5ea] dark:border-white/[0.08] bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-2xl flex flex-col justify-between p-4 space-y-4 overflow-y-auto">
         <div className="space-y-4">
           {/* Class Palette */}
           <div>
-            <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+            <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
               <span>Classes</span>
-              <span className="text-[10px] text-slate-400 font-mono">Keys 1-9</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Keys 1-9</span>
             </div>
             <div className="grid grid-cols-2 gap-1.5">
               {classes.map((cls: any) => {
@@ -1927,13 +1927,13 @@ export const AnnotationView: React.FC = () => {
                     onClick={() => setActiveClassId(cls.id)}
                     className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium border text-left transition-all ${
                       isCur
-                        ? 'border-blue-500/80 bg-blue-600/15 text-white shadow-sm ring-1 ring-blue-500/50'
-                        : 'border-white/[0.06] bg-black/20 text-slate-300 hover:bg-white/[0.06] hover:border-white/[0.12]'
+                        ? 'border-[#0071e3] bg-blue-50 dark:bg-blue-600/15 text-[#0071e3] dark:text-white shadow-xs ring-1 ring-[#0071e3]/30'
+                        : 'border-[#e5e5ea] dark:border-white/[0.06] bg-[#f6f3f5] dark:bg-black/20 text-[#1d1d1f] dark:text-slate-300 hover:bg-[#eaeaea] dark:hover:bg-white/[0.06]'
                     }`}
                   >
                     <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: cls.color }} />
                     <span className="truncate flex-1 font-semibold">{cls.name}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">{cls.hotkey}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{cls.hotkey}</span>
                   </button>
                 );
               })}
@@ -1941,24 +1941,24 @@ export const AnnotationView: React.FC = () => {
           </div>
 
           {/* AI-Assisted Studio Card */}
-          <div className="p-3.5 bg-black/30 rounded-2xl border border-white/[0.08] space-y-3">
+          <div className="p-3.5 bg-[#f6f3f5] dark:bg-black/30 rounded-2xl border border-[#e5e5ea] dark:border-white/[0.08] space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                <Bot className="w-4 h-4 text-indigo-400" />
+              <h4 className="text-xs font-bold text-[#1d1d1f] dark:text-white flex items-center gap-1.5">
+                <Bot className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                 AI Annotation Studio
               </h4>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-semibold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/30 font-semibold">
                 {aiProvider === 'florence2' ? 'Florence-2 LLM' : aiProvider === 'sam2' ? 'Meta SAM 2' : 'YOLO'}
               </span>
             </div>
 
             {/* Architecture Selector */}
             <div>
-              <label className="text-[10px] font-semibold text-slate-400 block mb-1">Architecture / Engine</label>
+              <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 block mb-1">Architecture / Engine</label>
               <select
                 value={aiProvider}
                 onChange={(e) => setAiProvider(e.target.value as any)}
-                className="w-full bg-[#131b2e] border border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-white outline-none font-semibold text-indigo-300 focus:border-indigo-500 transition-colors"
+                className="w-full bg-white dark:bg-[#131b2e] border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-[#1d1d1f] dark:text-white outline-none font-semibold text-indigo-600 dark:text-indigo-300 focus:border-[#0071e3] transition-colors"
               >
                 <option value="florence2">Microsoft Florence-2 Vision LLM (CPU SOTA)</option>
                 <option value="sam2">Meta SAM 2 (Tracking & Segmentation)</option>
@@ -1971,21 +1971,21 @@ export const AnnotationView: React.FC = () => {
               <div className="space-y-2.5">
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-semibold text-slate-400">Florence-2 Vision Model</label>
+                    <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">Florence-2 Vision Model</label>
                     {modelCatalog.find((m) => m.id === selectedFlorenceModel)?.is_installed ? (
-                      <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Ready
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Ready
                       </span>
                     ) : (
-                      <span className="text-[10px] text-amber-400 font-semibold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> Needs Install
+                      <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Needs Install
                       </span>
                     )}
                   </div>
                   <select
                     value={selectedFlorenceModel}
                     onChange={(e) => setSelectedFlorenceModel(e.target.value)}
-                    className="w-full bg-[#131b2e] border border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-white outline-none"
+                    className="w-full bg-white dark:bg-[#131b2e] border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-[#1d1d1f] dark:text-white outline-none"
                   >
                     <option value="microsoft/Florence-2-base">Florence-2 Base (~460MB - Fast Phrase Grounding)</option>
                     <option value="microsoft/Florence-2-large">Florence-2 Large (~1.5GB - High Accuracy Grounding)</option>
@@ -1994,28 +1994,28 @@ export const AnnotationView: React.FC = () => {
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-semibold text-slate-400">Target Object Phrase</label>
-                    <span className="text-[9px] text-indigo-300 font-mono uppercase">{florenceOutputType} Mode</span>
+                    <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">Target Object Phrase</label>
+                    <span className="text-[9px] text-indigo-600 dark:text-indigo-300 font-mono uppercase">{florenceOutputType} Mode</span>
                   </div>
                   <input
                     type="text"
                     value={florencePrompt}
                     onChange={(e) => setFlorencePrompt(e.target.value)}
                     placeholder="e.g. package on conveyor"
-                    className="w-full bg-[#131b2e] border border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full bg-white dark:bg-[#131b2e] border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3] transition-colors"
                   />
-                  <p className="text-[9px] text-slate-400 mt-0.5">
+                  <p className="text-[9px] text-slate-500 dark:text-slate-400 mt-0.5">
                     Grounding focuses strictly on your target object phrase.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[10px] font-semibold text-slate-400 block mb-1">Output Format</label>
+                    <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 block mb-1">Output Format</label>
                     <select
                       value={florenceOutputType}
                       onChange={(e) => setFlorenceOutputType(e.target.value as any)}
-                      className="w-full bg-[#131b2e] border border-white/[0.1] rounded-xl px-2 py-1.5 text-xs text-white outline-none focus:border-indigo-500"
+                      className="w-full bg-white dark:bg-[#131b2e] border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl px-2 py-1.5 text-xs text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3]"
                     >
                       <option value="bbox">Bounding Box</option>
                       <option value="polygon">Fine Polygon</option>
@@ -2023,18 +2023,18 @@ export const AnnotationView: React.FC = () => {
                     </select>
                   </div>
                   <div className="flex flex-col justify-end">
-                    <label className="text-[10px] font-semibold text-slate-400 block mb-1">SAM 2 Snapping</label>
+                    <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 block mb-1">SAM 2 Snapping</label>
                     <button
                       type="button"
                       onClick={() => setFlorenceRefineWithSam(!florenceRefineWithSam)}
                       className={`w-full py-1.5 px-2 rounded-xl text-xs font-medium border flex items-center justify-between transition-colors ${
                         florenceRefineWithSam
-                          ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
-                          : 'bg-[#131b2e] border-white/[0.1] text-slate-400'
+                          ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-300'
+                          : 'bg-white dark:bg-[#131b2e] border-[#e5e5ea] dark:border-white/[0.1] text-slate-500 dark:text-slate-400'
                       }`}
                     >
                       <span>{florenceRefineWithSam ? 'Enabled' : 'Disabled'}</span>
-                      <span className={`w-2 h-2 rounded-full ${florenceRefineWithSam ? 'bg-emerald-400' : 'bg-slate-600'}`} />
+                      <span className={`w-2 h-2 rounded-full ${florenceRefineWithSam ? 'bg-emerald-500' : 'bg-slate-400'}`} />
                     </button>
                   </div>
                 </div>
@@ -2043,7 +2043,7 @@ export const AnnotationView: React.FC = () => {
                   <button
                     onClick={handleFlorencePredict}
                     disabled={runningAi || !currentFrame}
-                    className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-98"
+                    className="w-full py-2 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-xl text-xs font-semibold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-[0.98]"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>{runningAi ? 'Grounding with Florence-2...' : 'Detect Box on Current Frame'}</span>
@@ -2052,9 +2052,9 @@ export const AnnotationView: React.FC = () => {
                   <button
                     onClick={handleFlorencePropagate}
                     disabled={propagating}
-                    className="w-full py-2 bg-white/[0.08] hover:bg-white/[0.12] text-slate-200 border border-white/[0.1] rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-98"
+                    className="w-full py-2 bg-white dark:bg-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.12] text-[#1d1d1f] dark:text-slate-200 border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-[0.98]"
                   >
-                    <Play className="w-3.5 h-3.5 text-indigo-400" />
+                    <Play className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                     <span>{propagating ? 'Grounding Across Frames...' : 'Batch Ground All Frames (Florence-2)'}</span>
                   </button>
                 </div>
@@ -2062,9 +2062,9 @@ export const AnnotationView: React.FC = () => {
             )}
 
             {/* Video Motion & Keyframe Trajectory Engine */}
-            <div className="pt-2 border-t border-white/[0.08] space-y-2">
+            <div className="pt-2 border-t border-[#e5e5ea] dark:border-white/[0.08] space-y-2">
               {/* Tab Selector */}
-              <div className="flex items-center p-0.5 bg-black/40 rounded-xl border border-white/[0.08]">
+              <div className="flex items-center p-0.5 bg-[#eaeaea] dark:bg-black/40 rounded-xl border border-[#e5e5ea] dark:border-white/[0.08]">
                 <button
                   type="button"
                   onClick={() => setVideoTrackingTab('interpolator')}
@@ -2093,33 +2093,33 @@ export const AnnotationView: React.FC = () => {
 
               {videoTrackingTab === 'interpolator' ? (
                 /* ================= ENTERPRISE KEYFRAME INTERPOLATION ENGINE ================= */
-                <div className="space-y-2.5 p-3 rounded-2xl bg-[#0b1220]/95 border border-cyan-500/30 shadow-xl">
+                <div className="space-y-2.5 p-3 rounded-2xl bg-[#f6f3f5] dark:bg-[#0b1220]/95 border border-[#e5e5ea] dark:border-cyan-500/30 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-white flex items-center gap-1.5">
-                      <Waypoints className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="text-[11px] font-bold text-[#1d1d1f] dark:text-white flex items-center gap-1.5">
+                      <Waypoints className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                       <span>Mathematical Trajectory Engine</span>
                     </span>
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">
                       Zero-Drift
                     </span>
                   </div>
 
                   {/* Anchor Setup Grid */}
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="p-2 rounded-xl bg-black/40 border border-white/[0.06] flex flex-col justify-between">
+                    <div className="p-2 rounded-xl bg-white dark:bg-black/40 border border-[#e5e5ea] dark:border-white/[0.06] flex flex-col justify-between shadow-xs">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-bold text-cyan-400 flex items-center gap-1">
-                          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                        <span className="text-[10px] font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
                           Anchor A (Start)
                         </span>
-                        <span className="font-mono text-[10px] text-white font-bold">
+                        <span className="font-mono text-[10px] text-[#1d1d1f] dark:text-white font-bold">
                           {anchorA ? `#${anchorA.frame_index}` : 'None'}
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={handleSetAnchorA}
-                        className="w-full mt-1 py-1 px-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-300 text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
+                        className="w-full mt-1 py-1 px-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-[10px] font-semibold transition-all flex items-center justify-center gap-1 active:scale-[0.98]"
                         title="Set current viewing frame as Start Anchor"
                       >
                         <GitCommit className="w-3 h-3" />
@@ -2127,20 +2127,20 @@ export const AnnotationView: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="p-2 rounded-xl bg-black/40 border border-white/[0.06] flex flex-col justify-between">
+                    <div className="p-2 rounded-xl bg-white dark:bg-black/40 border border-[#e5e5ea] dark:border-white/[0.06] flex flex-col justify-between shadow-xs">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-bold text-indigo-400 flex items-center gap-1">
-                          <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                        <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
                           Anchor B (End)
                         </span>
-                        <span className="font-mono text-[10px] text-white font-bold">
+                        <span className="font-mono text-[10px] text-[#1d1d1f] dark:text-white font-bold">
                           {anchorB ? `#${anchorB.frame_index}` : 'None'}
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={handleSetAnchorB}
-                        className="w-full mt-1 py-1 px-2 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
+                        className="w-full mt-1 py-1 px-2 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 text-[10px] font-semibold transition-all flex items-center justify-center gap-1 active:scale-[0.98]"
                         title="Set current viewing frame as End Anchor"
                       >
                         <GitCommit className="w-3 h-3" />
@@ -2152,11 +2152,11 @@ export const AnnotationView: React.FC = () => {
                   {/* Options: Mode & Rigid Dimension Lock */}
                   <div className="grid grid-cols-2 gap-2 text-[10px]">
                     <div>
-                      <label className="text-slate-400 block mb-0.5 font-medium">Trajectory Mode</label>
+                      <label className="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Trajectory Mode</label>
                       <select
                         value={interpMode}
                         onChange={(e) => setInterpMode(e.target.value as any)}
-                        className="w-full bg-[#131b2e] border border-white/[0.1] rounded-xl px-2 py-1 text-[11px] text-white outline-none"
+                        className="w-full bg-white dark:bg-[#131b2e] border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl px-2 py-1 text-[11px] text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3]"
                       >
                         <option value="linear">Linear (Constant Speed)</option>
                         <option value="spline">Catmull-Rom Spline</option>
@@ -2164,12 +2164,12 @@ export const AnnotationView: React.FC = () => {
                     </div>
 
                     <div className="flex items-center justify-start pt-3">
-                      <label className="flex items-center gap-1.5 cursor-pointer text-slate-300 select-none">
+                      <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
                         <input
                           type="checkbox"
                           checked={lockDimensions}
                           onChange={(e) => setLockDimensions(e.target.checked)}
-                          className="w-3.5 h-3.5 rounded bg-black/40 border-white/[0.2] text-cyan-500 focus:ring-0 cursor-pointer"
+                          className="w-3.5 h-3.5 rounded bg-white dark:bg-black/40 border-[#e5e5ea] dark:border-white/[0.2] text-[#0071e3] focus:ring-0 cursor-pointer"
                         />
                         <span title="Guarantees bounding box dimensions never wobble or deform along the conveyor belt">
                           Rigid (w, h) Lock
@@ -2183,7 +2183,7 @@ export const AnnotationView: React.FC = () => {
                     type="button"
                     onClick={handleExecuteInterpolation}
                     disabled={isInterpolating || !anchorA || !anchorB}
-                    className="w-full py-2 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-cyan-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98"
+                    className="w-full py-2 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-md shadow-cyan-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
                   >
                     {isInterpolating ? (
                       <>
@@ -2200,17 +2200,17 @@ export const AnnotationView: React.FC = () => {
 
                   {/* Telemetry Result Card */}
                   {interpolationResult && (
-                    <div className="p-2.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-[10px] space-y-1">
-                      <div className="flex items-center justify-between text-cyan-300 font-bold">
+                    <div className="p-2.5 rounded-xl bg-cyan-50/80 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-500/30 text-[10px] space-y-1">
+                      <div className="flex items-center justify-between text-cyan-700 dark:text-cyan-300 font-bold">
                         <span>✓ Interpolated {interpolationResult.interpolated_frames_count} Frames</span>
-                        <span className="font-mono text-cyan-400">{interpolationResult.execution_time_ms} ms</span>
+                        <span className="font-mono text-cyan-800 dark:text-cyan-400">{interpolationResult.execution_time_ms} ms</span>
                       </div>
-                      <div className="text-slate-400 flex items-center justify-between">
+                      <div className="text-slate-600 dark:text-slate-400 flex items-center justify-between">
                         <span>Annotations Created:</span>
-                        <span className="font-mono text-white font-bold">{interpolationResult.total_annotations_created}</span>
+                        <span className="font-mono text-[#1d1d1f] dark:text-white font-bold">{interpolationResult.total_annotations_created}</span>
                       </div>
                       {interpolationResult.telemetry && interpolationResult.telemetry.length > 0 && (
-                        <div className="text-slate-400 text-[9px] pt-1 border-t border-white/[0.08] truncate">
+                        <div className="text-slate-500 dark:text-slate-400 text-[9px] pt-1 border-t border-cyan-200/60 dark:border-white/[0.08] truncate">
                           Conveyor Velocity: {Math.round(interpolationResult.telemetry[0].velocity_vector[0] * 1000) / 1000} dx / frame
                         </div>
                       )}
@@ -2227,7 +2227,7 @@ export const AnnotationView: React.FC = () => {
                           setAnchorB(null);
                           setInterpolationResult(null);
                         }}
-                        className="text-[10px] text-slate-400 hover:text-rose-300 transition-colors"
+                        className="text-[10px] text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-300 transition-colors"
                       >
                         Reset Anchors
                       </button>
@@ -2238,22 +2238,22 @@ export const AnnotationView: React.FC = () => {
                 /* ================= SAM 2 TRACKER PANEL ================= */
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-white flex items-center gap-1.5">
-                      <Play className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-[11px] font-bold text-[#1d1d1f] dark:text-white flex items-center gap-1.5">
+                      <Play className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                       Auto-Track Across Video
                     </span>
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
                       SAM 2 Propagator
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-1.5">
                     <div>
-                      <label className="text-[9px] font-semibold text-slate-400 block mb-0.5">Range / Direction</label>
+                      <label className="text-[9px] font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">Range / Direction</label>
                       <select
                         value={trackDirection}
                         onChange={(e) => setTrackDirection(e.target.value as any)}
-                        className="w-full bg-[#131b2e] border border-white/[0.1] rounded-xl px-2 py-1 text-[11px] text-white outline-none"
+                        className="w-full bg-white dark:bg-[#131b2e] border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl px-2 py-1 text-[11px] text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3]"
                       >
                         <option value="forward">Forward (to end)</option>
                         <option value="next_10">Next 10 Frames</option>
@@ -2262,11 +2262,11 @@ export const AnnotationView: React.FC = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="text-[9px] font-semibold text-slate-400 block mb-0.5">Output Type</label>
+                      <label className="text-[9px] font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">Output Type</label>
                       <select
                         value={trackOutputType}
                         onChange={(e) => setTrackOutputType(e.target.value as any)}
-                        className="w-full bg-[#131b2e] border border-white/[0.1] rounded-xl px-2 py-1 text-[11px] text-white outline-none"
+                        className="w-full bg-white dark:bg-[#131b2e] border border-[#e5e5ea] dark:border-white/[0.1] rounded-xl px-2 py-1 text-[11px] text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3]"
                       >
                         <option value="bbox">Bounding Box (Clean)</option>
                         <option value="both">Box + Mask</option>
@@ -2277,7 +2277,7 @@ export const AnnotationView: React.FC = () => {
 
                   {/* Tracking Progress */}
                   {isTracking && (
-                    <div className="p-2.5 bg-emerald-950/40 border border-emerald-500/30 rounded-xl space-y-1.5">
+                    <div className="p-2.5 bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 rounded-xl space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-emerald-300 font-semibold flex items-center gap-1.5">
                           <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-400" />
@@ -2337,13 +2337,13 @@ export const AnnotationView: React.FC = () => {
           </div>
 
           {/* Real-time ROI & Confidence Filter Bar */}
-          <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs space-y-2">
-            <div className="flex items-center justify-between text-[11px] text-slate-300">
+          <div className="p-2.5 rounded-xl bg-white dark:bg-white/[0.03] border border-[#e5e5ea] dark:border-white/[0.06] shadow-xs text-xs space-y-2">
+            <div className="flex items-center justify-between text-[11px] text-slate-700 dark:text-slate-300">
               <span className="flex items-center gap-1.5 font-semibold">
-                <Filter className="w-3 h-3 text-blue-400" />
+                <Filter className="w-3 h-3 text-[#0071e3]" />
                 <span>Confidence Threshold</span>
               </span>
-              <span className="font-mono text-blue-400 font-bold">
+              <span className="font-mono text-[#0071e3] font-bold">
                 {Math.round(minConfidenceFilter * 100)}%
               </span>
             </div>
@@ -2354,15 +2354,15 @@ export const AnnotationView: React.FC = () => {
               step="0.05"
               value={minConfidenceFilter}
               onChange={(e) => setMinConfidenceFilter(parseFloat(e.target.value))}
-              className="w-full h-1 accent-blue-500 bg-white/10 rounded-lg cursor-pointer"
+              className="w-full h-1 accent-[#0071e3] bg-slate-200 dark:bg-white/10 rounded-lg cursor-pointer"
             />
             <div className="flex items-center justify-between pt-0.5 text-[10px]">
               <button
                 onClick={() => setShowConveyorRoi(!showConveyorRoi)}
                 className={`flex items-center gap-1 px-2 py-0.5 rounded-lg border transition-colors ${
                   showConveyorRoi
-                    ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
-                    : 'text-slate-400 border-white/[0.08] hover:text-white'
+                    ? 'bg-blue-500/20 text-blue-600 dark:text-blue-300 border-blue-500/40'
+                    : 'text-slate-500 dark:text-slate-400 border-[#e5e5ea] dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.06]'
                 }`}
               >
                 <ShieldCheck className="w-3 h-3" />
@@ -2372,8 +2372,8 @@ export const AnnotationView: React.FC = () => {
                 onClick={() => setFilterOutsideRoi(!filterOutsideRoi)}
                 className={`flex items-center gap-1 px-2 py-0.5 rounded-lg border transition-colors ${
                   filterOutsideRoi
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                    : 'text-slate-400 border-white/[0.08] hover:text-white'
+                    ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border-amber-500/40'
+                    : 'text-slate-500 dark:text-slate-400 border-[#e5e5ea] dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.06]'
                 }`}
               >
                 <span>Filter Exterior {filterOutsideRoi ? 'ON' : 'OFF'}</span>
@@ -2383,12 +2383,12 @@ export const AnnotationView: React.FC = () => {
 
           {/* Objects on Current Frame List */}
           <div>
-            <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+            <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
               <span>Objects on Frame ({annotations.length})</span>
               {annotations.length > 0 && (
                 <button
                   onClick={handleClearFrameAnnotations}
-                  className="text-[10px] text-slate-400 hover:text-rose-300 transition-colors"
+                  className="text-[10px] text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-300 transition-colors"
                 >
                   Clear Frame
                 </button>
@@ -2397,7 +2397,7 @@ export const AnnotationView: React.FC = () => {
 
             <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
               {annotations.length === 0 ? (
-                <div className="text-center py-6 text-xs text-slate-500">
+                <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500">
                   No objects labeled on this frame yet.
                 </div>
               ) : (
@@ -2415,10 +2415,10 @@ export const AnnotationView: React.FC = () => {
                       onClick={() => setSelectedAnnId(ann.id)}
                       className={`p-2.5 rounded-xl border flex items-center justify-between text-xs cursor-pointer transition-all ${
                         isSel
-                          ? 'border-blue-500/80 bg-blue-600/15 text-white ring-1 ring-blue-500/40 shadow-sm'
+                          ? 'border-[#0071e3] bg-blue-50 dark:bg-blue-600/15 text-[#0071e3] dark:text-white ring-1 ring-[#0071e3]/40 shadow-xs font-semibold'
                           : isBelow
-                          ? 'border-white/[0.03] bg-black/10 text-slate-500 opacity-60'
-                          : 'border-white/[0.06] bg-black/20 hover:bg-white/[0.06] text-slate-300'
+                          ? 'border-[#e5e5ea] dark:border-white/[0.03] bg-slate-100/50 dark:bg-black/10 text-slate-400 opacity-60'
+                          : 'border-[#e5e5ea] dark:border-white/[0.06] bg-white dark:bg-black/20 hover:bg-slate-50 dark:hover:bg-white/[0.06] text-[#1d1d1f] dark:text-slate-300 shadow-xs'
                       }`}
                     >
                       <div className="flex items-center gap-2 truncate">
@@ -2426,13 +2426,13 @@ export const AnnotationView: React.FC = () => {
                         <span className="font-semibold truncate">{ann.class_name}</span>
                         <span className="text-[10px] text-slate-400 font-mono">({ann.annotation_type})</span>
                         {isOutside && showConveyorRoi && (
-                          <span className="text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1 rounded">Out</span>
+                          <span className="text-[8px] bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30 px-1 rounded">Out</span>
                         )}
                       </div>
 
                       <div className="flex items-center gap-2">
                         {ann.confidence < 1.0 && (
-                          <span className="text-[10px] font-mono text-emerald-400">
+                          <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
                             {Math.round(ann.confidence * 100)}%
                           </span>
                         )}
@@ -2443,7 +2443,7 @@ export const AnnotationView: React.FC = () => {
                               handleConvertPolyToBbox(ann);
                             }}
                             title="Convert Polygon to YOLO Bounding Box"
-                            className="text-[9px] font-medium text-amber-300 hover:text-amber-200 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 px-1.5 py-0.5 rounded-md flex items-center gap-1 transition-all"
+                            className="text-[9px] font-medium text-amber-600 hover:text-amber-700 dark:text-amber-300 dark:hover:text-amber-200 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 px-1.5 py-0.5 rounded-md flex items-center gap-1 transition-all"
                           >
                             <Square className="w-2.5 h-2.5" />
                             To BBox
@@ -2454,7 +2454,7 @@ export const AnnotationView: React.FC = () => {
                             e.stopPropagation();
                             handleDeleteAnnotation(ann.id);
                           }}
-                          className="text-slate-400 hover:text-rose-400 p-1 rounded-md hover:bg-white/[0.08] transition-colors"
+                          className="text-slate-400 hover:text-rose-500 p-1 rounded-md hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-colors"
                           title="Delete annotation"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -2470,16 +2470,16 @@ export const AnnotationView: React.FC = () => {
 
         {/* Apple-Style Frame Review Footer Controls */}
         {currentFrame && (
-          <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs">
+          <div className="pt-3 border-t border-[#e5e5ea] dark:border-white/[0.08] flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 font-mono text-[11px]">Status:</span>
+              <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">Status:</span>
               <span
                 className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase tracking-wide border transition-all ${
                   currentFrame.status === 'approved'
-                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
+                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
                     : currentFrame.status === 'rejected'
-                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-[0_0_12px_rgba(244,63,94,0.25)]'
-                    : 'bg-black/40 text-slate-400 border-white/[0.1]'
+                    ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border-rose-500/40 shadow-[0_0_12px_rgba(244,63,94,0.25)]'
+                    : 'bg-slate-100 dark:bg-black/40 text-slate-500 dark:text-slate-400 border-[#e5e5ea] dark:border-white/[0.1]'
                 }`}
               >
                 {currentFrame.status || 'unreviewed'}
@@ -2494,7 +2494,7 @@ export const AnnotationView: React.FC = () => {
                 className={`px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-all duration-200 active:scale-95 disabled:opacity-50 ${
                   currentFrame.status === 'approved'
                     ? 'bg-emerald-500 text-white ring-2 ring-emerald-400/80 shadow-[0_2px_12px_rgba(16,185,129,0.4)]'
-                    : 'bg-emerald-600/80 hover:bg-emerald-600 text-white hover:shadow-md'
+                    : 'bg-emerald-600/90 hover:bg-emerald-600 text-white hover:shadow-md'
                 }`}
               >
                 {reviewing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -2508,7 +2508,7 @@ export const AnnotationView: React.FC = () => {
                 className={`px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-all duration-200 active:scale-95 disabled:opacity-50 ${
                   currentFrame.status === 'rejected'
                     ? 'bg-rose-500 text-white ring-2 ring-rose-400/80 shadow-[0_2px_12px_rgba(244,63,94,0.4)]'
-                    : 'bg-rose-600/80 hover:bg-rose-600 text-white hover:shadow-md'
+                    : 'bg-rose-600/90 hover:bg-rose-600 text-white hover:shadow-md'
                 }`}
               >
                 <XCircle className="w-3.5 h-3.5" />
@@ -2522,26 +2522,26 @@ export const AnnotationView: React.FC = () => {
       {/* Confirmation Modal for Project Wipe */}
       {showClearProjectModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#0f172a] border border-white/[0.12] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center gap-3 text-rose-400">
+          <div className="bg-white dark:bg-[#0f172a] border border-[#e5e5ea] dark:border-white/[0.12] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center gap-3 text-rose-500 dark:text-rose-400">
               <AlertTriangle className="w-6 h-6 flex-shrink-0" />
-              <h3 className="text-base font-bold text-white">Wipe All Annotations in Project?</h3>
+              <h3 className="text-base font-bold text-[#1d1d1f] dark:text-white">Wipe All Annotations in Project?</h3>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               This will permanently delete all annotations across all 126 frames for project{' '}
-              <strong className="text-white">{activeProject?.name || 'SVG'}</strong> and reset frame review statuses back to
+              <strong className="text-[#1d1d1f] dark:text-white">{activeProject?.name || 'SVG'}</strong> and reset frame review statuses back to
               unreviewed. This action cannot be undone.
             </p>
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setShowClearProjectModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.08] transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-colors"
               >
                 Cancel (Esc)
               </button>
               <button
                 onClick={handleWipeAllProjectAnnotations}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-950/50 transition-all active:scale-95"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-950/20 transition-all active:scale-95"
               >
                 Yes, Wipe Everything Clean
               </button>

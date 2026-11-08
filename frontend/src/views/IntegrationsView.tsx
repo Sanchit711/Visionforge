@@ -37,9 +37,9 @@ export const IntegrationsView: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
       {/* Top Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-[#e5e5ea] dark:border-white/[0.08]">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Pluggable Integrations Catalog</h2>
+          <h2 className="text-xl font-bold text-[#1d1d1f] dark:text-white tracking-tight">Pluggable Integrations Catalog</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Decoupled service adapters for video processors, AI models, compute runtimes, and storage
           </p>
@@ -61,7 +61,7 @@ export const IntegrationsView: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-blue-500/30 transition-all flex flex-col justify-between space-y-5"
+              className="bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-[#0071e3]/30 transition-all flex flex-col justify-between space-y-5"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">

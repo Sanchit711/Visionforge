@@ -122,29 +122,29 @@ export const RolesModal: React.FC = () => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-[#0f172a] border border-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-[#0f172a] border border-[#e5e5ea] dark:border-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] shadow-2xl flex flex-col overflow-hidden">
         {/* Glow Top Accent */}
-        <div className="h-1 bg-gradient-to-r from-emerald-500 via-brand-500 to-purple-500" />
+        <div className="h-1 bg-gradient-to-r from-emerald-500 via-[#0071e3] to-purple-500" />
 
         {/* Modal Header */}
-        <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-[#e5e5ea] dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
+            <div className="w-10 h-10 rounded-xl bg-[#0071e3]/10 border border-[#0071e3]/20 flex items-center justify-center text-[#0071e3]">
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">
+              <h2 className="text-lg font-bold text-[#1d1d1f] dark:text-white tracking-tight">
                 Roles & Responsibilities (RBAC) Matrix
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#86868b]">
                 Workspace access control, operational responsibilities, and permission boundaries
               </p>
             </div>
           </div>
           <button
             onClick={() => setRolesModalOpen(false)}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white p-1 rounded-lg hover:bg-[#f5f5f7] dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -162,20 +162,20 @@ export const RolesModal: React.FC = () => {
                   key={role.id}
                   className={`rounded-2xl border p-4.5 transition-all ${
                     isUserRole
-                      ? 'bg-brand-500/5 border-brand-500/40 shadow-lg shadow-brand-500/5 ring-1 ring-brand-500/20'
-                      : 'bg-slate-900/60 border-slate-800/80 hover:border-slate-700'
+                      ? 'bg-[#0071e3]/5 border-[#0071e3]/40 shadow-sm ring-1 ring-[#0071e3]/20'
+                      : 'bg-[#f6f3f5] dark:bg-slate-900/60 border-[#e5e5ea] dark:border-slate-800/80 hover:border-[#0071e3]/30'
                   }`}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center ${role.iconColor}`}>
+                      <div className={`w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 flex items-center justify-center ${role.iconColor}`}>
                         <Icon className="w-5 h-5" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-bold text-white">{role.name}</h3>
+                          <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white">{role.name}</h3>
                           {isUserRole && (
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-500 text-white">
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#0071e3] text-white">
                               You
                             </span>
                           )}
@@ -187,17 +187,17 @@ export const RolesModal: React.FC = () => {
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-400 leading-relaxed mb-3">
+                  <p className="text-xs text-[#6e6e73] dark:text-slate-400 leading-relaxed mb-3">
                     {role.description}
                   </p>
 
-                  <div className="space-y-1.5 pt-2 border-t border-slate-800/60">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <div className="space-y-1.5 pt-2 border-t border-[#e5e5ea] dark:border-slate-800/60">
+                    <span className="text-[10px] font-bold text-[#86868b] uppercase tracking-wider block mb-1">
                       Key Responsibilities:
                     </span>
                     {role.responsibilities.map((resp, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[11px] text-slate-300">
-                        <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                      <div key={i} className="flex items-start gap-2 text-[11px] text-[#414753] dark:text-slate-300">
+                        <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
                         <span>{resp}</span>
                       </div>
                     ))}
@@ -208,15 +208,15 @@ export const RolesModal: React.FC = () => {
           </div>
 
           {/* Granular Permission Matrix Table */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between">
+          <div className="rounded-2xl border border-[#e5e5ea] dark:border-slate-800 bg-white dark:bg-slate-900/70 overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-[#e5e5ea] dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Layers className="w-4 h-4 text-brand-400" />
-                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                <Layers className="w-4 h-4 text-[#0071e3]" />
+                <span className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider">
                   Operational Permissions Comparison Matrix
                 </span>
               </div>
-              <span className="text-[11px] text-slate-400">Enforced by Backend Middleware</span>
+              <span className="text-[11px] text-[#86868b]">Enforced by Backend Middleware</span>
             </div>
 
             <div className="overflow-x-auto">

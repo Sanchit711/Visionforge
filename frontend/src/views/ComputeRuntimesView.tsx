@@ -92,9 +92,9 @@ export const ComputeRuntimesView: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
       {/* Top Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-[#e5e5ea] dark:border-white/[0.08]">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Compute Runtime Manager & Failover</h2>
+          <h2 className="text-xl font-bold text-[#1d1d1f] dark:text-white tracking-tight">Compute Runtime Manager & Failover</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Orchestrate local workstations, Google Colab Pro GPU runtimes, remote servers, and edge Jetson devices
           </p>
@@ -110,7 +110,7 @@ export const ComputeRuntimesView: React.FC = () => {
           </button>
           <button
             onClick={handleGenerateColabNotebook}
-            className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white rounded-full text-xs font-semibold shadow-md shadow-amber-500/20 transition-all active:scale-95"
+            className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white rounded-full text-xs font-semibold shadow-md shadow-amber-500/20 transition-all active:scale-95 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Generate Colab Notebook (.ipynb)</span>
@@ -124,7 +124,7 @@ export const ComputeRuntimesView: React.FC = () => {
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
             <div className="space-y-1 text-xs">
-              <div className="font-bold text-slate-900 dark:text-white text-sm">Automatic Failover Migration Successful</div>
+              <div className="font-bold text-[#1d1d1f] dark:text-white text-sm">Automatic Failover Migration Successful</div>
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{failoverStatus.message}</p>
               <div className="flex items-center gap-3 font-mono text-[11px] text-amber-700 dark:text-amber-300 pt-1">
                 <span>Migrated: {failoverStatus.failed_runtime} &rarr; {failoverStatus.target_runtime}</span>
@@ -135,7 +135,7 @@ export const ComputeRuntimesView: React.FC = () => {
           </div>
           <button
             onClick={() => setFailoverStatus(null)}
-            className="text-xs text-amber-600 dark:text-amber-400 hover:underline font-semibold"
+            className="text-xs text-amber-600 dark:text-amber-400 hover:underline font-semibold cursor-pointer"
           >
             Dismiss
           </button>
@@ -150,7 +150,7 @@ export const ComputeRuntimesView: React.FC = () => {
           return (
             <div
               key={rt.id}
-              className={`bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between ${
+              className={`bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between ${
                 isOnline ? '' : 'opacity-85'
               }`}
             >

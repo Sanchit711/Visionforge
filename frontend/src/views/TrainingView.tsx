@@ -752,27 +752,27 @@ export const TrainingView: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Trainer Configuration & Engine Selector */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-brand-400" />
+        <div className="bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
+            <h3 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-[#0071e3]" />
               Configure Training Run
             </h3>
-            <span className="text-[10px] font-mono text-emerald-400">Ultralytics v8.4</span>
+            <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">Ultralytics v8.4</span>
           </div>
 
           {/* Segmented Control: Kaggle Cloud vs Google Colab vs Local Station (Apple UI Design) */}
-          <div className="flex p-1 bg-slate-950/80 rounded-xl border border-slate-800 text-xs">
+          <div className="flex p-1 bg-[#f6f3f5] dark:bg-slate-950/80 rounded-xl border border-[#e5e5ea] dark:border-slate-800 text-xs shadow-inner">
             <button
               type="button"
               onClick={() => setTrainingTarget('kaggle')}
               className={`flex-1 py-1.5 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 trainingTarget === 'kaggle'
-                  ? 'bg-gradient-to-r from-cyan-500/25 to-blue-500/25 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white dark:bg-gradient-to-r dark:from-cyan-500/25 dark:to-blue-500/25 text-[#0071e3] dark:text-cyan-300 border border-[#e5e5ea] dark:border-cyan-500/40 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-slate-200'
               }`}
             >
-              <Zap className="w-3.5 h-3.5 text-cyan-400" />
+              <Zap className="w-3.5 h-3.5 text-cyan-500" />
               <span>Kaggle Dual-T4</span>
             </button>
             <button
@@ -780,11 +780,11 @@ export const TrainingView: React.FC = () => {
               onClick={() => setTrainingTarget('colab')}
               className={`flex-1 py-1.5 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 trainingTarget === 'colab'
-                  ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white dark:bg-gradient-to-r dark:from-amber-500/20 dark:to-orange-500/20 text-amber-600 dark:text-amber-300 border border-[#e5e5ea] dark:border-amber-500/40 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-slate-200'
               }`}
             >
-              <Cloud className="w-3.5 h-3.5 text-amber-400" />
+              <Cloud className="w-3.5 h-3.5 text-amber-500" />
               <span>Colab GPU</span>
             </button>
             <button
@@ -792,11 +792,11 @@ export const TrainingView: React.FC = () => {
               onClick={() => setTrainingTarget('local')}
               className={`flex-1 py-1.5 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 trainingTarget === 'local'
-                  ? 'bg-brand-600/25 text-brand-300 border border-brand-500/40 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white dark:bg-brand-600/25 text-[#0071e3] dark:text-brand-300 border border-[#e5e5ea] dark:border-brand-500/40 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-slate-200'
               }`}
             >
-              <Cpu className="w-3.5 h-3.5 text-brand-400" />
+              <Cpu className="w-3.5 h-3.5 text-[#0071e3]" />
               <span>Local Station</span>
             </button>
           </div>
@@ -805,17 +805,17 @@ export const TrainingView: React.FC = () => {
             /* ================= KAGGLE CLOUD TRAINING HUB (Apple UI Design) ================= */
             <div className="space-y-3.5 text-xs">
               {/* Kaggle Engine Specs & Auth Status Badge */}
-              <div className="p-3 bg-gradient-to-br from-cyan-950/40 via-blue-950/20 to-slate-900 border border-cyan-500/25 rounded-2xl shadow-inner space-y-2">
-                <div className="flex items-center justify-between font-semibold text-cyan-200">
+              <div className="p-3 bg-[#f6f3f5] dark:bg-gradient-to-br dark:from-cyan-950/40 dark:via-blue-950/20 dark:to-slate-900 border border-[#e5e5ea] dark:border-cyan-500/25 rounded-2xl shadow-xs space-y-2">
+                <div className="flex items-center justify-between font-semibold text-cyan-700 dark:text-cyan-200">
                   <span className="flex items-center gap-1.5">
-                    <Zap className="w-4 h-4 text-cyan-400 animate-pulse" />
+                    <Zap className="w-4 h-4 text-cyan-500 animate-pulse" />
                     Kaggle Cloud Dual-T4 Acceleration
                   </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 font-mono border border-cyan-500/30">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-200 font-mono border border-cyan-500/30">
                     2x Tesla T4 &bull; 32GB VRAM
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-300/80 leading-relaxed">
+                <p className="text-[11px] text-slate-600 dark:text-slate-300/80 leading-relaxed">
                   Headless GPU cluster training via Kaggle API. Automatically zips datasets, generates PyTorch DDP scripts, trains YOLO models, and downloads weights.
                 </p>
 
@@ -824,18 +824,18 @@ export const TrainingView: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${
                       kaggleStatus.authenticated
-                        ? 'bg-emerald-400 shadow-sm shadow-emerald-400'
+                        ? 'bg-emerald-500 shadow-xs'
                         : kaggleStatus.requires_verification
-                        ? 'bg-amber-400 shadow-sm shadow-amber-400 animate-pulse'
-                        : 'bg-rose-400'
+                        ? 'bg-amber-500 shadow-xs animate-pulse'
+                        : 'bg-rose-500'
                     }`} />
-                    <span className="text-[11px] text-slate-300 font-medium">
+                    <span className="text-[11px] text-slate-600 dark:text-slate-300 font-medium">
                       {kaggleStatus.authenticated ? (
-                        <>Connected as <strong className="text-cyan-300 font-mono">@{kaggleStatus.username}</strong></>
+                        <>Connected as <strong className="text-cyan-700 dark:text-cyan-300 font-mono">@{kaggleStatus.username}</strong></>
                       ) : kaggleStatus.requires_verification ? (
-                        <span className="text-amber-300 font-medium">Phone Verification Required (@{kaggleStatus.username})</span>
+                        <span className="text-amber-700 dark:text-amber-300 font-medium">Phone Verification Required (@{kaggleStatus.username})</span>
                       ) : (
-                        <span className="text-rose-300">API Credentials Required</span>
+                        <span className="text-rose-600 dark:text-rose-300">API Credentials Required</span>
                       )}
                     </span>
                   </div>
@@ -846,7 +846,7 @@ export const TrainingView: React.FC = () => {
                         href="https://www.kaggle.com/settings"
                         target="_blank"
                         rel="noreferrer"
-                        className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 flex items-center gap-1 transition-all"
+                        className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-700 dark:text-amber-200 border border-amber-500/40 flex items-center gap-1 transition-all"
                       >
                         <ExternalLink className="w-2.5 h-2.5" />
                         Verify SMS
@@ -855,9 +855,9 @@ export const TrainingView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setShowKaggleCredsModal(true)}
-                      className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 flex items-center gap-1 transition-all active:scale-95"
+                      className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-white/10 flex items-center gap-1 transition-all active:scale-95 shadow-xs"
                     >
-                      <Key className="w-3 h-3 text-cyan-400" />
+                      <Key className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
                       <span>{kaggleStatus.authenticated ? 'Config API' : 'Enter API Key'}</span>
                     </button>
                   </div>
@@ -867,20 +867,20 @@ export const TrainingView: React.FC = () => {
               {/* Phone Verification Warning Alert */}
               {kaggleStatus.requires_verification && (
                 <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-2xl space-y-2">
-                  <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs">
-                    <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 font-semibold text-xs">
+                    <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
                     <span>Kaggle Account Requires Phone Verification</span>
                   </div>
-                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
                     Kaggle strictly requires SMS Phone Verification before enabling cloud GPU runners or dataset uploads via API. 
-                    Please complete phone verification at <strong className="text-amber-200">kaggle.com/settings</strong> (takes 30 seconds), or use Google Colab with zero setup.
+                    Please complete phone verification at <strong className="text-amber-700 dark:text-amber-200">kaggle.com/settings</strong> (takes 30 seconds), or use Google Colab with zero setup.
                   </p>
                   <div className="flex flex-wrap items-center gap-2 pt-1">
                     <a
                       href="https://www.kaggle.com/settings"
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
+                      className="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-700 dark:text-amber-200 border border-amber-500/40 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
                     >
                       <ExternalLink className="w-3 h-3" />
                       Open Kaggle Settings ↗
@@ -888,9 +888,9 @@ export const TrainingView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setTrainingTarget('colab')}
-                      className="px-3 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-200 border border-amber-500/40 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
+                      className="px-3 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-700 dark:text-amber-200 border border-amber-500/40 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all"
                     >
-                      <Cloud className="w-3 h-3 text-amber-400" />
+                      <Cloud className="w-3 h-3 text-amber-500" />
                       Switch to Google Colab Master System
                     </button>
                   </div>
@@ -900,12 +900,12 @@ export const TrainingView: React.FC = () => {
               {/* Dataset Version Selector */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-semibold text-slate-300">Frozen Dataset Version</label>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">Frozen Dataset Version</label>
                   {selectedDatasetId && (
                     <button
                       type="button"
                       onClick={handleDownloadDatasetZip}
-                      className="text-[10px] text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1"
+                      className="text-[10px] text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-semibold flex items-center gap-1"
                     >
                       <Download className="w-3 h-3" />
                       <span>Download ZIP</span>
@@ -915,7 +915,7 @@ export const TrainingView: React.FC = () => {
                 <select
                   value={selectedDatasetId}
                   onChange={(e) => setSelectedDatasetId(e.target.value)}
-                  className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3] transition-colors"
                 >
                   {combinedDatasets.length === 0 && <option value="">No dataset versions frozen yet</option>}
                   {combinedDatasets.map((d) => (
@@ -925,18 +925,18 @@ export const TrainingView: React.FC = () => {
                   ))}
                 </select>
                 {selectedDsObj && (
-                  <p className="text-[10px] text-slate-400 mt-1 font-mono">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-mono">
                     Train: {selectedDsObj.train_count} | Val: {selectedDsObj.val_count} | Test: {selectedDsObj.test_count} | Classes: package
                   </p>
                 )}
 
                 {datasets.length === 0 && (
-                  <div className="p-3 mt-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs space-y-2">
+                  <div className="p-3 mt-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-xs space-y-2">
                     <div className="flex items-center gap-1.5 font-semibold">
-                      <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                      <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
                       <span>Current Project &quot;{activeProject?.name || 'Raw full frames'}&quot; has no frozen dataset</span>
                     </div>
-                    <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                    <p className="text-[11px] text-amber-700/80 dark:text-amber-200/80 leading-relaxed">
                       Training requires a frozen YOLO dataset. Your annotated dataset <strong>v1.0 (126 frames)</strong> is ready in project <strong>&quot;SVG&quot;</strong>.
                     </p>
                     <div className="flex flex-wrap gap-2 pt-0.5">
@@ -955,9 +955,9 @@ export const TrainingView: React.FC = () => {
                               });
                             }
                           }}
-                          className="px-3 py-1 bg-cyan-500/25 hover:bg-cyan-500/40 border border-cyan-500/40 rounded-full font-semibold text-[11px] text-cyan-100 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                          className="px-3 py-1 bg-cyan-500/25 hover:bg-cyan-500/40 border border-cyan-500/40 rounded-full font-semibold text-[11px] text-cyan-800 dark:text-cyan-100 flex items-center gap-1.5 transition-all shadow-xs active:scale-95"
                         >
-                          <Sparkles className="w-3 h-3 text-cyan-300" />
+                          <Sparkles className="w-3 h-3 text-cyan-500" />
                           <span>Switch to &quot;Raw full frames&quot; (3,394 Frames Ready)</span>
                         </button>
                       )}
@@ -976,16 +976,16 @@ export const TrainingView: React.FC = () => {
                               });
                             }
                           }}
-                          className="px-3 py-1 bg-amber-500/25 hover:bg-amber-500/40 border border-amber-500/40 rounded-full font-semibold text-[11px] text-amber-100 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                          className="px-3 py-1 bg-amber-500/25 hover:bg-amber-500/40 border border-amber-500/40 rounded-full font-semibold text-[11px] text-amber-800 dark:text-amber-100 flex items-center gap-1.5 transition-all shadow-xs active:scale-95"
                         >
-                          <Sparkles className="w-3 h-3 text-amber-300" />
+                          <Sparkles className="w-3 h-3 text-amber-500" />
                           <span>Switch to &quot;SVG&quot; Project (v1.0 Ready)</span>
                         </button>
                       )}
                       <button
                         type="button"
                         onClick={() => setStage('datasets')}
-                        className="px-3 py-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-semibold text-[11px] text-slate-200 flex items-center gap-1 transition-all active:scale-95"
+                        className="px-3 py-1 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-[#e5e5ea] dark:border-white/10 rounded-full font-semibold text-[11px] text-slate-700 dark:text-slate-200 flex items-center gap-1 transition-all active:scale-95 shadow-xs"
                       >
                         <span>Open Datasets Studio</span>
                       </button>
@@ -996,11 +996,11 @@ export const TrainingView: React.FC = () => {
 
               {/* Base Model Weights Selection */}
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Base Model Checkpoint</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Base Model Checkpoint</label>
                 <select
                   value={kaggleModel}
                   onChange={(e) => setKaggleModel(e.target.value)}
-                  className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono focus:border-cyan-500 transition-colors"
+                  className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 >
                   <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default - Large)</option>
                   <option value="yolov8s.pt">yolov8s.pt (Small - 11.2M params - Balanced)</option>
@@ -1012,7 +1012,7 @@ export const TrainingView: React.FC = () => {
 
               {/* Fine-Tuning Preset */}
               <div className="flex items-center justify-between pb-1">
-                <span className="text-xs text-slate-400 font-medium">Cloud Hyperparameters</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Cloud Hyperparameters</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -1027,9 +1027,9 @@ export const TrainingView: React.FC = () => {
                       message: 'Optimized for Dual-T4 Kaggle Cluster (50 Epochs, Batch 8, AdamW, lr 0.0008)',
                     });
                   }}
-                  className="px-2.5 py-1 bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95"
+                  className="px-2.5 py-1 bg-cyan-600/15 hover:bg-cyan-600/25 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95"
                 >
-                  <Sparkles className="w-3 h-3 text-cyan-400" />
+                  <Sparkles className="w-3 h-3 text-cyan-500" />
                   Apply 50-Epoch Dual-GPU Preset
                 </button>
               </div>
@@ -1037,33 +1037,33 @@ export const TrainingView: React.FC = () => {
               {/* Hyperparameter Inputs */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Epochs</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Epochs</label>
                   <input
                     type="number"
                     min="1"
                     max="500"
                     value={kaggleEpochs}
                     onChange={(e) => setKaggleEpochs(parseInt(e.target.value) || 50)}
-                    className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono focus:border-cyan-500"
+                    className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Batch Size (Total)</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Batch Size (Total)</label>
                   <input
                     type="number"
                     min="1"
                     max="64"
                     value={kaggleBatchSize}
                     onChange={(e) => setKaggleBatchSize(parseInt(e.target.value) || 8)}
-                    className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono focus:border-cyan-500"
+                    className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Optimizer</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Optimizer</label>
                   <select
                     value={kaggleOptimizer}
                     onChange={(e) => setKaggleOptimizer(e.target.value)}
-                    className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono focus:border-cyan-500"
+                    className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   >
                     <option value="AdamW">AdamW (Recommended)</option>
                     <option value="SGD">SGD</option>
@@ -1072,13 +1072,13 @@ export const TrainingView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Learning Rate</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Learning Rate</label>
                   <input
                     type="number"
                     step="0.0001"
                     value={kaggleLr}
                     onChange={(e) => setKaggleLr(parseFloat(e.target.value) || 0.0008)}
-                    className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono focus:border-cyan-500"
+                    className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
               </div>
@@ -1245,7 +1245,7 @@ export const TrainingView: React.FC = () => {
                 <select
                   value={selectedDatasetId}
                   onChange={(e) => setSelectedDatasetId(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3] transition-colors"
                 >
                   {datasets.length === 0 && <option value="">No dataset versions frozen yet</option>}
                   {datasets.map((d) => (
@@ -1255,7 +1255,7 @@ export const TrainingView: React.FC = () => {
                   ))}
                 </select>
                 {selectedDsObj && (
-                  <p className="text-[10px] text-slate-400 mt-1 font-mono">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-mono">
                     Train: {selectedDsObj.train_count} | Val: {selectedDsObj.val_count} | Test: {selectedDsObj.test_count} | Classes: package
                   </p>
                 )}
@@ -1263,11 +1263,11 @@ export const TrainingView: React.FC = () => {
 
               {/* Colab Base Model Weights */}
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Base Model Weights</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Base Model Weights</label>
                 <select
                   value={colabModel}
                   onChange={(e) => setColabModel(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 >
                   <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default - Large)</option>
                   <option value="yolov8n.pt">yolov8n.pt (Nano - 3.2M params - Fast)</option>
@@ -1280,7 +1280,7 @@ export const TrainingView: React.FC = () => {
 
               {/* Quick Presets */}
               <div className="flex items-center justify-between pb-1">
-                <span className="text-xs text-slate-400 font-medium">Fine-Tuning Preset</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Fine-Tuning Preset</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -1295,9 +1295,9 @@ export const TrainingView: React.FC = () => {
                       message: 'Configured for conveyor package detection (40 Epochs, Batch 8, lr 0.0008)'
                     });
                   }}
-                  className="px-2.5 py-1 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                  className="px-2.5 py-1 bg-indigo-600/15 hover:bg-indigo-600/25 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
                 >
-                  <Sparkles className="w-3 h-3 text-indigo-400" />
+                  <Sparkles className="w-3 h-3 text-indigo-500" />
                   Industrial Conveyor Preset
                 </button>
               </div>
@@ -1305,33 +1305,33 @@ export const TrainingView: React.FC = () => {
               {/* Colab Hyperparameters */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Epochs</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Epochs</label>
                   <input
                     type="number"
                     min="1"
                     max="500"
                     value={colabEpochs}
                     onChange={(e) => setColabEpochs(parseInt(e.target.value) || 50)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Batch Size</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Batch Size</label>
                   <input
                     type="number"
                     min="1"
                     max="64"
                     value={colabBatchSize}
                     onChange={(e) => setColabBatchSize(parseInt(e.target.value) || 4)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Optimizer</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Optimizer</label>
                   <select
                     value={colabOptimizer}
                     onChange={(e) => setColabOptimizer(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   >
                     <option value="AdamW">AdamW (Recommended)</option>
                     <option value="SGD">SGD</option>
@@ -1340,19 +1340,19 @@ export const TrainingView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Learning Rate</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Learning Rate</label>
                   <input
                     type="number"
                     step="0.0001"
                     value={colabLr}
                     onChange={(e) => setColabLr(parseFloat(e.target.value) || 0.001)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
               </div>
 
               {/* Colab Drive Checkpointing Controls */}
-              <div className="p-3 bg-slate-850/80 rounded-xl border border-slate-800 text-[11px] space-y-1.5">
+              <div className="p-3 bg-[#f6f3f5] dark:bg-slate-850/80 rounded-xl border border-[#e5e5ea] dark:border-slate-800 text-[11px] space-y-1.5 shadow-xs">
                 <div className="flex items-center justify-between text-slate-300 font-semibold">
                   <span className="flex items-center gap-1.5">
                     <HardDrive className="w-3.5 h-3.5 text-indigo-400" />
@@ -1452,22 +1452,22 @@ export const TrainingView: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Experiment Name</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Experiment Name</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Dataset Version</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Dataset Version</label>
                 <select
                   value={selectedDatasetId}
                   onChange={(e) => setSelectedDatasetId(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3] transition-colors"
                 >
                   {datasets.length === 0 && <option value="">No dataset versions frozen yet</option>}
                   {datasets.map((d) => (
@@ -1479,11 +1479,11 @@ export const TrainingView: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Base Model Weights</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Base Model Weights</label>
                 <select
                   value={modelVariant}
                   onChange={(e) => setModelVariant(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 >
                   <option value="yolo26l_conveyor_best8.pt">yolo26l_conveyor_best8.pt (Production best (8).pt - Fine-tune)</option>
                   <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default)</option>
@@ -1494,36 +1494,36 @@ export const TrainingView: React.FC = () => {
               </div>
 
               {/* Safeguard Verification */}
-              <div className="p-3 bg-slate-850/80 rounded-xl border border-slate-800 space-y-2">
+              <div className="p-3 bg-[#f6f3f5] dark:bg-slate-850/80 rounded-xl border border-[#e5e5ea] dark:border-slate-800 space-y-2 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-slate-200 flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-brand-400" />
+                  <span className="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#0071e3]" />
                     Class Alignment Safeguard
                   </span>
                   <button
                     type="button"
                     onClick={handleCheckCompatibility}
                     disabled={checkingCompat || !selectedDatasetId}
-                    className="px-2 py-0.5 rounded text-[10px] bg-brand-600/80 hover:bg-brand-600 text-white font-semibold transition-colors disabled:opacity-50"
+                    className="px-2 py-0.5 rounded text-[10px] bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold transition-colors disabled:opacity-50"
                   >
                     {checkingCompat ? 'Verifying...' : 'Verify Classes'}
                   </button>
                 </div>
 
                 {compatCheck && (
-                  <div className="text-[11px] space-y-1 pt-1 border-t border-slate-800/60">
+                  <div className="text-[11px] space-y-1 pt-1 border-t border-[#e5e5ea] dark:border-slate-800/60">
                     <div className="flex items-center gap-1.5 font-semibold">
                       {compatCheck.compatible ? (
-                        <span className="text-emerald-400 flex items-center gap-1">
+                        <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                           <CheckCircle2 className="w-3.5 h-3.5" /> Classes Fully Compatible
                         </span>
                       ) : (
-                        <span className="text-amber-400 flex items-center gap-1">
+                        <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1">
                           <AlertTriangle className="w-3.5 h-3.5" /> Class Remapping Notice
                         </span>
                       )}
                     </div>
-                    <p className="text-slate-400 text-[10px] leading-relaxed">{compatCheck.recommendation}</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-[10px] leading-relaxed">{compatCheck.recommendation}</p>
                   </div>
                 )}
               </div>
@@ -1531,33 +1531,33 @@ export const TrainingView: React.FC = () => {
               {/* Hyperparameters Grid */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Epochs</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Epochs</label>
                   <input
                     type="number"
                     min="1"
                     max="300"
                     value={epochs}
                     onChange={(e) => setEpochs(parseInt(e.target.value) || 10)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Batch Size</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Batch Size</label>
                   <input
                     type="number"
                     min="1"
                     max="128"
                     value={batchSize}
                     onChange={(e) => setBatchSize(parseInt(e.target.value) || 16)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Image Size</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Image Size</label>
                   <select
                     value={imgSize}
                     onChange={(e) => setImgSize(parseInt(e.target.value))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   >
                     <option value={416}>416 x 416</option>
                     <option value={640}>640 x 640</option>
@@ -1565,11 +1565,11 @@ export const TrainingView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5 font-medium">Device</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5 font-medium">Device</label>
                   <select
                     value={device}
                     onChange={(e) => setDevice(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3]"
                   >
                     <option value="auto">Auto (CUDA / CPU)</option>
                     <option value="cpu">Force CPU</option>
@@ -1599,27 +1599,27 @@ export const TrainingView: React.FC = () => {
         </div>
 
         {/* Right 2 Columns: Training Results & Colab Workflow Guide */}
-        <div className="lg:col-span-2 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-5">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col justify-between space-y-5">
           {activeExperiment ? (
             <div className="space-y-4">
               {/* Header with status pill and stop button */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-bold text-white">{activeExperiment.name}</h3>
+                    <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white">{activeExperiment.name}</h3>
                     <span
                       className={`text-[10px] uppercase font-mono font-semibold px-2 py-0.5 rounded ${
                         activeExperiment.status === 'running'
-                          ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20 animate-pulse'
+                          ? 'bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20 animate-pulse'
                           : activeExperiment.status === 'completed'
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                          : 'bg-slate-800 text-slate-400'
+                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                       }`}
                     >
                       {activeExperiment.status}
                     </span>
                   </div>
-                  <span className="text-[11px] text-slate-400 font-mono">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                     Model: {activeExperiment.model_variant} &bull; Device: {activeExperiment.device}
                   </span>
                 </div>
@@ -1628,7 +1628,7 @@ export const TrainingView: React.FC = () => {
                   <button
                     onClick={handleStopTraining}
                     disabled={stopping}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-600/80 hover:bg-rose-600 text-white rounded-xl text-xs font-semibold shadow-sm transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-600/90 hover:bg-rose-600 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors"
                   >
                     <Square className="w-3.5 h-3.5" />
                     <span>{stopping ? 'Stopping...' : 'Safe Stop'}</span>
@@ -1638,7 +1638,7 @@ export const TrainingView: React.FC = () => {
 
               {/* Progress bar */}
               <div>
-                <div className="flex justify-between text-xs text-slate-300 font-mono mb-1">
+                <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300 font-mono mb-1">
                   <span>Epoch {activeExperiment.current_epoch} / {activeExperiment.total_epochs}</span>
                   <span>
                     {activeExperiment.total_epochs > 0
@@ -1646,9 +1646,9 @@ export const TrainingView: React.FC = () => {
                       : 0}%
                   </span>
                 </div>
-                <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-brand-500 via-indigo-500 to-emerald-500 transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 transition-all duration-300"
                     style={{
                       width: `${
                         activeExperiment.total_epochs > 0
@@ -1662,9 +1662,9 @@ export const TrainingView: React.FC = () => {
 
               {/* Metric Cards Row */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div className="bg-slate-850 p-3 rounded-xl border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Best mAP50</div>
-                  <div className="text-base font-bold text-emerald-400 font-mono mt-1">
+                <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold">Best mAP50</div>
+                  <div className="text-base font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-1">
                     {activeExperiment.best_map50
                       ? `${(activeExperiment.best_map50 * 100).toFixed(1)}%`
                       : activeExperiment.map50
@@ -1672,33 +1672,33 @@ export const TrainingView: React.FC = () => {
                       : '0.0%'}
                   </div>
                 </div>
-                <div className="bg-slate-850 p-3 rounded-xl border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">mAP50-95</div>
-                  <div className="text-base font-bold text-teal-400 font-mono mt-1">
+                <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold">mAP50-95</div>
+                  <div className="text-base font-bold text-teal-600 dark:text-teal-400 font-mono mt-1">
                     {activeExperiment.map50_95
                       ? `${(activeExperiment.map50_95 * 100).toFixed(1)}%`
                       : '0.0%'}
                   </div>
                 </div>
-                <div className="bg-slate-850 p-3 rounded-xl border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Precision</div>
-                  <div className="text-base font-bold text-brand-400 font-mono mt-1">
+                <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold">Precision</div>
+                  <div className="text-base font-bold text-[#0071e3] dark:text-brand-400 font-mono mt-1">
                     {Math.round((activeExperiment.precision || 0) * 100)}%
                   </div>
                 </div>
-                <div className="bg-slate-850 p-3 rounded-xl border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Recall</div>
-                  <div className="text-base font-bold text-indigo-400 font-mono mt-1">
+                <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold">Recall</div>
+                  <div className="text-base font-bold text-indigo-600 dark:text-indigo-400 font-mono mt-1">
                     {Math.round((activeExperiment.recall || 0) * 100)}%
                   </div>
                 </div>
               </div>
 
               {/* Streaming Log Terminal or Colab Drive info */}
-              <div className="bg-black/90 p-3.5 rounded-xl border border-slate-800 text-[11px] font-mono text-slate-300 max-h-48 overflow-y-auto space-y-1">
+              <div className="bg-black/90 p-3.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 text-[11px] font-mono text-slate-300 max-h-48 overflow-y-auto space-y-1">
                 <div className="text-slate-500 text-[10px] uppercase font-bold flex items-center justify-between pb-1 border-b border-slate-800">
                   <span className="flex items-center gap-1.5">
-                    <Terminal className="w-3.5 h-3.5 text-brand-400" />
+                    <Terminal className="w-3.5 h-3.5 text-cyan-400" />
                     Training Diagnostics & Logs
                   </span>
                   <span className="text-slate-400 font-normal">
@@ -1716,13 +1716,13 @@ export const TrainingView: React.FC = () => {
             /* ================= KAGGLE CLOUD DUAL-T4 LIVE PIPELINE & TELEMETRY TRACKER (Apple UI Design) ================= */
             <div className="space-y-4">
               {/* Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
                 <div>
-                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-cyan-400" />
+                  <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-cyan-500" />
                     Kaggle Cloud Dual-T4 Live Telemetry & Control
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     Headless PyTorch DDP cluster pipeline with real-time transfer & GPU diagnostics
                   </p>
                 </div>
@@ -1731,14 +1731,14 @@ export const TrainingView: React.FC = () => {
                   <span
                     className={`text-[10px] font-mono font-semibold px-2.5 py-1 rounded-full uppercase border flex items-center gap-1.5 ${
                       isLaunchingKaggle
-                        ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 animate-pulse'
+                        ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border-cyan-500/40 animate-pulse'
                         : kaggleJob?.status === 'running'
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 animate-pulse'
+                        ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/40 animate-pulse'
                         : kaggleJob?.status === 'complete'
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                        ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/40'
                         : kaggleJob?.status === 'queued'
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                        : 'bg-slate-800 text-slate-400 border-slate-700'
+                        ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'
                     }`}
                   >
                     <span className={`w-1.5 h-1.5 rounded-full ${
@@ -1758,9 +1758,9 @@ export const TrainingView: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowQuickGuideModal(true)}
-                    className="px-3 py-1 bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/10 hover:border-cyan-500/30 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+                    className="px-3 py-1 bg-white dark:bg-white/[0.06] hover:bg-slate-100 dark:hover:bg-white/[0.12] text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-white/10 hover:border-cyan-500/30 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs"
                   >
-                    <BookOpen className="w-3.5 h-3.5 text-cyan-300" />
+                    <BookOpen className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-300" />
                     <span>Quick Guide</span>
                   </button>
 
@@ -1769,9 +1769,9 @@ export const TrainingView: React.FC = () => {
                       href={kaggleJob?.kernel_url || telemetry?.kernel_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-1 bg-gradient-to-r from-cyan-600/30 to-blue-600/30 hover:from-cyan-600/40 hover:to-blue-600/40 text-cyan-200 border border-cyan-500/40 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+                      className="px-3 py-1 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 hover:from-cyan-600/30 hover:to-blue-600/30 text-cyan-700 dark:text-cyan-200 border border-cyan-500/40 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs"
                     >
-                      <ExternalLink className="w-3.5 h-3.5 text-cyan-300" />
+                      <ExternalLink className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-300" />
                       <span>Open Kaggle Notebook</span>
                     </a>
                   )}
@@ -1779,12 +1779,12 @@ export const TrainingView: React.FC = () => {
               </div>
 
               {/* Apple Glassmorphic Live Cloud Telemetry Card */}
-              <div className="p-4 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 border border-cyan-500/30 rounded-2xl space-y-3.5 shadow-2xl backdrop-blur-md">
+              <div className="p-4 bg-[#f6f3f5] dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-slate-950/95 dark:to-slate-900/90 border border-[#e5e5ea] dark:border-cyan-500/30 rounded-2xl space-y-3.5 shadow-xs dark:shadow-2xl backdrop-blur-md">
                 {/* Stage Banner & Dynamic Progress Bar */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-200 flex items-center gap-2">
-                      <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                      <Cpu className="w-3.5 h-3.5 text-cyan-500" />
                       {telemetry?.stage_name || (
                         kaggleJob?.status === 'running'
                           ? 'Stage 3/4: Training on Dual Tesla T4 GPUs (PyTorch DDP Active)'
@@ -1795,7 +1795,7 @@ export const TrainingView: React.FC = () => {
                           : 'Kaggle Dual-T4 Acceleration Standby'
                       )}
                     </span>
-                    <span className="font-mono text-cyan-300 font-bold">
+                    <span className="font-mono text-cyan-700 dark:text-cyan-300 font-bold">
                       {telemetry?.progress_pct ?? (
                         kaggleJob?.status === 'complete'
                           ? 100
@@ -1807,7 +1807,7 @@ export const TrainingView: React.FC = () => {
                       )}%
                     </span>
                   </div>
-                  <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                  <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-300/50 dark:border-slate-700/50">
                     <div
                       className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-emerald-400 rounded-full transition-all duration-500"
                       style={{
@@ -1829,54 +1829,54 @@ export const TrainingView: React.FC = () => {
 
                 {/* 4 Live Telemetry Metric Tiles */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-                  <div className="p-2.5 bg-slate-900/80 border border-slate-800/80 rounded-xl space-y-0.5">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
-                      <Layers className="w-3 h-3 text-cyan-400" />
+                  <div className="p-2.5 bg-white dark:bg-slate-900/80 border border-[#e5e5ea] dark:border-slate-800/80 rounded-xl space-y-0.5 shadow-xs">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold flex items-center gap-1">
+                      <Layers className="w-3 h-3 text-cyan-500" />
                       Dataset Upload
                     </div>
-                    <div className="text-xs font-bold text-white font-mono">
+                    <div className="text-xs font-bold text-[#1d1d1f] dark:text-white font-mono">
                       5.78 GB / 5.78 GB
                     </div>
-                    <div className="text-[9px] text-emerald-400 font-medium">
+                    <div className="text-[9px] text-emerald-600 dark:text-emerald-400 font-medium">
                       100% Verified on Cloud
                     </div>
                   </div>
 
-                  <div className="p-2.5 bg-slate-900/80 border border-slate-800/80 rounded-xl space-y-0.5">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
-                      <Zap className="w-3 h-3 text-amber-400" />
+                  <div className="p-2.5 bg-white dark:bg-slate-900/80 border border-[#e5e5ea] dark:border-slate-800/80 rounded-xl space-y-0.5 shadow-xs">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold flex items-center gap-1">
+                      <Zap className="w-3 h-3 text-amber-500" />
                       Transfer Speed
                     </div>
-                    <div className="text-xs font-bold text-amber-300 font-mono">
+                    <div className="text-xs font-bold text-amber-600 dark:text-amber-300 font-mono">
                       ~20.2 MB/s
                     </div>
-                    <div className="text-[9px] text-slate-400">
+                    <div className="text-[9px] text-slate-500 dark:text-slate-400">
                       Cloud Ingestion Pipeline
                     </div>
                   </div>
 
-                  <div className="p-2.5 bg-slate-900/80 border border-slate-800/80 rounded-xl space-y-0.5">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
-                      <Cpu className="w-3 h-3 text-purple-400" />
+                  <div className="p-2.5 bg-white dark:bg-slate-900/80 border border-[#e5e5ea] dark:border-slate-800/80 rounded-xl space-y-0.5 shadow-xs">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold flex items-center gap-1">
+                      <Cpu className="w-3 h-3 text-purple-500" />
                       Hardware Nodes
                     </div>
-                    <div className="text-xs font-bold text-purple-300 font-mono">
+                    <div className="text-xs font-bold text-purple-600 dark:text-purple-300 font-mono">
                       2x Tesla T4
                     </div>
-                    <div className="text-[9px] text-slate-400">
+                    <div className="text-[9px] text-slate-500 dark:text-slate-400">
                       32 GB VRAM • PyTorch DDP
                     </div>
                   </div>
 
-                  <div className="p-2.5 bg-slate-900/80 border border-slate-800/80 rounded-xl space-y-0.5">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                  <div className="p-2.5 bg-white dark:bg-slate-900/80 border border-[#e5e5ea] dark:border-slate-800/80 rounded-xl space-y-0.5 shadow-xs">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
                       Target Dataset
                     </div>
-                    <div className="text-xs font-bold text-emerald-300 font-mono truncate" title={selectedDsObj?.version_name || 'v1.0_keyframe_3394'}>
+                    <div className="text-xs font-bold text-emerald-600 dark:text-emerald-300 font-mono truncate" title={selectedDsObj?.version_name || 'v1.0_keyframe_3394'}>
                       {selectedDsObj?.version_name || 'v1.0_keyframe_3394'}
                     </div>
-                    <div className="text-[9px] text-slate-400">
+                    <div className="text-[9px] text-slate-500 dark:text-slate-400">
                       3,394 Curated Frames
                     </div>
                   </div>
@@ -2177,16 +2177,16 @@ export const TrainingView: React.FC = () => {
 
       {/* Manual Sync Modal for Colab Runs */}
       {showSyncModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Cloud className="w-4 h-4 text-amber-400" />
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-[#e5e5ea] dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
+              <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white flex items-center gap-2">
+                <Cloud className="w-4 h-4 text-amber-500" />
                 Sync Google Colab Run Metrics
               </h3>
               <button
                 onClick={() => setShowSyncModal(false)}
-                className="text-slate-400 hover:text-white text-xs"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-base leading-none"
               >
                 &times;
               </button>
@@ -2194,19 +2194,19 @@ export const TrainingView: React.FC = () => {
 
             <form onSubmit={handleSyncColabMetricsSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Colab Run Name</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Colab Run Name</label>
                 <input
                   type="text"
                   required
                   value={syncExpName}
                   onChange={(e) => setSyncExpName(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-slate-400 mb-0.5">mAP50</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5">mAP50</label>
                   <input
                     type="number"
                     step="0.001"
@@ -2214,11 +2214,11 @@ export const TrainingView: React.FC = () => {
                     max="1"
                     value={syncMap50}
                     onChange={(e) => setSyncMap50(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono text-emerald-400 font-bold"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono text-emerald-600 dark:text-emerald-400 font-bold focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5">Precision</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5">Precision</label>
                   <input
                     type="number"
                     step="0.001"
@@ -2226,11 +2226,11 @@ export const TrainingView: React.FC = () => {
                     max="1"
                     value={syncPrecision}
                     onChange={(e) => setSyncPrecision(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-0.5">Recall</label>
+                  <label className="block text-slate-600 dark:text-slate-400 mb-0.5">Recall</label>
                   <input
                     type="number"
                     step="0.001"
@@ -2238,12 +2238,12 @@ export const TrainingView: React.FC = () => {
                     max="1"
                     value={syncRecall}
                     onChange={(e) => setSyncRecall(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white outline-none font-mono"
+                    className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3]"
                   />
                 </div>
               </div>
 
-              <div className="p-3 bg-slate-850 rounded-xl border border-slate-800 text-[11px] text-slate-400">
+              <div className="p-3 bg-[#f6f3f5] dark:bg-slate-850 rounded-xl border border-[#e5e5ea] dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400 shadow-xs">
                 Values are automatically recorded into VisionForge's Experiment comparison and Model Validation dashboard.
               </div>
 
@@ -2251,14 +2251,14 @@ export const TrainingView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowSyncModal(false)}
-                  className="flex-1 py-2 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold"
+                  className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 rounded-xl font-semibold transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={syncing}
-                  className="flex-1 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-semibold shadow"
+                  className="flex-1 py-2 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-xl font-semibold shadow-xs transition-colors"
                 >
                   {syncing ? 'Saving...' : 'Save Run Metrics'}
                 </button>
@@ -2270,23 +2270,23 @@ export const TrainingView: React.FC = () => {
 
       {/* Kaggle Cloud Quick Guide Modal (Apple UI Design) */}
       {showQuickGuideModal && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-900/95 border border-white/15 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900/95 border border-[#e5e5ea] dark:border-white/15 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-md shadow-cyan-500/20">
                   <Zap className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">
+                  <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white">
                     Kaggle Cloud Dual-T4 Training Quick Guide
                   </h3>
-                  <p className="text-[11px] text-slate-400">Zero-setup headless cluster training in 3 clicks</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Zero-setup headless cluster training in 3 clicks</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowQuickGuideModal(false)}
-                className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-slate-400 hover:text-white flex items-center justify-center text-sm transition-all"
+                className="w-7 h-7 rounded-full bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.12] text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white flex items-center justify-center text-sm transition-all"
               >
                 &times;
               </button>
@@ -2294,58 +2294,58 @@ export const TrainingView: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
               {/* Step 1 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
+              <div className="p-4 bg-[#f6f3f5] dark:bg-slate-950/60 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl space-y-2 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 text-[10px] font-bold flex items-center justify-center font-mono">1</span>
-                  <Key className="w-3.5 h-3.5 text-cyan-400" />
+                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 text-[10px] font-bold flex items-center justify-center font-mono">1</span>
+                  <Key className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                 </div>
-                <h4 className="text-xs font-bold text-white">Authenticate API Key</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Go to <a href="https://www.kaggle.com/settings" target="_blank" rel="noreferrer" className="text-cyan-400 underline font-medium">kaggle.com/settings</a>, ensure SMS phone verification is active, click <strong>&quot;Generate&quot;</strong> under API Tokens, and paste your key in VisionForge.
+                <h4 className="text-xs font-bold text-[#1d1d1f] dark:text-white">Authenticate API Key</h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Go to <a href="https://www.kaggle.com/settings" target="_blank" rel="noreferrer" className="text-cyan-600 dark:text-cyan-400 underline font-medium">kaggle.com/settings</a>, ensure SMS phone verification is active, click <strong>&quot;Generate&quot;</strong> under API Tokens, and paste your key in VisionForge.
                 </p>
               </div>
 
               {/* Step 2 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
+              <div className="p-4 bg-[#f6f3f5] dark:bg-slate-950/60 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl space-y-2 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold flex items-center justify-center font-mono">2</span>
-                  <Database className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="w-5 h-5 rounded-full bg-blue-500/20 text-[#0071e3] dark:text-blue-400 text-[10px] font-bold flex items-center justify-center font-mono">2</span>
+                  <Database className="w-3.5 h-3.5 text-[#0071e3] dark:text-blue-400" />
                 </div>
-                <h4 className="text-xs font-bold text-white">Freeze YOLO Dataset</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  In <strong>Datasets Studio</strong>, freeze an immutable version (e.g. <code className="text-blue-300 font-mono">v1.0</code>). VisionForge enforces strict source-video leakage prevention across train/val splits.
+                <h4 className="text-xs font-bold text-[#1d1d1f] dark:text-white">Freeze YOLO Dataset</h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                  In <strong>Datasets Studio</strong>, freeze an immutable version (e.g. <code className="text-[#0071e3] dark:text-blue-300 font-mono">v1.0</code>). VisionForge enforces strict source-video leakage prevention across train/val splits.
                 </p>
               </div>
 
               {/* Step 3 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
+              <div className="p-4 bg-[#f6f3f5] dark:bg-slate-950/60 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl space-y-2 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-[10px] font-bold flex items-center justify-center font-mono">3</span>
-                  <Cpu className="w-3.5 h-3.5 text-purple-400" />
+                  <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-700 dark:text-purple-400 text-[10px] font-bold flex items-center justify-center font-mono">3</span>
+                  <Cpu className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 </div>
-                <h4 className="text-xs font-bold text-white">Dispatch Dual-T4 Training</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Select <code className="text-purple-300 font-mono">yolo26l.pt</code>, click <strong>&quot;Apply 50-Epoch Preset&quot;</strong>, and press <strong>&quot;Launch Headless Training&quot;</strong>. Training runs with PyTorch DDP on 32GB VRAM.
+                <h4 className="text-xs font-bold text-[#1d1d1f] dark:text-white">Dispatch Dual-T4 Training</h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Select <code className="text-purple-600 dark:text-purple-300 font-mono">yolo26l.pt</code>, click <strong>&quot;Apply 50-Epoch Preset&quot;</strong>, and press <strong>&quot;Launch Headless Training&quot;</strong>. Training runs with PyTorch DDP on 32GB VRAM.
                 </p>
               </div>
 
               {/* Step 4 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
+              <div className="p-4 bg-[#f6f3f5] dark:bg-slate-950/60 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl space-y-2 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center font-mono">4</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold flex items-center justify-center font-mono">4</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h4 className="text-xs font-bold text-white">Live Telemetry & Ingest</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Monitor epoch loss and mAP live in the HUD. When complete, click <strong>&quot;Ingest Model Weights&quot;</strong> to auto-import <code className="text-emerald-300 font-mono">best.pt</code> directly into the Model Registry.
+                <h4 className="text-xs font-bold text-[#1d1d1f] dark:text-white">Live Telemetry & Ingest</h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Monitor epoch loss and mAP live in the HUD. When complete, click <strong>&quot;Ingest Model Weights&quot;</strong> to auto-import <code className="text-emerald-600 dark:text-emerald-300 font-mono">best.pt</code> directly into the Model Registry.
                 </p>
               </div>
             </div>
 
-            <div className="p-3 bg-gradient-to-r from-cyan-950/40 to-blue-950/40 border border-cyan-500/20 rounded-2xl flex items-center justify-between text-xs">
-              <span className="text-slate-300 flex items-center gap-2">
-                <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Full offline documentation available in <code className="text-cyan-300 font-mono">docs/KAGGLE_CLOUD_TRAINING_GUIDE.md</code></span>
+            <div className="p-3 bg-cyan-50/60 dark:bg-gradient-to-r dark:from-cyan-950/40 dark:to-blue-950/40 border border-cyan-200 dark:border-cyan-500/20 rounded-2xl flex items-center justify-between text-xs">
+              <span className="text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                <BookOpen className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>Full offline documentation available in <code className="text-cyan-700 dark:text-cyan-300 font-mono">docs/KAGGLE_CLOUD_TRAINING_GUIDE.md</code></span>
               </span>
             </div>
 
@@ -2353,7 +2353,7 @@ export const TrainingView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowQuickGuideModal(false)}
-                className="px-6 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold rounded-full text-xs shadow-md shadow-cyan-900/30 transition-all active:scale-98"
+                className="px-6 py-2.5 bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold rounded-full text-xs shadow-md transition-all active:scale-[0.98]"
               >
                 Got It, Let&apos;s Train
               </button>
@@ -2364,174 +2364,80 @@ export const TrainingView: React.FC = () => {
 
       {/* Kaggle Credentials Configuration Modal (Apple UI Design) */}
       {showKaggleCredsModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900/95 border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Key className="w-4 h-4 text-cyan-400" />
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900/95 border border-[#e5e5ea] dark:border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
+              <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white flex items-center gap-2">
+                <Key className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 Configure Kaggle API Credentials
               </h3>
               <button
                 onClick={() => setShowKaggleCredsModal(false)}
-                className="text-slate-400 hover:text-white text-base leading-none"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-base leading-none"
               >
                 &times;
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               To train models on Kaggle Dual-T4 GPUs for free, enter your Kaggle username and API key. You can generate a key at{' '}
               <a
                 href="https://www.kaggle.com/settings/api"
                 target="_blank"
                 rel="noreferrer"
-                className="text-cyan-400 underline font-medium"
+                className="text-cyan-600 dark:text-cyan-400 underline font-medium"
               >
                 kaggle.com/settings/api
               </a>{' '}
-              (click &quot;Create New Token&quot; to get your <code className="text-cyan-300">kaggle.json</code>).
+              (click &quot;Create New Token&quot; to get your <code className="text-cyan-700 dark:text-cyan-300">kaggle.json</code>).
             </p>
 
             <form onSubmit={handleSaveKaggleCredentials} className="space-y-3.5 text-xs">
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Kaggle Username</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Kaggle Username</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. your_kaggle_username"
                   value={kaggleUsernameInput}
                   onChange={(e) => setKaggleUsernameInput(e.target.value)}
-                  className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono focus:border-cyan-500"
+                  className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Kaggle API Key (32-char hex)</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Kaggle API Key (32-char hex)</label>
                 <input
                   type="password"
                   required
                   placeholder="e.g. 78a1bc49d..."
                   value={kaggleKeyInput}
                   onChange={(e) => setKaggleKeyInput(e.target.value)}
-                  className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono focus:border-cyan-500"
+                  className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 />
               </div>
 
-              <div className="p-3 bg-cyan-950/30 border border-cyan-500/20 rounded-xl text-[11px] text-cyan-200/80">
-                Credentials are saved to your local machine at <code className="text-cyan-300 font-mono">~/.kaggle/kaggle.json</code> and never shared.
+              <div className="p-3 bg-cyan-50/70 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-500/20 rounded-xl text-[11px] text-cyan-800 dark:text-cyan-200/80">
+                Credentials are saved to your local machine at <code className="text-cyan-700 dark:text-cyan-300 font-mono">~/.kaggle/kaggle.json</code> and never shared.
               </div>
 
               <div className="flex gap-2.5 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowKaggleCredsModal(false)}
-                  className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-full font-semibold transition-all"
+                  className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 rounded-full font-semibold transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={savingCreds}
-                  className="flex-1 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-full font-semibold shadow-md shadow-cyan-900/30 transition-all active:scale-98 disabled:opacity-50"
+                  className="flex-1 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-full font-semibold shadow-md shadow-cyan-900/20 transition-all active:scale-[0.98] disabled:opacity-50"
                 >
                   {savingCreds ? 'Authenticating...' : 'Save & Verify'}
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* Kaggle Cloud Quick Guide Modal (Apple UI Design) */}
-      {showQuickGuideModal && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-900/95 border border-white/15 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                  <Zap className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white">
-                    Kaggle Cloud Dual-T4 Training Quick Guide
-                  </h3>
-                  <p className="text-[11px] text-slate-400">Zero-setup headless cluster training in 3 clicks</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowQuickGuideModal(false)}
-                className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-slate-400 hover:text-white flex items-center justify-center text-sm transition-all"
-              >
-                &times;
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-              {/* Step 1 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 text-[10px] font-bold flex items-center justify-center font-mono">1</span>
-                  <Key className="w-3.5 h-3.5 text-cyan-400" />
-                </div>
-                <h4 className="text-xs font-bold text-white">Authenticate API Key</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Go to <a href="https://www.kaggle.com/settings" target="_blank" rel="noreferrer" className="text-cyan-400 underline font-medium">kaggle.com/settings</a>, ensure SMS phone verification is active, click <strong>&quot;Generate&quot;</strong> under API Tokens, and paste your key in VisionForge.
-                </p>
-              </div>
-
-              {/* Step 2 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold flex items-center justify-center font-mono">2</span>
-                  <Database className="w-3.5 h-3.5 text-blue-400" />
-                </div>
-                <h4 className="text-xs font-bold text-white">Freeze YOLO Dataset</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  In <strong>Datasets Studio</strong>, freeze an immutable version (e.g. <code className="text-blue-300 font-mono">v1.0</code>). VisionForge enforces strict source-video leakage prevention across train/val splits.
-                </p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-[10px] font-bold flex items-center justify-center font-mono">3</span>
-                  <Cpu className="w-3.5 h-3.5 text-purple-400" />
-                </div>
-                <h4 className="text-xs font-bold text-white">Dispatch Dual-T4 Training</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Select <code className="text-purple-300 font-mono">yolo26l.pt</code>, click <strong>&quot;Apply 50-Epoch Preset&quot;</strong>, and press <strong>&quot;Launch Headless Training&quot;</strong>. Training runs with PyTorch DDP on 32GB VRAM.
-                </p>
-              </div>
-
-              {/* Step 4 */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center font-mono">4</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                </div>
-                <h4 className="text-xs font-bold text-white">Live Telemetry & Ingest</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Monitor epoch loss and mAP live in the HUD. When complete, click <strong>&quot;Ingest Model Weights&quot;</strong> to auto-import <code className="text-emerald-300 font-mono">best.pt</code> directly into the Model Registry.
-                </p>
-              </div>
-            </div>
-
-            <div className="p-3 bg-gradient-to-r from-cyan-950/40 to-blue-950/40 border border-cyan-500/20 rounded-2xl flex items-center justify-between text-xs">
-              <span className="text-slate-300 flex items-center gap-2">
-                <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Full offline documentation available in <code className="text-cyan-300 font-mono">docs/KAGGLE_CLOUD_TRAINING_GUIDE.md</code></span>
-              </span>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setShowQuickGuideModal(false)}
-                className="px-6 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold rounded-full text-xs shadow-md shadow-cyan-900/30 transition-all active:scale-98"
-              >
-                Got It, Let&apos;s Train
-              </button>
-            </div>
           </div>
         </div>
       )}

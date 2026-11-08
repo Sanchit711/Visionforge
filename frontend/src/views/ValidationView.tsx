@@ -394,13 +394,13 @@ export const ValidationView: React.FC = () => {
       {activeTab === 'multi_model' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Model Selection & Settings */}
-          <div className="bg-slate-900/90 border border-white/10 rounded-2xl p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-cyan-400" />
+          <div className="bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-white/10 rounded-2xl p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
+              <h3 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <Sliders className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 Select Models to Audit (2 to 4)
               </h3>
-              <span className="text-[10px] font-mono text-cyan-400">
+              <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400 font-semibold">
                 {selectedMultiModels.length} / 4 Selected
               </span>
             </div>
@@ -419,14 +419,14 @@ export const ValidationView: React.FC = () => {
                     className={`p-2.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between text-xs font-mono ${
                       isSelected
                         ? `${color?.border || 'border-cyan-500'} ${color?.bg || 'bg-cyan-950/20'} text-white font-semibold`
-                        : 'border-slate-800 bg-slate-950/50 text-slate-400 hover:border-slate-700'
+                        : 'border-[#e5e5ea] dark:border-slate-800 bg-[#f6f3f5] dark:bg-slate-950/50 text-slate-700 dark:text-slate-400 hover:border-[#0071e3]/40'
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate">
                       {isSelected ? (
                         <CheckSquare className={`w-4 h-4 ${color?.text || 'text-cyan-400'}`} />
                       ) : (
-                        <Square className="w-4 h-4 text-slate-600" />
+                        <Square className="w-4 h-4 text-slate-400 dark:text-slate-600" />
                       )}
                       <span className="truncate">{opt.label}</span>
                     </div>
@@ -441,11 +441,11 @@ export const ValidationView: React.FC = () => {
             </div>
 
             {/* Evaluation Parameters */}
-            <div className="space-y-3 pt-2 border-t border-slate-800 text-xs">
+            <div className="space-y-3 pt-2 border-t border-[#e5e5ea] dark:border-slate-800 text-xs">
               <div>
-                <div className="flex justify-between text-slate-300 font-medium mb-1">
+                <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium mb-1">
                   <span>Sample Frames Count</span>
-                  <span className="font-mono text-cyan-400">{sampleCount} frames</span>
+                  <span className="font-mono text-cyan-600 dark:text-cyan-400 font-bold">{sampleCount} frames</span>
                 </div>
                 <input
                   type="range"
@@ -454,14 +454,14 @@ export const ValidationView: React.FC = () => {
                   step="5"
                   value={sampleCount}
                   onChange={(e) => setSampleCount(parseInt(e.target.value))}
-                  className="w-full h-1 bg-slate-800 rounded appearance-none"
+                  className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between text-slate-300 font-medium mb-1">
+                <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium mb-1">
                   <span>Confidence Threshold</span>
-                  <span className="font-mono text-cyan-400">{Math.round(confThreshold * 100)}%</span>
+                  <span className="font-mono text-cyan-600 dark:text-cyan-400 font-bold">{Math.round(confThreshold * 100)}%</span>
                 </div>
                 <input
                   type="range"
@@ -470,14 +470,14 @@ export const ValidationView: React.FC = () => {
                   step="0.05"
                   value={confThreshold}
                   onChange={(e) => setConfThreshold(parseFloat(e.target.value))}
-                  className="w-full h-1 bg-slate-800 rounded appearance-none"
+                  className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between text-slate-300 font-medium mb-1">
+                <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium mb-1">
                   <span>IoU NMS Threshold</span>
-                  <span className="font-mono text-indigo-400">{Math.round(iouThreshold * 100)}%</span>
+                  <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">{Math.round(iouThreshold * 100)}%</span>
                 </div>
                 <input
                   type="range"
@@ -486,7 +486,7 @@ export const ValidationView: React.FC = () => {
                   step="0.05"
                   value={iouThreshold}
                   onChange={(e) => setIouThreshold(parseFloat(e.target.value))}
-                  className="w-full h-1 bg-slate-800 rounded appearance-none"
+                  className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                 />
               </div>
             </div>
@@ -495,7 +495,7 @@ export const ValidationView: React.FC = () => {
             <button
               onClick={handleRunMultiModelBenchmark}
               disabled={benchmarkingMulti || selectedMultiModels.length === 0}
-              className="w-full py-3 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white rounded-full text-xs font-bold shadow-lg shadow-cyan-900/40 flex items-center justify-center gap-2 transition-all active:scale-98 disabled:opacity-50"
+              className="w-full py-3 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-full text-xs font-bold shadow-md shadow-blue-500/25 flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
             >
               <Sparkles className="w-4 h-4 text-cyan-200" />
               <span>{benchmarkingMulti ? 'Auditing Weights & Latency...' : 'Run Forensic Comparison & Introspect'}</span>
@@ -503,17 +503,17 @@ export const ValidationView: React.FC = () => {
           </div>
 
           {/* Right 2 Columns: Audit Dashboard & Scorecard */}
-          <div className="lg:col-span-2 bg-slate-900/90 border border-white/10 rounded-2xl p-5 shadow-xl space-y-5">
+          <div className="lg:col-span-2 bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-white/10 rounded-2xl p-5 shadow-sm space-y-5">
             {multiBenchmarkResult ? (
               <div className="space-y-5">
                 {/* Header & Export Actions */}
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
                   <div>
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                      <Award className="w-4 h-4 text-emerald-400" />
+                    <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white flex items-center gap-2">
+                      <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       Forensic Audit Matrix ({multiBenchmarkResult.num_models} Models Audited)
                     </h3>
-                    <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                       Evaluated on {multiBenchmarkResult.num_frames_evaluated} conveyor test frames
                     </p>
                   </div>
@@ -521,15 +521,15 @@ export const ValidationView: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleCopyReport(multiBenchmarkResult.markdown_report)}
-                      className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all"
+                      className="px-3 py-1.5 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-[#e5e5ea] dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs"
                     >
-                      {copiedReport ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-cyan-400" />}
+                      {copiedReport ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
                       <span>{copiedReport ? 'Copied!' : 'Copy Markdown'}</span>
                     </button>
 
                     <button
                       onClick={() => handleDownloadMarkdown(multiBenchmarkResult.markdown_report, 'visionforge_forensic_report.md')}
-                      className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-md"
+                      className="px-3 py-1.5 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs active:scale-[0.98]"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>Download .md</span>
@@ -539,8 +539,8 @@ export const ValidationView: React.FC = () => {
 
                 {/* 1. Architectural Introspection Grid */}
                 <div>
-                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                     Deep Weights Introspection
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -551,11 +551,11 @@ export const ValidationView: React.FC = () => {
                           <div className={`text-xs font-bold font-mono truncate ${color.text}`}>
                             {spec.name}
                           </div>
-                          <div className="text-[11px] text-slate-300 space-y-0.5 font-mono">
-                            <div>Params: <strong className="text-white">{spec.param_count_human}</strong></div>
-                            <div>Size: <strong className="text-white">{spec.file_size_mb} MB</strong></div>
-                            <div>Conv Layers: <strong className="text-white">{spec.conv_layers_count}</strong></div>
-                            <div>Est. GFLOPs: <strong className="text-white">{spec.estimated_gflops}</strong></div>
+                          <div className="text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5 font-mono">
+                            <div>Params: <strong className="text-[#1d1d1f] dark:text-white">{spec.param_count_human}</strong></div>
+                            <div>Size: <strong className="text-[#1d1d1f] dark:text-white">{spec.file_size_mb} MB</strong></div>
+                            <div>Conv Layers: <strong className="text-[#1d1d1f] dark:text-white">{spec.conv_layers_count}</strong></div>
+                            <div>Est. GFLOPs: <strong className="text-[#1d1d1f] dark:text-white">{spec.estimated_gflops}</strong></div>
                           </div>
                         </div>
                       );
@@ -565,13 +565,13 @@ export const ValidationView: React.FC = () => {
 
                 {/* 2. Static In-Flight Benchmark Table */}
                 <div>
-                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     In-Flight Inference Performance
                   </h4>
-                  <div className="overflow-x-auto rounded-xl border border-slate-800">
+                  <div className="overflow-x-auto rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
                     <table className="w-full text-left text-xs font-mono">
-                      <thead className="bg-slate-950/80 text-slate-400 uppercase text-[10px]">
+                      <thead className="bg-[#f6f3f5] dark:bg-slate-950/80 text-slate-600 dark:text-slate-400 uppercase text-[10px] border-b border-[#e5e5ea] dark:border-slate-800">
                         <tr>
                           <th className="p-3">Model Checkpoint</th>
                           <th className="p-3">Avg Latency</th>
@@ -580,17 +580,17 @@ export const ValidationView: React.FC = () => {
                           <th className="p-3">Mean Confidence</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800">
+                      <tbody className="divide-y divide-[#e5e5ea] dark:divide-slate-800">
                         {multiBenchmarkResult.benchmark_results.map((b: any, idx: number) => (
-                          <tr key={idx} className="hover:bg-slate-800/40">
-                            <td className="p-3 font-bold text-white flex items-center gap-2">
+                          <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                            <td className="p-3 font-bold text-[#1d1d1f] dark:text-white flex items-center gap-2">
                               <span className={`w-2 h-2 rounded-full ${modelPaletteColors[idx % modelPaletteColors.length].bg}`} />
                               <span>{b.model_name}</span>
                             </td>
-                            <td className="p-3 text-cyan-300 font-bold">{b.avg_latency_ms} ms</td>
-                            <td className="p-3 text-emerald-400 font-bold">{b.throughput_fps} FPS</td>
-                            <td className="p-3 text-slate-200">{b.total_detections}</td>
-                            <td className="p-3 text-brand-300">{(b.avg_confidence * 100).toFixed(1)}%</td>
+                            <td className="p-3 text-cyan-600 dark:text-cyan-300 font-bold">{b.avg_latency_ms} ms</td>
+                            <td className="p-3 text-emerald-600 dark:text-emerald-400 font-bold">{b.throughput_fps} FPS</td>
+                            <td className="p-3 text-slate-700 dark:text-slate-200">{b.total_detections}</td>
+                            <td className="p-3 text-[#0071e3] dark:text-brand-300 font-semibold">{(b.avg_confidence * 100).toFixed(1)}%</td>
                           </tr>
                         ))}
                       </tbody>
@@ -599,33 +599,33 @@ export const ValidationView: React.FC = () => {
                 </div>
 
                 {/* 3. Executive Winner Badges */}
-                <div className="p-4 bg-slate-950/90 border border-white/10 rounded-2xl space-y-3">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Award className="w-4 h-4 text-amber-400" />
+                <div className="p-4 bg-[#f6f3f5] dark:bg-slate-950/90 border border-[#e5e5ea] dark:border-white/10 rounded-2xl space-y-3 shadow-xs">
+                  <h4 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <Award className="w-4 h-4 text-amber-500" />
                     Executive Metric Winners
                   </h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">🚀 Speed Leader</div>
-                      <div className="font-bold text-cyan-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">🚀 Speed Leader</div>
+                      <div className="font-bold text-cyan-600 dark:text-cyan-400 truncate mt-0.5">
                         {multiBenchmarkResult.winners.fastest_inference}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">⚡ Highest Throughput</div>
-                      <div className="font-bold text-emerald-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">⚡ Highest Throughput</div>
+                      <div className="font-bold text-emerald-600 dark:text-emerald-400 truncate mt-0.5">
                         {multiBenchmarkResult.winners.highest_fps}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">💾 Compact Footprint</div>
-                      <div className="font-bold text-indigo-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">💾 Compact Footprint</div>
+                      <div className="font-bold text-indigo-600 dark:text-indigo-400 truncate mt-0.5">
                         {multiBenchmarkResult.winners.most_compact_size}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">🎯 Confidence Leader</div>
-                      <div className="font-bold text-amber-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-xs">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">🎯 Confidence Leader</div>
+                      <div className="font-bold text-amber-600 dark:text-amber-400 truncate mt-0.5">
                         {multiBenchmarkResult.winners.highest_confidence}
                       </div>
                     </div>
@@ -650,22 +650,22 @@ export const ValidationView: React.FC = () => {
       {activeTab === 'video_benchmark' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Video & Model Selection */}
-          <div className="bg-slate-900/90 border border-white/10 rounded-2xl p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Video className="w-4 h-4 text-purple-400" />
+          <div className="bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-white/10 rounded-2xl p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
+              <h3 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <Video className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                 In-Motion Temporal Setup
               </h3>
-              <span className="text-[10px] font-mono text-purple-400">Quad-Split Synthesizer</span>
+              <span className="text-[10px] font-mono text-purple-600 dark:text-purple-400 font-semibold">Quad-Split Synthesizer</span>
             </div>
 
             {/* Select Ingested Video */}
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-slate-300">Conveyor Video Stream</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">Conveyor Video Stream</label>
               <select
                 value={selectedVideoId}
                 onChange={(e) => setSelectedVideoId(e.target.value)}
-                className="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none text-xs"
+                className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none text-xs focus:border-[#0071e3] transition-colors"
               >
                 {videos.length === 0 && <option value="">No videos in project yet</option>}
                 {videos.map((v) => (
@@ -678,9 +678,9 @@ export const ValidationView: React.FC = () => {
 
             {/* Models to Benchmark (1 to 4) */}
             <div className="space-y-1.5">
-              <div className="flex justify-between text-xs text-slate-300 font-semibold">
+              <div className="flex justify-between text-xs text-slate-700 dark:text-slate-300 font-semibold">
                 <span>Select Models (1 to 4)</span>
-                <span className="font-mono text-purple-400">{selectedVideoModels.length}/4</span>
+                <span className="font-mono text-purple-600 dark:text-purple-400 font-bold">{selectedVideoModels.length}/4</span>
               </div>
               <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                 {defaultModelOptions.map((opt, i) => {
@@ -695,14 +695,14 @@ export const ValidationView: React.FC = () => {
                       className={`p-2.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between text-xs font-mono ${
                         isSelected
                           ? `${color?.border || 'border-purple-500'} ${color?.bg || 'bg-purple-950/20'} text-white font-semibold`
-                          : 'border-slate-800 bg-slate-950/50 text-slate-400 hover:border-slate-700'
+                          : 'border-[#e5e5ea] dark:border-slate-800 bg-[#f6f3f5] dark:bg-slate-950/50 text-slate-700 dark:text-slate-400 hover:border-[#0071e3]/40'
                       }`}
                     >
                       <div className="flex items-center gap-2 truncate">
                         {isSelected ? (
                           <CheckSquare className={`w-4 h-4 ${color?.text || 'text-purple-400'}`} />
                         ) : (
-                          <Square className="w-4 h-4 text-slate-600" />
+                          <Square className="w-4 h-4 text-slate-400 dark:text-slate-600" />
                         )}
                         <span className="truncate">{opt.label}</span>
                       </div>
@@ -718,10 +718,10 @@ export const ValidationView: React.FC = () => {
             </div>
 
             {/* Frame Limit Slider */}
-            <div className="space-y-2 pt-2 border-t border-slate-800 text-xs">
-              <div className="flex justify-between text-slate-300 font-medium">
+            <div className="space-y-2 pt-2 border-t border-[#e5e5ea] dark:border-slate-800 text-xs">
+              <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium">
                 <span>Frames to Process</span>
-                <span className="font-mono text-purple-400">{videoMaxFrames} frames</span>
+                <span className="font-mono text-purple-600 dark:text-purple-400 font-bold">{videoMaxFrames} frames</span>
               </div>
               <input
                 type="range"
@@ -730,7 +730,7 @@ export const ValidationView: React.FC = () => {
                 step="30"
                 value={videoMaxFrames}
                 onChange={(e) => setVideoMaxFrames(parseInt(e.target.value))}
-                className="w-full h-1 bg-slate-800 rounded appearance-none"
+                className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
               />
               <p className="text-[10px] text-slate-500">
                 Processes ~{((videoMaxFrames / 25) || 1).toFixed(1)} seconds of high-speed conveyor footage.
@@ -741,7 +741,7 @@ export const ValidationView: React.FC = () => {
             <button
               onClick={handleRunVideoBenchmark}
               disabled={runningVideoBench || selectedVideoModels.length === 0}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-full text-xs font-bold shadow-lg shadow-purple-900/40 flex items-center justify-center gap-2 transition-all active:scale-98 disabled:opacity-50"
+              className="w-full py-3 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-full text-xs font-bold shadow-md shadow-blue-500/25 flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
             >
               <Video className="w-4 h-4 text-purple-200" />
               <span>
@@ -755,14 +755,14 @@ export const ValidationView: React.FC = () => {
           </div>
 
           {/* Right 2 Columns: Video Player & Temporal Scorecard */}
-          <div className="lg:col-span-2 bg-slate-900/90 border border-white/10 rounded-2xl p-5 shadow-xl space-y-5">
+          <div className="lg:col-span-2 bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-white/10 rounded-2xl p-5 shadow-sm space-y-5">
             {videoBenchResult ? (
               <div className="space-y-5">
                 {/* Header & Export Actions */}
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
                   <div>
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                      <Flame className="w-4 h-4 text-purple-400" />
+                    <h3 className="text-sm font-bold text-[#1d1d1f] dark:text-white flex items-center gap-2">
+                      <Flame className="w-4 h-4 text-purple-500" />
                       In-Motion Temporal Audit: {videoBenchResult.video_filename}
                     </h3>
                     <p className="text-[11px] text-slate-400 font-mono mt-0.5">
@@ -870,45 +870,45 @@ export const ValidationView: React.FC = () => {
                 </div>
 
                 {/* In-Motion Winner Badges */}
-                <div className="p-4 bg-slate-950/90 border border-white/10 rounded-2xl space-y-3">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Award className="w-4 h-4 text-purple-400" />
+                <div className="p-4 bg-[#f6f3f5] dark:bg-slate-950/90 border border-[#e5e5ea] dark:border-white/10 rounded-2xl space-y-3">
+                  <h4 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <Award className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                     In-Motion Forensic Winners
                   </h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">🎯 Fastest Ingress Lock</div>
-                      <div className="font-bold text-cyan-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">🎯 Fastest Ingress Lock</div>
+                      <div className="font-bold text-cyan-600 dark:text-cyan-400 truncate mt-0.5">
                         {videoBenchResult.winners.fastest_ingress}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">🛡️ Rock-Solid Tracking (Lowest σ)</div>
-                      <div className="font-bold text-emerald-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">🛡️ Rock-Solid Tracking (Lowest σ)</div>
+                      <div className="font-bold text-emerald-600 dark:text-emerald-400 truncate mt-0.5">
                         {videoBenchResult.winners.lowest_jitter}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">🔒 Best Continuity</div>
-                      <div className="font-bold text-purple-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">🔒 Best Continuity</div>
+                      <div className="font-bold text-purple-600 dark:text-purple-400 truncate mt-0.5">
                         {videoBenchResult.winners.highest_continuity}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">✨ Fewest Dropouts</div>
-                      <div className="font-bold text-indigo-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">✨ Fewest Dropouts</div>
+                      <div className="font-bold text-indigo-600 dark:text-indigo-400 truncate mt-0.5">
                         {videoBenchResult.winners.least_dropouts}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">🧹 Cleanest (Lowest Roller Bleed)</div>
-                      <div className="font-bold text-amber-400 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">🧹 Cleanest (Lowest Roller Bleed)</div>
+                      <div className="font-bold text-amber-600 dark:text-amber-400 truncate mt-0.5">
                         {videoBenchResult.winners.least_roller_bleed}
                       </div>
                     </div>
-                    <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                      <div className="text-[10px] text-slate-400 uppercase font-medium">⚡ Speed Leader</div>
-                      <div className="font-bold text-cyan-300 truncate mt-0.5">
+                    <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">⚡ Speed Leader</div>
+                      <div className="font-bold text-cyan-600 dark:text-cyan-300 truncate mt-0.5">
                         {videoBenchResult.winners.fastest_latency}
                       </div>
                     </div>
@@ -916,8 +916,8 @@ export const ValidationView: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-slate-400 text-xs py-24 space-y-3">
-                <Video className="w-12 h-12 text-slate-600 animate-pulse" />
+              <div className="h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-xs py-24 space-y-3">
+                <Video className="w-12 h-12 text-slate-400 dark:text-slate-600 animate-pulse" />
                 <p className="max-w-md text-center leading-relaxed">
                   Select an industrial conveyor video stream and click <strong>&quot;Launch In-Motion Video Benchmark&quot;</strong> to evaluate tracking stability, bounding box jitter ($\sigma$), package ingress latency, and synthesize a synchronized multi-pane video.
                 </p>
@@ -933,25 +933,25 @@ export const ValidationView: React.FC = () => {
       {activeTab === 'single' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Input Selection & Parameters */}
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-brand-400" />
+          <div className="bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
+              <h3 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <Sliders className="w-4 h-4 text-[#0071e3]" />
                 Single Frame Setup
               </h3>
-              <span className="text-[10px] font-mono text-emerald-400">Ultralytics Predictor</span>
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">Ultralytics Predictor</span>
             </div>
 
             <div className="space-y-3.5 text-xs">
               {/* Primary Model */}
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   {compareMode ? 'Model A' : 'Model Weights'}
                 </label>
                 <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                  className="w-full bg-[#f6f3f5] dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-all"
                 >
                   <option value="best_8.pt">best_8.pt (Industrial Conveyor Baseline)</option>
                   <option value="best_9.pt">best_9.pt (Conveyor Package Fine-Tuned)</option>
@@ -969,11 +969,11 @@ export const ValidationView: React.FC = () => {
               {/* Model B if Comparison Mode */}
               {compareMode && (
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Model B (Comparison Candidate)</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Model B (Comparison Candidate)</label>
                   <select
                     value={modelB}
                     onChange={(e) => setModelB(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                    className="w-full bg-[#f6f3f5] dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-all"
                   >
                     <option value="best_9.pt">best_9.pt (Conveyor Package Fine-Tuned)</option>
                     <option value="best_8.pt">best_8.pt (Industrial Conveyor Baseline)</option>
@@ -991,14 +991,14 @@ export const ValidationView: React.FC = () => {
 
               {/* Test Image Source */}
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Select Project Frame</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Select Project Frame</label>
                 <select
                   value={selectedFramePath}
                   onChange={(e) => {
                     setSelectedFramePath(e.target.value);
                     setCustomFile(null);
                   }}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
+                  className="w-full bg-[#f6f3f5] dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none focus:border-[#0071e3] transition-all"
                 >
                   {frames.map((f, i) => (
                     <option key={f.id} value={f.file_path}>
@@ -1009,8 +1009,8 @@ export const ValidationView: React.FC = () => {
               </div>
 
               {/* Or Upload Custom Image */}
-              <div className="pt-2 border-t border-slate-800/80">
-                <label className="block text-[11px] text-slate-400 mb-1">Or Upload Custom Image File</label>
+              <div className="pt-2 border-t border-[#e5e5ea] dark:border-slate-800/80">
+                <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">Or Upload Custom Image File</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -1020,16 +1020,16 @@ export const ValidationView: React.FC = () => {
                       setSelectedFramePath('');
                     }
                   }}
-                  className="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-slate-300 file:font-semibold hover:file:bg-slate-700"
+                  className="w-full text-xs text-slate-600 dark:text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-white dark:file:bg-slate-800 file:border-[#e5e5ea] dark:file:border-transparent file:text-slate-700 dark:file:text-slate-300 file:font-semibold hover:file:bg-slate-100 shadow-xs cursor-pointer"
                 />
               </div>
 
               {/* Sliders */}
               <div className="space-y-3 pt-2">
                 <div>
-                  <div className="flex justify-between text-slate-300 font-medium mb-1">
+                  <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium mb-1">
                     <span>Confidence Threshold</span>
-                    <span className="font-mono text-brand-400">{Math.round(confThreshold * 100)}%</span>
+                    <span className="font-mono text-[#0071e3] font-bold">{Math.round(confThreshold * 100)}%</span>
                   </div>
                   <input
                     type="range"
@@ -1038,14 +1038,14 @@ export const ValidationView: React.FC = () => {
                     step="0.05"
                     value={confThreshold}
                     onChange={(e) => setConfThreshold(parseFloat(e.target.value))}
-                    className="w-full h-1 bg-slate-800 rounded appearance-none"
+                    className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                   />
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-slate-300 font-medium mb-1">
+                  <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium mb-1">
                     <span>IoU NMS Threshold</span>
-                    <span className="font-mono text-indigo-400">{Math.round(iouThreshold * 100)}%</span>
+                    <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">{Math.round(iouThreshold * 100)}%</span>
                   </div>
                   <input
                     type="range"
@@ -1054,7 +1054,7 @@ export const ValidationView: React.FC = () => {
                     step="0.05"
                     value={iouThreshold}
                     onChange={(e) => setIouThreshold(parseFloat(e.target.value))}
-                    className="w-full h-1 bg-slate-800 rounded appearance-none"
+                    className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                   />
                 </div>
               </div>
@@ -1067,7 +1067,7 @@ export const ValidationView: React.FC = () => {
                     setInferenceResult(null);
                     setComparisonResult(null);
                   }}
-                  className="text-xs text-slate-400 hover:text-white flex items-center gap-1 font-semibold"
+                  className="text-xs text-slate-600 dark:text-slate-400 hover:text-[#0071e3] dark:hover:text-white flex items-center gap-1 font-semibold transition-colors"
                 >
                   <Split className="w-3.5 h-3.5" />
                   <span>{compareMode ? 'Disable Comparison' : 'Enable Dual Compare'}</span>
@@ -1077,7 +1077,7 @@ export const ValidationView: React.FC = () => {
               <button
                 onClick={handleRunSingleInference}
                 disabled={inferring}
-                className="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-full text-xs font-semibold shadow-lg shadow-brand-600/30 flex items-center justify-center gap-2 transition-all disabled:opacity-50 mt-4 active:scale-98"
+                className="w-full py-2.5 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-full text-xs font-semibold shadow-md shadow-[#0071e3]/20 flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 mt-4 cursor-pointer"
               >
                 <ScanEye className="w-4 h-4" />
                 <span>{inferring ? 'Benchmarking Inference...' : compareMode ? 'Compare Both Models' : 'Run Inference'}</span>
@@ -1086,55 +1086,55 @@ export const ValidationView: React.FC = () => {
           </div>
 
           {/* Right 2 Columns: Single Frame Output */}
-          <div className="lg:col-span-2 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4">
+          <div className="lg:col-span-2 bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col justify-between space-y-4">
             {comparisonResult ? (
               <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Split className="w-4 h-4 text-brand-400" />
+                <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
+                  <h3 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <Split className="w-4 h-4 text-[#0071e3]" />
                     Dual Model Comparison Output
                   </h3>
-                  <span className="text-[11px] font-mono text-indigo-400">
+                  <span className="text-[11px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold">
                     Latency Diff: {comparisonResult.latency_diff_ms} ms
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-slate-850 p-3 rounded-xl border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between text-xs font-bold text-white">
+                  <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#1d1d1f] dark:text-white">
                       <span>{comparisonResult.model_a.name}</span>
-                      <span className="font-mono text-brand-400">
+                      <span className="font-mono text-[#0071e3]">
                         {comparisonResult.model_a.detection_count} detections
                       </span>
                     </div>
-                    <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                    <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center shadow-inner">
                       <img
                         src={comparisonResult.model_a.result.annotated_image_url}
                         alt="Model A Result"
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="flex justify-between text-[11px] font-mono text-slate-400 pt-1">
+                    <div className="flex justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-1">
                       <span>Latency: {comparisonResult.model_a.result.latency_ms} ms</span>
                       <span>FPS: {comparisonResult.model_a.result.fps}</span>
                     </div>
                   </div>
 
-                  <div className="bg-slate-850 p-3 rounded-xl border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between text-xs font-bold text-white">
+                  <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#1d1d1f] dark:text-white">
                       <span>{comparisonResult.model_b.name}</span>
-                      <span className="font-mono text-indigo-400">
+                      <span className="font-mono text-indigo-600 dark:text-indigo-400">
                         {comparisonResult.model_b.detection_count} detections
                       </span>
                     </div>
-                    <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                    <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center shadow-inner">
                       <img
                         src={comparisonResult.model_b.result.annotated_image_url}
                         alt="Model B Result"
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="flex justify-between text-[11px] font-mono text-slate-400 pt-1">
+                    <div className="flex justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-1">
                       <span>Latency: {comparisonResult.model_b.result.latency_ms} ms</span>
                       <span>FPS: {comparisonResult.model_b.result.fps}</span>
                     </div>
@@ -1144,27 +1144,27 @@ export const ValidationView: React.FC = () => {
             ) : inferenceResult ? (
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-3 text-center">
-                  <div className="bg-slate-850 p-3 rounded-xl border border-slate-800">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold">Latency</div>
-                    <div className="text-base font-bold text-emerald-400 font-mono mt-1">
+                  <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold">Latency</div>
+                    <div className="text-base font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-1">
                       {inferenceResult.latency_ms} ms
                     </div>
                   </div>
-                  <div className="bg-slate-850 p-3 rounded-xl border border-slate-800">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold">Throughput</div>
-                    <div className="text-base font-bold text-brand-400 font-mono mt-1">
+                  <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold">Throughput</div>
+                    <div className="text-base font-bold text-[#0071e3] font-mono mt-1">
                       {inferenceResult.fps} FPS
                     </div>
                   </div>
-                  <div className="bg-slate-850 p-3 rounded-xl border border-slate-800">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold">Compute Device</div>
-                    <div className="text-base font-bold text-indigo-400 font-mono mt-1">
+                  <div className="bg-[#f6f3f5] dark:bg-slate-850 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 shadow-sm">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-semibold">Compute Device</div>
+                    <div className="text-base font-bold text-indigo-600 dark:text-indigo-400 font-mono mt-1">
                       {inferenceResult.device_used}
                     </div>
                   </div>
                 </div>
 
-                <div className="aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                <div className="aspect-video bg-black rounded-xl overflow-hidden border border-[#e5e5ea] dark:border-slate-800 flex items-center justify-center shadow-inner">
                   <img
                     src={inferenceResult.annotated_image_url}
                     alt="Inference visualization"
@@ -1172,27 +1172,27 @@ export const ValidationView: React.FC = () => {
                   />
                 </div>
 
-                <div className="bg-slate-850/60 p-3 rounded-xl border border-slate-800 space-y-2">
-                  <div className="text-xs font-bold text-white flex items-center justify-between">
+                <div className="bg-[#f6f3f5] dark:bg-slate-850/60 p-3 rounded-xl border border-[#e5e5ea] dark:border-slate-800 space-y-2">
+                  <div className="text-xs font-bold text-[#1d1d1f] dark:text-white flex items-center justify-between">
                     <span>Detected Objects ({inferenceResult.detections.length})</span>
-                    <span className="text-[10px] font-mono text-slate-400">Class &bull; Conf &bull; Coordinates</span>
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">Class &bull; Conf &bull; Coordinates</span>
                   </div>
 
                   <div className="flex flex-wrap gap-2 max-h-28 overflow-y-auto pr-1">
                     {inferenceResult.detections.map((d: any, idx: number) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-1.5"
+                        className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-200 flex items-center gap-1.5 shadow-xs"
                       >
-                        <span className="font-semibold text-white capitalize">{d.class_name}</span>
-                        <span className="text-emerald-400">{(d.confidence * 100).toFixed(0)}%</span>
+                        <span className="font-semibold text-[#1d1d1f] dark:text-white capitalize">{d.class_name}</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-bold">{(d.confidence * 100).toFixed(0)}%</span>
                       </span>
                     ))}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="h-full flex items-center justify-center text-slate-500 text-xs py-24">
+              <div className="h-full flex items-center justify-center text-slate-400 dark:text-slate-500 text-xs py-24">
                 Select an image and click &apos;Run Inference&apos; to benchmark detection latency and visualize predictions.
               </div>
             )}

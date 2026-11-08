@@ -232,9 +232,9 @@ export const VideoLabView: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
       {/* Top action bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-[#e5e5ea] dark:border-white/[0.08]">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Video Ingestion & Crop Lab</h2>
+          <h2 className="text-lg font-bold text-[#1d1d1f] dark:text-white tracking-tight">Video Ingestion & Crop Lab</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Trim video sequences, define normalized ROI crop bounding boxes, and save reusable camera presets
           </p>
@@ -244,13 +244,13 @@ export const VideoLabView: React.FC = () => {
           <button
             onClick={handleGenerateSynthetic}
             disabled={uploading}
-            className="flex items-center gap-2 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all disabled:opacity-50 active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all disabled:opacity-50 active:scale-95 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Generate Demo Video</span>
           </button>
 
-          <label className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-600/25 cursor-pointer transition-all active:scale-95">
+          <label className="flex items-center gap-2 px-4 py-2 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-full text-xs font-semibold shadow-md shadow-[#0071e3]/25 cursor-pointer transition-all active:scale-95">
             <Upload className="w-3.5 h-3.5" />
             <span>{uploading ? 'Uploading...' : 'Upload Video'}</span>
             <input type="file" accept="video/*" onChange={handleFileUpload} className="hidden" />
@@ -260,10 +260,10 @@ export const VideoLabView: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Video List */}
-        <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] rounded-3xl p-4 shadow-sm flex flex-col h-[640px]">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06] text-xs font-bold text-slate-900 dark:text-white">
+        <div className="bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] rounded-3xl p-4 shadow-sm flex flex-col h-[640px]">
+          <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-white/[0.06] text-xs font-bold text-[#1d1d1f] dark:text-white">
             <span className="flex items-center gap-2">
-              <FileVideo className="w-4 h-4 text-blue-500" />
+              <FileVideo className="w-4 h-4 text-[#0071e3]" />
               Source Videos ({videos.length})
             </span>
             <button onClick={loadVideos} className="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 transition-colors">
@@ -287,8 +287,8 @@ export const VideoLabView: React.FC = () => {
                     onClick={() => setSelectedVideo(vid)}
                     className={`p-3 rounded-2xl border cursor-pointer transition-all ${
                       isSel
-                        ? 'border-blue-500 bg-blue-50/80 dark:bg-blue-950/20 text-slate-900 dark:text-white shadow-sm'
-                        : 'border-slate-200/80 dark:border-white/[0.06] bg-slate-50/50 dark:bg-white/[0.02] hover:bg-slate-100 dark:hover:bg-white/[0.05] text-slate-700 dark:text-slate-300'
+                        ? 'border-[#0071e3] bg-[#0071e3]/10 dark:bg-blue-950/20 text-[#1d1d1f] dark:text-white shadow-sm'
+                        : 'border-[#e5e5ea] dark:border-white/[0.06] bg-[#f6f3f5] dark:bg-white/[0.02] hover:bg-[#eaeaea] dark:hover:bg-white/[0.05] text-slate-700 dark:text-slate-300'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -309,7 +309,7 @@ export const VideoLabView: React.FC = () => {
         </div>
 
         {/* Right Column (2 cols): Interactive Video Player & Visual Crop */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] rounded-3xl p-5 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] rounded-3xl p-5 shadow-sm flex flex-col justify-between">
           {selectedVideo ? (
             <div className="space-y-4">
               {/* Video Preview Container with Rectangular Crop Overlay */}
@@ -382,7 +382,7 @@ export const VideoLabView: React.FC = () => {
 
               {/* Player Timeline & Controls */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
                   <span>{currentTime.toFixed(2)}s / {duration.toFixed(2)}s</span>
                   <span>Frame: {Math.round(currentTime * (selectedVideo.fps || 24))} / {selectedVideo.total_frames}</span>
                 </div>
@@ -401,13 +401,15 @@ export const VideoLabView: React.FC = () => {
                       videoRef.current.currentTime = t;
                     }
                   }}
-                  className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                  className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-[#0071e3]"
                 />
 
                 {/* Trimming Scrubbers */}
                 <div className="grid grid-cols-2 gap-4 pt-1 text-xs">
                   <div>
-                    <label className="text-[11px] text-slate-400 block mb-1">Trim Start: <span className="text-white font-mono">{trimStart.toFixed(2)}s</span></label>
+                    <label className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">
+                      Trim Start: <span className="text-[#1d1d1f] dark:text-white font-mono font-semibold">{trimStart.toFixed(2)}s</span>
+                    </label>
                     <input
                       type="range"
                       min="0"
@@ -415,11 +417,13 @@ export const VideoLabView: React.FC = () => {
                       step="0.1"
                       value={trimStart}
                       onChange={(e) => setTrimStart(parseFloat(e.target.value))}
-                      className="w-full h-1 bg-slate-800 rounded appearance-none cursor-pointer"
+                      className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none cursor-pointer accent-[#0071e3]"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] text-slate-400 block mb-1">Trim End: <span className="text-white font-mono">{trimEnd.toFixed(2)}s</span></label>
+                    <label className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">
+                      Trim End: <span className="text-[#1d1d1f] dark:text-white font-mono font-semibold">{trimEnd.toFixed(2)}s</span>
+                    </label>
                     <input
                       type="range"
                       min="0"
@@ -427,7 +431,7 @@ export const VideoLabView: React.FC = () => {
                       step="0.1"
                       value={trimEnd}
                       onChange={(e) => setTrimEnd(parseFloat(e.target.value))}
-                      className="w-full h-1 bg-slate-800 rounded appearance-none cursor-pointer"
+                      className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none cursor-pointer accent-[#0071e3]"
                     />
                   </div>
                 </div>
@@ -437,38 +441,38 @@ export const VideoLabView: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => stepFrame(-1)}
-                      className="p-2 bg-slate-850 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white"
+                      className="p-2 bg-[#f5f5f7] hover:bg-[#eaeaea] dark:bg-slate-850 dark:hover:bg-slate-800 rounded-lg text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white border border-[#e5e5ea] dark:border-transparent transition-colors cursor-pointer"
                       title="Step -1 frame"
                     >
                       <SkipBack className="w-4 h-4" />
                     </button>
                     <button
                       onClick={togglePlay}
-                      className="p-2.5 bg-brand-600 hover:bg-brand-500 rounded-xl text-white shadow-md shadow-brand-600/30"
+                      className="p-2.5 bg-[#0071e3] hover:bg-[#0077ed] rounded-xl text-white shadow-md shadow-[#0071e3]/25 active:scale-95 transition-all cursor-pointer"
                       title={isPlaying ? 'Pause' : 'Play'}
                     >
                       {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                     </button>
                     <button
                       onClick={() => stepFrame(1)}
-                      className="p-2 bg-slate-850 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white"
+                      className="p-2 bg-[#f5f5f7] hover:bg-[#eaeaea] dark:bg-slate-850 dark:hover:bg-slate-800 rounded-lg text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white border border-[#e5e5ea] dark:border-transparent transition-colors cursor-pointer"
                       title="Step +1 frame"
                     >
                       <SkipForward className="w-4 h-4" />
                     </button>
 
                     {/* Mode Toggle: Video Player vs Precision Frame Engine */}
-                    <div className="flex items-center bg-slate-850 p-1 rounded-xl border border-slate-800 ml-2">
+                    <div className="flex items-center bg-[#f6f3f5] dark:bg-slate-850 p-1 rounded-xl border border-[#e5e5ea] dark:border-slate-800 ml-2">
                       <button
                         onClick={() => {
                           setPreviewMode('video');
                           setVideoError(false);
                           if (videoRef.current) videoRef.current.load();
                         }}
-                        className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
                           previewMode === 'video' && !videoError
-                            ? 'bg-brand-600 text-white shadow'
-                            : 'text-slate-400 hover:text-white'
+                            ? 'bg-[#0071e3] text-white shadow-xs'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white'
                         }`}
                         title="Stream video with HTML5 player"
                       >
@@ -477,10 +481,10 @@ export const VideoLabView: React.FC = () => {
                       </button>
                       <button
                         onClick={() => setPreviewMode('frame')}
-                        className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
                           previewMode === 'frame' || videoError
-                            ? 'bg-amber-600 text-white shadow'
-                            : 'text-slate-400 hover:text-white'
+                            ? 'bg-amber-600 text-white shadow-xs'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white'
                         }`}
                         title="Precision frame-by-frame rendering"
                       >
@@ -491,28 +495,28 @@ export const VideoLabView: React.FC = () => {
                   </div>
 
                   {/* Aspect Ratio Buttons */}
-                  <div className="flex items-center gap-1.5 text-xs bg-slate-850 p-1 rounded-xl border border-slate-800">
+                  <div className="flex items-center gap-1 text-xs bg-[#f6f3f5] dark:bg-slate-850 p-1 rounded-xl border border-[#e5e5ea] dark:border-slate-800">
                     <button
                       onClick={() => applyAspectRatio('1:1')}
-                      className={`px-2 py-1 rounded-lg font-mono text-[11px] ${aspectRatio === '1:1' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                      className={`px-2 py-1 rounded-lg font-mono text-[11px] transition-colors ${aspectRatio === '1:1' ? 'bg-[#0071e3] text-white font-semibold shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white'}`}
                     >
                       1:1
                     </button>
                     <button
                       onClick={() => applyAspectRatio('16:9')}
-                      className={`px-2 py-1 rounded-lg font-mono text-[11px] ${aspectRatio === '16:9' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                      className={`px-2 py-1 rounded-lg font-mono text-[11px] transition-colors ${aspectRatio === '16:9' ? 'bg-[#0071e3] text-white font-semibold shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white'}`}
                     >
                       16:9
                     </button>
                     <button
                       onClick={() => applyAspectRatio('4:3')}
-                      className={`px-2 py-1 rounded-lg font-mono text-[11px] ${aspectRatio === '4:3' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                      className={`px-2 py-1 rounded-lg font-mono text-[11px] transition-colors ${aspectRatio === '4:3' ? 'bg-[#0071e3] text-white font-semibold shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white'}`}
                     >
                       4:3
                     </button>
                     <button
                       onClick={() => applyAspectRatio('reset')}
-                      className="px-2 py-1 rounded-lg text-[11px] text-slate-400 hover:text-white"
+                      className="px-2 py-1 rounded-lg text-[11px] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
                     >
                       Reset
                     </button>
@@ -521,10 +525,10 @@ export const VideoLabView: React.FC = () => {
               </div>
 
               {/* Crop Coordinate Sliders */}
-              <div className="bg-slate-50 dark:bg-white/[0.03] p-4 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] space-y-3">
-                <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+              <div className="bg-[#f6f3f5] dark:bg-white/[0.03] p-4 rounded-2xl border border-[#e5e5ea] dark:border-white/[0.08] space-y-3">
+                <div className="text-xs font-bold text-[#1d1d1f] dark:text-white flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Crop className="w-4 h-4 text-blue-500" />
+                    <Crop className="w-4 h-4 text-[#0071e3]" />
                     ROI Coordinates (Normalized & Pixels)
                   </span>
                   <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400">
@@ -534,7 +538,7 @@ export const VideoLabView: React.FC = () => {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                   <div>
-                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5">X Position</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">X Position</label>
                     <input
                       type="range"
                       min="0"
@@ -542,11 +546,11 @@ export const VideoLabView: React.FC = () => {
                       step="0.02"
                       value={cropBox.x}
                       onChange={(e) => setCropBox({ ...cropBox, x: parseFloat(e.target.value) })}
-                      className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none"
+                      className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5">Y Position</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Y Position</label>
                     <input
                       type="range"
                       min="0"
@@ -554,11 +558,11 @@ export const VideoLabView: React.FC = () => {
                       step="0.02"
                       value={cropBox.y}
                       onChange={(e) => setCropBox({ ...cropBox, y: parseFloat(e.target.value) })}
-                      className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none"
+                      className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5">Crop Width</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Crop Width</label>
                     <input
                       type="range"
                       min="0.1"
@@ -566,11 +570,11 @@ export const VideoLabView: React.FC = () => {
                       step="0.02"
                       value={cropBox.w}
                       onChange={(e) => setCropBox({ ...cropBox, w: parseFloat(e.target.value) })}
-                      className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none"
+                      className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5">Crop Height</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Crop Height</label>
                     <input
                       type="range"
                       min="0.1"
@@ -578,23 +582,23 @@ export const VideoLabView: React.FC = () => {
                       step="0.02"
                       value={cropBox.h}
                       onChange={(e) => setCropBox({ ...cropBox, h: parseFloat(e.target.value) })}
-                      className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded appearance-none"
+                      className="w-full h-1.5 bg-[#e5e5ea] dark:bg-slate-800 rounded appearance-none accent-[#0071e3]"
                     />
                   </div>
                 </div>
 
                 {/* Presets row */}
-                <div className="flex items-center gap-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06]">
+                <div className="flex items-center gap-2 pt-2 border-t border-[#e5e5ea] dark:border-white/[0.06]">
                   <input
                     type="text"
                     placeholder="New preset name..."
                     value={presetName}
                     onChange={(e) => setPresetName(e.target.value)}
-                    className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 flex-1 outline-none"
+                    className="bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-[#1d1d1f] dark:text-white placeholder-slate-400 flex-1 outline-none focus:border-[#0071e3]"
                   />
                   <button
                     onClick={handleSavePreset}
-                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-semibold transition-colors"
+                    className="px-3.5 py-1.5 bg-white hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-[#e5e5ea] dark:border-slate-700 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
                   >
                     Save Preset
                   </button>
@@ -604,7 +608,7 @@ export const VideoLabView: React.FC = () => {
                         const p = presets.find((pr) => pr.id === e.target.value);
                         if (p) setCropBox({ x: p.x, y: p.y, w: p.width, h: p.height });
                       }}
-                      className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 outline-none cursor-pointer"
+                      className="bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 outline-none cursor-pointer"
                     >
                       <option value="">Load Preset...</option>
                       {presets.map((p) => (
@@ -622,7 +626,7 @@ export const VideoLabView: React.FC = () => {
                 <button
                   onClick={handleProcessCrop}
                   disabled={processingCrop}
-                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-500/25 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+                  className="px-5 py-2.5 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-full text-xs font-semibold shadow-md shadow-[#0071e3]/25 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
                 >
                   <Crop className="w-4 h-4" />
                   <span>{processingCrop ? 'Processing Crop...' : 'Apply Crop & Trim'}</span>
@@ -630,7 +634,7 @@ export const VideoLabView: React.FC = () => {
 
                 <button
                   onClick={() => setStage('frame_studio')}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-semibold shadow-md shadow-emerald-600/25 flex items-center gap-2 transition-all active:scale-95"
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-semibold shadow-md shadow-emerald-600/25 flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
                 >
                   <span>Proceed to Frame Studio</span>
                   <ArrowRight className="w-4 h-4" />

@@ -19,28 +19,28 @@ export const NotificationToast: React.FC = () => {
             ? AlertTriangle
             : Info;
 
-        const colorClasses =
+        const iconColor =
           n.type === 'success'
-            ? 'border-emerald-500/50 bg-emerald-950/80 text-emerald-200'
+            ? 'text-emerald-500'
             : n.type === 'error'
-            ? 'border-rose-500/50 bg-rose-950/80 text-rose-200'
+            ? 'text-rose-500'
             : n.type === 'warning'
-            ? 'border-amber-500/50 bg-amber-950/80 text-amber-200'
-            : 'border-blue-500/50 bg-blue-950/80 text-blue-200';
+            ? 'text-amber-500'
+            : 'text-[#0071e3]';
 
         return (
           <div
             key={n.id}
-            className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border backdrop-blur-md shadow-2xl transition-all duration-300 animate-slide-in ${colorClasses}`}
+            className="pointer-events-auto flex items-start gap-3 p-3.5 rounded-2xl border border-[#e5e5ea] dark:border-white/10 bg-white/95 dark:bg-[#161f30]/95 backdrop-blur-xl shadow-xl shadow-black/10 dark:shadow-black/40 transition-all duration-300 animate-slide-in"
           >
-            <Icon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+            <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${iconColor}`} />
             <div className="flex-1 min-w-0">
-              <div className="font-semibold text-sm leading-tight text-white">{n.title}</div>
-              {n.message && <div className="text-xs opacity-90 mt-1 leading-relaxed break-words">{n.message}</div>}
+              <div className="font-semibold text-xs text-[#1d1d1f] dark:text-white leading-tight">{n.title}</div>
+              {n.message && <div className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed break-words">{n.message}</div>}
             </div>
             <button
               onClick={() => removeNotification(n.id)}
-              className="text-white/60 hover:text-white p-1 rounded-lg transition-colors"
+              className="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>

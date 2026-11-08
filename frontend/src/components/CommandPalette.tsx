@@ -182,14 +182,14 @@ export const CommandPalette: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/60 backdrop-blur-md animate-fade-in">
       <div
-        className="w-full max-w-xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="w-full max-w-xl bg-white/95 dark:bg-[#121826]/95 backdrop-blur-2xl border border-[#e5e5ea] dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Bar */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-800 bg-slate-850/60">
-          <Search className="w-5 h-5 text-slate-400" />
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#e5e5ea] dark:border-white/10 bg-[#fbfbfd]/80 dark:bg-black/30">
+          <Search className="w-5 h-5 text-[#86868b]" />
           <input
             ref={inputRef}
             type="text"
@@ -211,9 +211,9 @@ export const CommandPalette: React.FC = () => {
                 handleSelect(filtered[selectedIndex]);
               }
             }}
-            className="flex-1 bg-transparent text-sm text-white placeholder-slate-500 outline-none"
+            className="flex-1 bg-transparent text-sm text-[#1d1d1f] dark:text-white placeholder-[#86868b] outline-none"
           />
-          <kbd className="px-2 py-0.5 text-[10px] bg-slate-800 rounded border border-slate-700 text-slate-400 font-mono">
+          <kbd className="px-2 py-0.5 text-[10px] bg-[#f5f5f7] dark:bg-white/[0.08] rounded-md border border-[#e5e5ea] dark:border-white/10 text-[#86868b] font-mono">
             ESC
           </kbd>
         </div>
@@ -221,7 +221,7 @@ export const CommandPalette: React.FC = () => {
         {/* Results List */}
         <div className="max-h-96 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
-            <div className="p-6 text-center text-xs text-slate-500">No matching commands found.</div>
+            <div className="p-6 text-center text-xs text-[#86868b]">No matching commands found.</div>
           ) : (
             filtered.map((item, idx) => {
               const Icon = item.icon;
@@ -232,17 +232,17 @@ export const CommandPalette: React.FC = () => {
                   onClick={() => handleSelect(item)}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors ${
-                    isSelected ? 'bg-brand-600 text-white font-semibold' : 'text-slate-300 hover:bg-slate-800/80'
+                    isSelected ? 'bg-[#0071e3] text-white font-semibold shadow-sm' : 'text-[#414753] dark:text-slate-300 hover:bg-[#f5f5f7] dark:hover:bg-white/[0.06]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-slate-400'}`} />
+                    <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-[#86868b]'}`} />
                     <span>{item.title}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded font-mono ${
-                        isSelected ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
+                        isSelected ? 'bg-white/20 text-white' : 'bg-[#f5f5f7] dark:bg-white/[0.08] text-[#86868b]'
                       }`}
                     >
                       {item.category}

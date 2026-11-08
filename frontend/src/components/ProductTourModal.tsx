@@ -697,9 +697,9 @@ export const ProductTourModal: React.FC = () => {
         <div className="absolute inset-0 bg-black/25 pointer-events-none transition-opacity duration-300" />
 
         {/* Floating Spotlight Glass HUD */}
-        <div className="pointer-events-auto relative w-full max-w-3xl mx-auto bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-2xl border border-slate-200/80 dark:border-white/15 rounded-[28px] shadow-2xl shadow-black/50 overflow-hidden transition-all duration-300 animate-slide-up">
+        <div className="pointer-events-auto relative w-full max-w-3xl mx-auto bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-2xl border border-[#e5e5ea] dark:border-white/15 rounded-[28px] shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden transition-all duration-300 animate-slide-up">
           {/* Top Bar with Stage Navigator, Mode Switcher & Auto-Play */}
-          <div className="px-5 py-3 border-b border-slate-100 dark:border-white/[0.08] flex items-center justify-between gap-3 bg-slate-50/50 dark:bg-white/[0.02]">
+          <div className="px-5 py-3 border-b border-[#e5e5ea] dark:border-white/[0.08] flex items-center justify-between gap-3 bg-[#f6f3f5] dark:bg-white/[0.02]">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${step.accentColor} flex items-center justify-center text-white shadow-sm flex-shrink-0`}>
                 <step.icon className="w-4 h-4" />
@@ -816,7 +816,7 @@ export const ProductTourModal: React.FC = () => {
                     onClick={() => handleStepClick(idx)}
                     className={`h-2 rounded-full transition-all duration-300 ${
                       isActive
-                        ? 'w-7 bg-blue-500 shadow-sm'
+                        ? 'w-7 bg-[#0071e3] shadow-sm'
                         : 'w-2 bg-slate-300 dark:bg-white/20 hover:bg-slate-400 dark:hover:bg-white/40'
                     }`}
                     title={`Stage ${idx + 1}: ${s.badge}`}
@@ -830,7 +830,7 @@ export const ProductTourModal: React.FC = () => {
               <button
                 onClick={handlePrev}
                 disabled={isFirst}
-                className={`flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                className={`flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   isFirst
                     ? 'opacity-30 cursor-not-allowed text-slate-400'
                     : 'text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/[0.08] active:scale-95'
@@ -842,7 +842,7 @@ export const ProductTourModal: React.FC = () => {
 
               <button
                 onClick={() => setIsMinimized(true)}
-                className="px-3 py-1.5 rounded-full bg-slate-200 dark:bg-white/[0.08] hover:bg-slate-300 dark:hover:bg-white/[0.12] text-slate-800 dark:text-slate-200 text-xs font-medium transition-all"
+                className="px-3.5 py-1.5 rounded-full bg-slate-200/80 dark:bg-white/[0.08] hover:bg-slate-300 dark:hover:bg-white/[0.12] text-slate-800 dark:text-slate-200 text-xs font-medium transition-all cursor-pointer"
                 title="Interact directly with the live view"
               >
                 Test Stage Live
@@ -850,7 +850,7 @@ export const ProductTourModal: React.FC = () => {
 
               <button
                 onClick={handleNext}
-                className="flex items-center gap-1.5 px-5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/25 transition-all hover:scale-[1.02] active:scale-95"
+                className="flex items-center gap-1.5 px-5 py-1.5 rounded-full bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs font-semibold shadow-md shadow-[#0071e3]/25 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
               >
                 <span>{isLast ? 'Complete Tour' : 'Next Stage'}</span>
                 <ChevronRight className="w-4 h-4" />
@@ -980,7 +980,7 @@ export const ProductTourModal: React.FC = () => {
                   onClick={() => handleStepClick(idx)}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     isActive
-                      ? 'w-7 bg-blue-500'
+                      ? 'w-7 bg-[#0071e3]'
                       : 'w-2 bg-slate-300 dark:bg-white/20 hover:bg-slate-400 dark:hover:bg-white/40'
                   }`}
                   title={`Go to stage ${idx + 1}`}
@@ -994,7 +994,7 @@ export const ProductTourModal: React.FC = () => {
             <button
               onClick={handlePrev}
               disabled={isFirst}
-              className={`flex items-center gap-1 px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 isFirst
                   ? 'opacity-30 cursor-not-allowed text-slate-400'
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/[0.08] active:scale-95'
@@ -1006,7 +1006,7 @@ export const ProductTourModal: React.FC = () => {
 
             <button
               onClick={handleNext}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-95"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs font-semibold shadow-md shadow-[#0071e3]/20 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
             >
               <span>{isLast ? 'Complete Tour' : 'Next Stage'}</span>
               <ChevronRight className="w-4 h-4" />
