@@ -172,10 +172,10 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Collapse Toggle Footer */}
-      <div className="p-3 border-t border-white/[0.06] flex items-center justify-between">
+      <div className="p-3 border-t border-slate-200/80 dark:border-white/[0.06] flex items-center justify-between">
         <button
           onClick={toggleSidebar}
-          className="w-full flex items-center justify-center p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] text-[#86868b] hover:text-white transition-all text-xs gap-2"
+          className="w-full flex items-center justify-center p-2 rounded-xl bg-slate-100/80 dark:bg-white/[0.03] hover:bg-slate-200 dark:hover:bg-white/[0.06] text-slate-600 dark:text-[#86868b] hover:text-slate-900 dark:hover:text-white transition-all text-xs gap-2"
         >
           {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <><ChevronLeft className="w-4 h-4" /> <span>Collapse Sidebar</span></>}
         </button>

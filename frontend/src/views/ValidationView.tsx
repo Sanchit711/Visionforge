@@ -284,30 +284,30 @@ export const ValidationView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
       {/* Top Bar with Apple-Styled Segmented Control */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/[0.08]">
         <div>
           <div className="flex items-center gap-2.5">
-            <h2 className="text-lg font-bold text-white tracking-tight">Model Forensic Laboratory &amp; Video Suite</h2>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Model Forensic Laboratory &amp; Video Suite</h2>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 font-mono">
               Forensic v2.0
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Multi-checkpoint .pt architecture inspection, static frame scorecard, and in-motion video stress testing with live split-HUD
           </p>
         </div>
 
         {/* 3-Tab Segmented Control (Apple UI Design) */}
-        <div className="flex p-1 bg-slate-950/80 rounded-full border border-white/10 text-xs shadow-inner">
+        <div className="flex p-1 bg-slate-100 dark:bg-black/40 rounded-full border border-slate-200 dark:border-white/10 text-xs shadow-inner">
           <button
             type="button"
             onClick={() => setActiveTab('multi_model')}
             className={`py-1.5 px-3.5 rounded-full font-semibold flex items-center gap-1.5 transition-all ${
               activeTab === 'multi_model'
                 ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             <BarChart3 className="w-3.5 h-3.5" />
@@ -319,7 +319,7 @@ export const ValidationView: React.FC = () => {
             className={`py-1.5 px-3.5 rounded-full font-semibold flex items-center gap-1.5 transition-all ${
               activeTab === 'video_benchmark'
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             <Video className="w-3.5 h-3.5" />
@@ -330,8 +330,8 @@ export const ValidationView: React.FC = () => {
             onClick={() => setActiveTab('single')}
             className={`py-1.5 px-3.5 rounded-full font-semibold flex items-center gap-1.5 transition-all ${
               activeTab === 'single'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-white dark:bg-white/[0.1] text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             <ScanEye className="w-3.5 h-3.5" />

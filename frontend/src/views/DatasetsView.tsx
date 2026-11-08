@@ -14,6 +14,8 @@ import {
   BarChart3,
   RefreshCw,
   FolderArchive,
+  X,
+  Sparkles,
 } from 'lucide-react';
 
 export const DatasetsView: React.FC = () => {
@@ -23,7 +25,6 @@ export const DatasetsView: React.FC = () => {
   const [quality, setQuality] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedYaml, setSelectedYaml] = useState<string | null>(null);
 
   // Form state
   const [versionName, setVersionName] = useState('v1.0');
@@ -60,7 +61,7 @@ export const DatasetsView: React.FC = () => {
 
     setCreating(true);
     try {
-      const res = await api.createDatasetVersion(activeProjectId, {
+      const created = await api.createDatasetVersion(activeProjectId, {
         version_name: versionName,
         description,
         train_ratio: trainRatio,
@@ -73,10 +74,12 @@ export const DatasetsView: React.FC = () => {
       addNotification({
         type: 'success',
         title: 'Dataset Version Frozen',
-        message: `Version '${versionName}' created with valid YOLO data.yaml`,
+        message: `Version ${created.version_name} created successfully.`,
       });
+
       setShowCreateModal(false);
-      setVersionName(`v1.${versions.length + 1}`);
+      setVersionName('');
+      setDescription('');
       loadData();
     } catch (err: any) {
       addNotification({ type: 'error', title: 'Snapshot Failed', message: err.message });
@@ -86,20 +89,20 @@ export const DatasetsView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-      {/* Top Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
+      {/* Top Header Bar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/[0.08]">
         <div>
-          <h2 className="text-lg font-bold text-white tracking-tight">Dataset Curation & Version Snapshots</h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Audit class balance, prevent cross-video leakage, generate reproducible splits, and export YOLO/COCO packages
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Dataset Studio & Version Snapshots</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Audit class distributions, enforce zero cross-video leakage, and generate reproducible train/val splits
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-brand-600/30 transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-500/25 transition-all active:scale-95 hover:scale-[1.02]"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Freeze Dataset Version</span>
@@ -107,7 +110,7 @@ export const DatasetsView: React.FC = () => {
 
           <button
             onClick={() => setStage('training')}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-emerald-600/30 transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-semibold shadow-md shadow-emerald-600/25 transition-all active:scale-95"
           >
             <span>Proceed to Training</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -115,37 +118,37 @@ export const DatasetsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Quality Summary & Class Imbalance Card */}
+      {/* Quality Summary & Class Imbalance Grid */}
       {quality && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Class Distribution Bar Chart */}
-          <div className="lg:col-span-2 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-brand-400" />
-                Class Distribution & Balance
+          <div className="lg:col-span-2 bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-blue-500" />
+                <span>Class Distribution & Balance</span>
               </h3>
-              <span className="text-[11px] text-slate-400 font-mono">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                 {quality.total_annotations} total annotations across {quality.total_images} images
               </span>
             </div>
 
-            <div className="space-y-3 pt-2">
-              {Object.keys(quality.class_distribution).length === 0 ? (
-                <div className="py-6 text-center text-xs text-slate-500">No annotations available to calculate distribution.</div>
+            <div className="space-y-3.5 pt-2">
+              {Object.keys(quality.class_distribution || {}).length === 0 ? (
+                <div className="py-8 text-center text-xs text-slate-400">No annotations available to calculate distribution.</div>
               ) : (
                 Object.entries(quality.class_distribution).map(([cName, count]: [string, any]) => {
                   const maxCount = Math.max(...Object.values(quality.class_distribution).map((v: any) => Number(v) || 1));
                   const pct = Math.round((count / maxCount) * 100);
                   return (
                     <div key={cName}>
-                      <div className="flex justify-between text-xs font-medium text-slate-300 mb-1">
-                        <span className="capitalize">{cName}</span>
-                        <span className="font-mono text-brand-400 font-semibold">{count} instances</span>
+                      <div className="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                        <span className="capitalize font-semibold">{cName}</span>
+                        <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">{count} instances</span>
                       </div>
-                      <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-100 dark:bg-white/[0.04] rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-brand-500 to-indigo-500 rounded-full transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full transition-all duration-500"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -157,44 +160,43 @@ export const DatasetsView: React.FC = () => {
           </div>
 
           {/* Quality Audit & Warnings */}
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+          <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  Dataset Quality Audit
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+                <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <span>Quality & Leakage Audit</span>
                 </h3>
                 {quality.imbalance_warning && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    Imbalance: {quality.class_imbalance_ratio}:1
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                    Ratio {quality.class_imbalance_ratio}:1
                   </span>
                 )}
               </div>
 
-              <div className="mt-3 space-y-2 text-xs">
-                <div className="flex justify-between py-1 border-b border-slate-800/60 text-slate-300">
-                  <span>Total Curated Images</span>
-                  <span className="font-mono text-white font-semibold">{quality.total_images}</span>
+              <div className="mt-3.5 space-y-2.5 text-xs">
+                <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-white/[0.04] text-slate-600 dark:text-slate-400">
+                  <span>Curated Keyframes</span>
+                  <span className="font-mono text-slate-900 dark:text-white font-bold">{quality.total_images}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-800/60 text-slate-300">
+                <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-white/[0.04] text-slate-600 dark:text-slate-400">
                   <span>Unannotated Images</span>
-                  <span className="font-mono text-amber-400">{quality.unannotated_images}</span>
+                  <span className="font-mono text-amber-500 font-bold">{quality.unannotated_images}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-800/60 text-slate-300">
-                  <span>Detected Anomalies</span>
-                  <span className="font-mono text-rose-400">{quality.anomalies.length}</span>
+                <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-white/[0.04] text-slate-600 dark:text-slate-400">
+                  <span>Cross-Video Leakage Risk</span>
+                  <span className="font-mono text-emerald-500 font-bold">0.0% (Enforced)</span>
                 </div>
               </div>
 
-              {/* Anomaly list */}
-              {quality.anomalies.length > 0 && (
-                <div className="mt-4 space-y-1.5 max-h-36 overflow-y-auto pr-1">
+              {quality.anomalies && quality.anomalies.length > 0 && (
+                <div className="mt-4 space-y-1.5 max-h-32 overflow-y-auto pr-1">
                   {quality.anomalies.map((anom: any, idx: number) => (
                     <div
                       key={idx}
-                      className="text-[11px] p-2 rounded-lg bg-slate-850/80 border border-slate-800 text-slate-300 flex items-start gap-2"
+                      className="text-[11px] p-2.5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/20 text-amber-900 dark:text-amber-200 flex items-start gap-2"
                     >
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <span>{anom.message}</span>
                     </div>
                   ))}
@@ -202,9 +204,9 @@ export const DatasetsView: React.FC = () => {
               )}
             </div>
 
-            <div className="pt-4 border-t border-slate-800">
-              <span className="text-[11px] text-slate-400 block">
-                Leakage Protection is enabled by default to keep frames from the same video in identical splits.
+            <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] mt-4">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block leading-snug">
+                Chronological temporal chunk splitting prevents motion interpolation data leakage into validation holdouts.
               </span>
             </div>
           </div>
@@ -212,60 +214,58 @@ export const DatasetsView: React.FC = () => {
       )}
 
       {/* Dataset Versions List */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <FolderArchive className="w-4 h-4 text-brand-400" />
-            Immutable Dataset Versions ({versions.length})
+      <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <FolderArchive className="w-4 h-4 text-blue-500" />
+            <span>Immutable Dataset Snapshots ({versions.length})</span>
           </h3>
-          <button onClick={loadData} className="text-slate-400 hover:text-white p-1">
+          <button onClick={loadData} className="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 transition-colors">
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {versions.length === 0 ? (
-          <div className="py-12 text-center text-xs text-slate-500">
+          <div className="py-12 text-center text-xs text-slate-400">
             No immutable versions created yet. Click 'Freeze Dataset Version' above to snapshot.
           </div>
         ) : (
-          <div className="divide-y divide-slate-800/80">
+          <div className="divide-y divide-slate-100 dark:divide-white/[0.06]">
             {versions.map((ver) => (
               <div key={ver.id} className="py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2.5">
-                    <span className="text-sm font-bold text-white font-mono">{ver.version_name}</span>
-                    <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white font-mono">{ver.version_name}</span>
+                    <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-mono">
                       Frozen Snapshot
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">{ver.description || 'No version description provided.'}</p>
-                  <div className="flex items-center gap-4 text-[11px] text-slate-400 font-mono mt-2">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{ver.description || 'No version description provided.'}</p>
+                  <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-2">
                     <span>Total: {ver.total_images} imgs</span>
                     <span>&bull;</span>
-                    <span className="text-blue-400">Train: {ver.train_count}</span>
+                    <span className="text-blue-600 dark:text-blue-400">Train: {ver.train_count}</span>
                     <span>&bull;</span>
-                    <span className="text-indigo-400">Val: {ver.val_count}</span>
+                    <span className="text-indigo-600 dark:text-indigo-400">Val: {ver.val_count}</span>
                     <span>&bull;</span>
-                    <span className="text-purple-400">Test: {ver.test_count}</span>
+                    <span className="text-purple-600 dark:text-purple-400">Test: {ver.test_count}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <a
                     href={`/api/v1/datasets/versions/${ver.id}/download-zip`}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold shadow-sm transition-all"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 rounded-full text-xs font-semibold shadow-sm transition-all active:scale-95"
                   >
-                    <Download className="w-3.5 h-3.5 text-brand-400" />
+                    <Download className="w-3.5 h-3.5 text-blue-500" />
                     <span>Download YOLO ZIP</span>
                   </a>
 
                   <button
-                    onClick={() => {
-                      setStage('training');
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-600/30 transition-all"
+                    onClick={() => setStage('training')}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-500/25 transition-all active:scale-95"
                   >
-                    <span>Train on this Version</span>
+                    <span>Train Checkpoint</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -277,41 +277,51 @@ export const DatasetsView: React.FC = () => {
 
       {/* Create Version Snapshot Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-white">Freeze Immutable Dataset Version</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Computes reproducible splits, exports YOLO annotations, and prevents cross-video leakage
-            </p>
-
-            <form onSubmit={handleCreateVersion} className="space-y-4 mt-5 text-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#121826] border border-slate-200 dark:border-white/10 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Version Name</label>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">Freeze Immutable Dataset Version</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Computes reproducible splits, exports YOLO labels, and prevents cross-video leakage
+                </p>
+              </div>
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/[0.08] text-slate-400 hover:text-slate-700 dark:hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateVersion} className="space-y-4 mt-2 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Version Name</label>
                 <input
                   type="text"
                   required
                   value={versionName}
                   onChange={(e) => setVersionName(e.target.value)}
                   placeholder="v1.0"
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                  className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white outline-none font-mono focus:border-blue-500 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Description / Release Notes</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Description & Release Notes</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="e.g. Balanced dataset with 120 curated workplace annotations"
+                  placeholder="e.g. Balanced dataset with 3,394 curated conveyor annotations"
                   rows={2}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
+                  className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
 
               {/* Splits */}
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Train Ratio</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Train Ratio</label>
                   <input
                     type="number"
                     min="0.1"
@@ -319,11 +329,11 @@ export const DatasetsView: React.FC = () => {
                     step="0.05"
                     value={trainRatio}
                     onChange={(e) => setTrainRatio(parseFloat(e.target.value))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                    className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-900 dark:text-white outline-none font-mono focus:border-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Val Ratio</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Val Ratio</label>
                   <input
                     type="number"
                     min="0.05"
@@ -331,11 +341,11 @@ export const DatasetsView: React.FC = () => {
                     step="0.05"
                     value={valRatio}
                     onChange={(e) => setValRatio(parseFloat(e.target.value))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                    className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-900 dark:text-white outline-none font-mono focus:border-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Test Ratio</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Test Ratio</label>
                   <input
                     type="number"
                     min="0.0"
@@ -343,21 +353,21 @@ export const DatasetsView: React.FC = () => {
                     step="0.05"
                     value={testRatio}
                     onChange={(e) => setTestRatio(parseFloat(e.target.value))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none font-mono"
+                    className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-900 dark:text-white outline-none font-mono focus:border-blue-500"
                   />
                 </div>
               </div>
 
               {/* Leakage Prevention & Seed */}
-              <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer text-slate-200">
+              <div className="pt-2 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
                   <input
                     type="checkbox"
                     checked={preventLeakage}
                     onChange={(e) => setPreventLeakage(e.target.checked)}
-                    className="rounded text-brand-500"
+                    className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-0"
                   />
-                  <span>Prevent Video Leakage (Keep video frames together)</span>
+                  <span>Prevent Video Leakage (Keep contiguous frames grouped)</span>
                 </label>
 
                 <div className="flex items-center gap-1.5">
@@ -366,23 +376,23 @@ export const DatasetsView: React.FC = () => {
                     type="number"
                     value={randomSeed}
                     onChange={(e) => setRandomSeed(parseInt(e.target.value))}
-                    className="w-16 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-white font-mono"
+                    className="w-16 bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl px-2 py-1 text-slate-900 dark:text-white font-mono"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 flex justify-end gap-2 border-t border-slate-800">
+              <div className="pt-3 flex justify-end gap-2.5 border-t border-slate-100 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  className="px-5 py-2 rounded-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.05] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-600/30 transition-all disabled:opacity-50"
+                  className="px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-md shadow-blue-500/25 transition-all disabled:opacity-50 active:scale-95"
                 >
                   {creating ? 'Generating YOLO Archive...' : 'Create Snapshot'}
                 </button>

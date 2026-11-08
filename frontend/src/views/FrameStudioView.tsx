@@ -439,115 +439,65 @@ export const FrameStudioView: React.FC = () => {
   };
 
   return (
-
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
       {/* Top Bar */}
-
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/[0.08]">
         <div>
-
-          <h2 className="text-lg font-bold text-white tracking-tight">Frame Studio & Deduplication</h2>
-
-          <p className="text-xs text-slate-400 mt-0.5">
-
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Frame Studio & Deduplication</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Extract high-fidelity image sequences, filter out blurry or redundant frames, and inspect contact sheets
-
           </p>
-
         </div>
 
         <div className="flex items-center gap-3">
-
           <button
-
             onClick={() => setShowContactSheet(true)}
-
-            className="flex items-center gap-2 px-3 py-2 bg-slate-850 hover:bg-slate-800 border border-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition-all"
-
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold transition-all active:scale-95 shadow-sm"
           >
-
-            <FileSpreadsheet className="w-3.5 h-3.5 text-brand-400" />
-
+            <FileSpreadsheet className="w-3.5 h-3.5 text-blue-500" />
             <span>Contact Sheet</span>
-
           </button>
 
           <button
-
             onClick={() => setStage('annotation')}
-
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-emerald-600/30 transition-all"
-
+            className="flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-semibold shadow-md shadow-emerald-600/25 transition-all active:scale-95"
           >
-
             <span>Annotate Frames</span>
-
             <ArrowRight className="w-3.5 h-3.5" />
-
           </button>
-
         </div>
-
       </div>
 
       {/* Extraction Configuration Panel */}
-
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-
-            <Sliders className="w-4 h-4 text-brand-400" />
-
-            Extraction Configuration Parameters
-
+      <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+          <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <Sliders className="w-4 h-4 text-blue-500" />
+            <span>Extraction Configuration Parameters</span>
           </h3>
-
-          <span className="text-[11px] text-slate-400">OpenCV Native Engine</span>
-
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">OpenCV Native Engine</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
-
           {/* Video Selector */}
-
           <div>
-
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Source Video</label>
-
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Source Video</label>
             <select
-
               value={selectedVideoId}
-
               onChange={(e) => setSelectedVideoId(e.target.value)}
-
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
-
+              className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/30 transition-all"
             >
-
               {videos.map((v) => (
-
-                <option key={v.id} value={v.id}>
-
+                <option key={v.id} value={v.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                   {v.original_filename} ({v.duration}s)
-
                 </option>
-
               ))}
-
             </select>
-
           </div>
 
           {/* Mode */}
-
           <div>
-
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">Extraction Mode</label>
-
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">Extraction Mode</label>
             <select
               value={mode}
               onChange={(e) => {
@@ -560,1074 +510,587 @@ export const FrameStudioView: React.FC = () => {
                   setTimeSelectionMode('full');
                 }
               }}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
+              className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/30 transition-all"
             >
-              <option value="all_frames">⚡ All Raw Frames (100% - Every Single Frame)</option>
-              <option value="interval_frame">Interval (Every N Frames)</option>
-              <option value="interval_sec">Interval (Every N Seconds)</option>
-              <option value="fps">Target FPS (e.g. 1 frame/sec)</option>
+              <option value="all_frames" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">⚡ All Raw Frames (100% - Every Single Frame)</option>
+              <option value="interval_frame" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Interval (Every N Frames)</option>
+              <option value="interval_sec" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Interval (Every N Seconds)</option>
+              <option value="fps" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Target FPS (e.g. 1 frame/sec)</option>
             </select>
-
           </div>
 
           {/* Value */}
-
           <div>
-
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-
-              Interval Value: <span className="font-mono text-brand-400">{intervalVal}</span>
-
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              Interval Value: <span className="font-mono text-blue-500">{intervalVal}</span>
             </label>
-
             <input
-
               type="number"
-
               min="0.1"
-
               step="0.5"
-
               value={intervalVal}
-
               onChange={(e) => setIntervalVal(parseFloat(e.target.value) || 1.0)}
-
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
-
+              className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/30 transition-all font-mono"
             />
-
           </div>
 
           {/* Sharpness Threshold */}
-
           <div>
-
-            <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-
-              Min Sharpness: <span className="font-mono text-indigo-400">{minSharpness}</span>
-
+            <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              Min Sharpness: <span className="font-mono text-indigo-500 dark:text-indigo-400">{minSharpness}</span>
             </label>
-
             <input
-
               type="number"
-
               min="0"
-
               step="5"
-
               value={minSharpness}
-
               onChange={(e) => setMinSharpness(parseFloat(e.target.value) || 0)}
-
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
-
+              className="w-full bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/30 transition-all font-mono"
             />
-
           </div>
 
           {/* Checkboxes & Run Button */}
-
           <div className="flex flex-col justify-end gap-2">
-
-            <div className="flex items-center gap-3 text-[11px] text-slate-300">
-
+            <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-slate-300">
               <label className="flex items-center gap-1.5 cursor-pointer">
-
                 <input
-
                   type="checkbox"
-
                   checked={deduplicate}
-
                   onChange={(e) => setDeduplicate(e.target.checked)}
-
-                  className="rounded text-brand-500"
-
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                 />
-
                 <span>Deduplicate</span>
-
               </label>
-
               <label className="flex items-center gap-1.5 cursor-pointer">
-
                 <input
-
                   type="checkbox"
-
                   checked={useCrop}
-
                   onChange={(e) => setUseCrop(e.target.checked)}
-
-                  className="rounded text-brand-500"
-
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                 />
-
                 <span>Apply Crop</span>
-
               </label>
-
             </div>
-
             <button
-
               onClick={handleExtract}
-
               disabled={extracting}
-
-              className="w-full py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-
+              className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-600/25 transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
             >
-
               <Film className="w-3.5 h-3.5" />
-
               <span>{extracting ? 'Extracting...' : 'Extract Frames'}</span>
-
             </button>
-
           </div>
-
         </div>
 
         {/* Custom Time Selection Section */}
-
-        <div className="pt-4 border-t border-slate-800 space-y-3">
-
+        <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-
             <div className="flex items-center gap-2">
-
-              <Clock className="w-4 h-4 text-brand-400" />
-
-              <span className="text-xs font-bold text-white uppercase tracking-wider">
-
+              <Clock className="w-4 h-4 text-blue-500" />
+              <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                 Time Window & Temporal Selection
-
               </span>
-
-              <span className="text-[11px] text-slate-400 hidden md:inline">
-
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden md:inline">
                 • Target specific seconds, intervals, or timestamps
-
               </span>
-
             </div>
 
             {/* Selection Mode Pills */}
-
-            <div className="flex items-center bg-slate-800 p-0.5 rounded-xl border border-slate-700 text-xs">
-
+            <div className="flex items-center bg-slate-100 dark:bg-black/30 p-1 rounded-full border border-slate-200 dark:border-white/10 text-xs">
               <button
-
                 onClick={() => setTimeSelectionMode('range')}
-
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition-all ${
-
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all ${
                   timeSelectionMode === 'range'
-
-                    ? 'bg-brand-600 text-white shadow-sm'
-
-                    : 'text-slate-400 hover:text-white'
-
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
-
               >
-
                 <Scissors className="w-3.5 h-3.5" />
-
                 <span>Time Range</span>
-
               </button>
-
               <button
-
                 onClick={() => {
-
                   setTimeSelectionMode('full');
-
                   if (selectedVideo) {
-
                     setStartTime(0);
-
                     setEndTime(selectedVideo.duration || 0);
-
                   }
-
                 }}
-
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition-all ${
-
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all ${
                   timeSelectionMode === 'full'
-
-                    ? 'bg-brand-600 text-white shadow-sm'
-
-                    : 'text-slate-400 hover:text-white'
-
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
-
               >
-
                 <Timer className="w-3.5 h-3.5" />
-
                 <span>Full Video</span>
-
               </button>
-
               <button
-
                 onClick={() => setTimeSelectionMode('custom_timestamps')}
-
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition-all ${
-
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all ${
                   timeSelectionMode === 'custom_timestamps'
-
-                    ? 'bg-brand-600 text-white shadow-sm'
-
-                    : 'text-slate-400 hover:text-white'
-
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
-
               >
-
                 <span>Specific Timestamps</span>
-
               </button>
-
             </div>
-
           </div>
 
           {/* Mode 1: Time Range */}
-
           {timeSelectionMode === 'range' && (
-
-            <div className="bg-slate-850/70 border border-slate-800 rounded-xl p-4 space-y-4">
-
+            <div className="bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] rounded-2xl p-4 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                 {/* Start Time Box */}
-
-                <div className="bg-slate-900/80 border border-slate-750 p-3 rounded-xl flex items-center gap-3">
-
+                <div className="bg-white dark:bg-black/30 border border-slate-200/80 dark:border-white/10 p-3.5 rounded-2xl flex items-center gap-3 shadow-xs">
                   {selectedVideo && (
-
-                    <div className="w-20 h-12 bg-black rounded-lg overflow-hidden border border-slate-700 flex-shrink-0 relative group">
-
+                    <div className="w-20 h-12 bg-black rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 flex-shrink-0 relative group">
                       <img
-
                         src={`/api/v1/videos/${selectedVideo.id}/frame-preview?timestamp_sec=${startTime}`}
-
                         alt="Start frame preview"
-
                         className="w-full h-full object-cover"
-
                         loading="lazy"
-
                       />
-
-                      <span className="absolute bottom-0.5 right-0.5 text-[8px] font-mono bg-black/80 px-1 rounded text-slate-300">
-
+                      <span className="absolute bottom-0.5 right-0.5 text-[8px] font-mono bg-black/80 px-1 rounded text-white">
                         START
-
                       </span>
-
                     </div>
-
                   )}
 
                   <div className="flex-1 space-y-1">
-
                     <div className="flex items-center justify-between text-xs">
-
-                      <label className="font-semibold text-slate-300">
-
-                        Start Time: <span className="font-mono text-brand-400">{startTime.toFixed(2)}s</span>
-
+                      <label className="font-semibold text-slate-700 dark:text-slate-300">
+                        Start Time: <span className="font-mono text-blue-500">{startTime.toFixed(2)}s</span>
                       </label>
-
-                      <span className="font-mono text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">
-
+                      <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full">
                         {formatTime(startTime)}
-
                       </span>
-
                     </div>
 
                     <div className="flex items-center gap-2">
-
                       <input
-
                         type="range"
-
                         min="0"
-
                         max={endTime > 0 ? endTime : selectedVideo?.duration || 100}
-
                         step="0.1"
-
                         value={startTime}
-
                         onChange={(e) => {
-
                           const val = parseFloat(e.target.value);
-
                           setStartTime(Math.min(val, endTime));
-
                         }}
-
-                        className="w-full h-1 bg-slate-800 rounded appearance-none cursor-pointer"
-
+                        className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full appearance-none cursor-pointer accent-blue-600"
                       />
-
                       <input
-
                         type="number"
-
                         min="0"
-
                         max={endTime}
-
                         step="0.5"
-
                         value={startTime}
-
                         onChange={(e) => {
-
                           const val = parseFloat(e.target.value) || 0;
-
                           setStartTime(Math.max(0, Math.min(val, endTime)));
-
                         }}
-
-                        className="w-16 bg-slate-800 border border-slate-700 rounded-lg px-2 py-0.5 text-xs text-white text-right font-mono outline-none"
-
+                        className="w-16 bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-1 text-xs text-slate-800 dark:text-white text-right font-mono outline-none"
                       />
-
                     </div>
-
                   </div>
-
                 </div>
 
                 {/* End Time Box */}
-
-                <div className="bg-slate-900/80 border border-slate-750 p-3 rounded-xl flex items-center gap-3">
-
+                <div className="bg-white dark:bg-black/30 border border-slate-200/80 dark:border-white/10 p-3.5 rounded-2xl flex items-center gap-3 shadow-xs">
                   {selectedVideo && (
-
-                    <div className="w-20 h-12 bg-black rounded-lg overflow-hidden border border-slate-700 flex-shrink-0 relative group">
-
+                    <div className="w-20 h-12 bg-black rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 flex-shrink-0 relative group">
                       <img
-
                         src={`/api/v1/videos/${selectedVideo.id}/frame-preview?timestamp_sec=${endTime}`}
-
                         alt="End frame preview"
-
                         className="w-full h-full object-cover"
-
                         loading="lazy"
-
                       />
-
-                      <span className="absolute bottom-0.5 right-0.5 text-[8px] font-mono bg-black/80 px-1 rounded text-slate-300">
-
+                      <span className="absolute bottom-0.5 right-0.5 text-[8px] font-mono bg-black/80 px-1 rounded text-white">
                         END
-
                       </span>
-
                     </div>
-
                   )}
 
                   <div className="flex-1 space-y-1">
-
                     <div className="flex items-center justify-between text-xs">
-
-                      <label className="font-semibold text-slate-300">
-
-                        End Time: <span className="font-mono text-emerald-400">{endTime.toFixed(2)}s</span>
-
+                      <label className="font-semibold text-slate-700 dark:text-slate-300">
+                        End Time: <span className="font-mono text-emerald-500">{endTime.toFixed(2)}s</span>
                       </label>
-
-                      <span className="font-mono text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">
-
+                      <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full">
                         {formatTime(endTime)}
-
                       </span>
-
                     </div>
 
                     <div className="flex items-center gap-2">
-
                       <input
-
                         type="range"
-
                         min={startTime}
-
                         max={selectedVideo?.duration || 100}
-
                         step="0.1"
-
                         value={endTime}
-
                         onChange={(e) => {
-
                           const val = parseFloat(e.target.value);
-
                           setEndTime(Math.max(startTime, val));
-
                         }}
-
-                        className="w-full h-1 bg-slate-800 rounded appearance-none cursor-pointer"
-
+                        className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full appearance-none cursor-pointer accent-emerald-500"
                       />
-
                       <input
-
                         type="number"
-
                         min={startTime}
-
                         max={selectedVideo?.duration || 9999}
-
                         step="0.5"
-
                         value={endTime}
-
                         onChange={(e) => {
-
                           const val = parseFloat(e.target.value) || 0;
-
                           setEndTime(Math.max(startTime, val));
-
                         }}
-
-                        className="w-16 bg-slate-800 border border-slate-700 rounded-lg px-2 py-0.5 text-xs text-white text-right font-mono outline-none"
-
+                        className="w-16 bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-1 text-xs text-slate-800 dark:text-white text-right font-mono outline-none"
                       />
-
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
 
               {/* Visual Timeline Range Bar */}
-
               {selectedVideo && selectedVideo.duration > 0 && (
-
-                <div className="space-y-1">
-
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                     <span>0.00s</span>
-
                     <span>
-
-                      Window: <strong className="text-white">{(endTime - startTime).toFixed(2)}s</strong> ({Math.round(((endTime - startTime) / selectedVideo.duration) * 100)}% of video)
-
+                      Window: <strong className="text-slate-800 dark:text-white">{(endTime - startTime).toFixed(2)}s</strong> ({Math.round(((endTime - startTime) / selectedVideo.duration) * 100)}% of video)
                     </span>
-
                     <span>{selectedVideo.duration.toFixed(2)}s</span>
-
                   </div>
-
-                  <div className="w-full h-2.5 bg-slate-800 rounded-full relative overflow-hidden">
-
+                  <div className="w-full h-2 bg-slate-200 dark:bg-black/50 rounded-full relative overflow-hidden">
                     <div
-
-                      className="absolute top-0 bottom-0 bg-gradient-to-r from-brand-500 to-emerald-500 rounded-full shadow-md"
-
+                      className="absolute top-0 bottom-0 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full shadow-md"
                       style={{
-
                         left: `${(startTime / selectedVideo.duration) * 100}%`,
-
                         width: `${Math.max(1, ((endTime - startTime) / selectedVideo.duration) * 100)}%`,
-
                       }}
-
                     />
-
                   </div>
-
                 </div>
-
               )}
 
               {/* Quick Actions & Estimation row */}
-
               <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-
                 <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-
-                  <span className="text-slate-400 mr-1">Quick Presets:</span>
-
+                  <span className="text-slate-500 dark:text-slate-400 mr-1">Quick Presets:</span>
                   <button
-
                     onClick={() => {
-
                       if (selectedVideo) {
-
                         setStartTime(selectedVideo.trim_start || 0);
-
                         setEndTime(selectedVideo.trim_end || selectedVideo.duration || 0);
-
                         addNotification({
-
                           type: 'info',
-
                           title: 'Trim Synced',
-
                           message: 'Applied start/end trim configured in Video Lab',
-
                         });
-
                       }
-
                     }}
-
-                    className="px-2.5 py-1 bg-slate-800 hover:bg-slate-750 text-brand-300 rounded-lg border border-brand-500/30 font-medium transition-all flex items-center gap-1"
-
+                    className="px-3 py-1 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full border border-blue-200 dark:border-blue-500/30 font-medium transition-all flex items-center gap-1 active:scale-95"
                     title="Load trim from Video Lab"
-
                   >
-
                     <Scissors className="w-3 h-3" />
-
                     <span>Sync Video Lab Trim</span>
-
                   </button>
-
                   <button
-
                     onClick={() => {
-
                       if (selectedVideo) {
-
                         setStartTime(0);
-
                         setEndTime(Math.min(30, selectedVideo.duration || 30));
-
                       }
-
                     }}
-
-                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-all"
-
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-white/10 transition-all active:scale-95"
                   >
-
                     First 30s
-
                   </button>
-
                   <button
-
                     onClick={() => {
-
                       if (selectedVideo) {
-
                         const mid = (selectedVideo.duration || 60) / 2;
-
                         setStartTime(Math.max(0, mid - 30));
-
                         setEndTime(Math.min(selectedVideo.duration || 60, mid + 30));
-
                       }
-
                     }}
-
-                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-all"
-
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-white/10 transition-all active:scale-95"
                   >
-
                     Middle 60s
-
                   </button>
-
                   <button
-
                     onClick={() => {
-
                       if (selectedVideo) {
-
                         setStartTime(Math.max(0, (selectedVideo.duration || 30) - 30));
-
                         setEndTime(selectedVideo.duration || 30);
-
                       }
-
                     }}
-
-                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-all"
-
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-white/10 transition-all active:scale-95"
                   >
-
                     Last 30s
-
                   </button>
-
                   <button
-
                     onClick={() => {
-
                       if (selectedVideo) {
-
                         setStartTime(0);
-
                         setEndTime(selectedVideo.duration || 0);
-
                       }
-
                     }}
-
-                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-all flex items-center gap-1"
-
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1 active:scale-95"
                   >
-
                     <RotateCcw className="w-3 h-3" />
-
                     <span>Reset Full</span>
-
                   </button>
-
                 </div>
 
                 {/* Estimate Output Counter */}
-
-                <div className="flex items-center gap-2 text-xs font-medium bg-slate-900/90 border border-slate-750 px-3 py-1.5 rounded-xl">
-
-                  <Film className="w-3.5 h-3.5 text-brand-400" />
-
-                  <span className="text-slate-400">Estimated Output:</span>
-
-                  <span className="font-mono font-bold text-white">~{getEstimatedFrameCount()} frames</span>
-
+                <div className="flex items-center gap-2 text-xs font-medium bg-white dark:bg-black/30 border border-slate-200/80 dark:border-white/10 px-3.5 py-1.5 rounded-full shadow-xs">
+                  <Film className="w-3.5 h-3.5 text-blue-500" />
+                  <span className="text-slate-500 dark:text-slate-400">Estimated Output:</span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">~{getEstimatedFrameCount()} frames</span>
                 </div>
-
               </div>
-
             </div>
-
           )}
 
           {/* Mode 2: Full Video */}
-
           {timeSelectionMode === 'full' && (
-
-            <div className="bg-slate-850/50 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs">
-
-              <div className="flex items-center gap-2 text-slate-300">
-
-                <Timer className="w-4 h-4 text-emerald-400" />
-
+            <div className="bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] rounded-2xl p-4 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                <Timer className="w-4 h-4 text-emerald-500" />
                 <span>
-
-                  Extracting across entire duration: <strong className="text-white">0.00s — {selectedVideo?.duration || 0}s</strong> ({formatTime(selectedVideo?.duration || 0)})
-
+                  Extracting across entire duration: <strong className="text-slate-900 dark:text-white">0.00s — {selectedVideo?.duration || 0}s</strong> ({formatTime(selectedVideo?.duration || 0)})
                 </span>
-
               </div>
-
-              <div className="font-mono text-brand-400 font-semibold">
-
+              <div className="font-mono text-blue-500 font-semibold">
                 Estimated Output: ~{getEstimatedFrameCount()} frames
-
               </div>
-
             </div>
-
           )}
 
           {/* Mode 3: Specific Timestamps */}
-
           {timeSelectionMode === 'custom_timestamps' && (
-
-            <div className="bg-slate-850/70 border border-slate-800 rounded-xl p-4 space-y-3 text-xs">
-
+            <div className="bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] rounded-2xl p-4 space-y-3 text-xs">
               <div>
-
-                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-
+                <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                   Custom Timestamps (Seconds, Comma-Separated)
-
                 </label>
-
                 <input
-
                   type="text"
-
                   placeholder="e.g. 2.5, 10.0, 15.2, 33.0, 60.5, 120.0"
-
                   value={customTimestampsStr}
-
                   onChange={(e) => setCustomTimestampsStr(e.target.value)}
-
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono placeholder-slate-500 outline-none"
-
+                  className="w-full bg-white dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-2xl px-3 py-2 text-slate-900 dark:text-white font-mono placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500/30 transition-all"
                 />
-
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-
                 <div className="flex items-center gap-2 text-[11px]">
-
-                  <span className="text-slate-400">Helper:</span>
-
+                  <span className="text-slate-500 dark:text-slate-400">Helper:</span>
                   <button
-
                     onClick={() => {
-
                       if (!selectedVideo) return;
-
                       const d = selectedVideo.duration || 60;
-
                       const sample = [];
-
                       for (let t = 5; t < d; t += 10) {
-
                         sample.push(t.toFixed(1));
-
                       }
-
                       setCustomTimestampsStr(sample.join(', '));
-
                     }}
-
-                    className="px-2 py-1 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-lg border border-slate-700"
-
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-white/10 font-medium transition-all"
                   >
-
                     Every 10s Sample
-
                   </button>
-
                   <button
-
                     onClick={() => setCustomTimestampsStr('')}
-
-                    className="px-2 py-1 bg-slate-800 hover:bg-slate-750 text-slate-400 rounded-lg border border-slate-700"
-
+                    className="px-3 py-1 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-500 dark:text-slate-400 rounded-full border border-slate-200 dark:border-white/10 transition-all"
                   >
-
                     Clear
-
                   </button>
-
                 </div>
-
-                <div className="font-mono text-brand-400 font-semibold">
-
+                <div className="font-mono text-blue-500 font-semibold">
                   Valid Timestamps: {getEstimatedFrameCount()}
-
                 </div>
-
               </div>
-
             </div>
-
           )}
-
         </div>
-
       </div>
 
-      
-        {/* Live Extraction Progress Banner */}
-        {extracting && (
-          <div className="p-4 bg-gradient-to-r from-brand-950/70 via-slate-900 to-slate-900 border border-brand-500/50 rounded-2xl space-y-2.5 shadow-xl shadow-brand-950/60 animate-in fade-in">
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2 text-brand-300 font-bold">
-                <Loader2 className="w-4 h-4 animate-spin text-brand-400" />
-                <span className="uppercase tracking-wider">Live Extraction In Progress</span>
-              </div>
-              <span className="font-mono text-brand-200 font-black text-sm">
-                {Math.round(extractionProgress || 0)}%
-              </span>
+      {/* Live Extraction Progress Banner */}
+      {extracting && (
+        <div className="p-5 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-teal-500/10 dark:from-blue-950/40 dark:via-slate-900 dark:to-[#121826] border border-blue-200 dark:border-blue-500/30 rounded-3xl space-y-3 shadow-lg backdrop-blur-xl animate-in fade-in">
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-300 font-bold">
+              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+              <span className="uppercase tracking-wider">Live Extraction In Progress</span>
             </div>
-            <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700/50">
-              <div
-                className="h-full bg-gradient-to-r from-brand-500 via-indigo-500 to-teal-400 transition-all duration-300 rounded-full shadow-sm shadow-brand-500/50"
-                style={{ width: `${Math.max(5, extractionProgress || 0)}%` }}
-              />
-            </div>
-            <div className="flex items-center justify-between text-[11px] text-slate-400">
-              <span className="font-medium text-slate-300 truncate max-w-[70%]">{extractionMessage || 'Processing video stream...'}</span>
-              <span className="text-emerald-400 font-mono text-[10px] flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
-                Live Gallery Sync
-              </span>
-            </div>
+            <span className="font-mono text-blue-600 dark:text-blue-300 font-black text-sm">
+              {Math.round(extractionProgress || 0)}%
+            </span>
           </div>
-        )}
-
+          <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/50 dark:border-white/10">
+            <div
+              className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-teal-400 transition-all duration-300 rounded-full shadow-sm shadow-blue-500/50"
+              style={{ width: `${Math.max(5, extractionProgress || 0)}%` }}
+            />
+          </div>
+          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+            <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-[70%]">{extractionMessage || 'Processing video stream...'}</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[10px] flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping inline-block" />
+              Live Gallery Sync
+            </span>
+          </div>
+        </div>
+      )}
       {/* Frame Gallery */}
-
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
-
+      <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-white/[0.06]">
           <div className="flex items-center gap-3">
-
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-
-              <Film className="w-4 h-4 text-brand-400" />
-
-              Extracted Frames Gallery ({frames.length})
-
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Film className="w-4 h-4 text-blue-500" />
+              <span>Extracted Frames Gallery ({frames.length})</span>
             </h3>
-
-            <button onClick={loadData} className="text-slate-400 hover:text-white p-1" title="Refresh Frames">
-
-              <RefreshCw className="w-3.5 h-3.5" />
-
-            </button>
-
             <button
-
-              onClick={handleDeduplicate}
-
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg transition-all"
-
-              title="Remove duplicate timestamp frames"
-
+              onClick={loadData}
+              className="text-slate-400 hover:text-slate-800 dark:hover:text-white p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors"
+              title="Refresh Frames"
             >
-
-              <Sparkles className="w-3.5 h-3.5" />
-
-              <span>Deduplicate</span>
-
+              <RefreshCw className="w-3.5 h-3.5" />
             </button>
-
+            <button
+              onClick={handleDeduplicate}
+              className="flex items-center gap-1.5 px-3 py-1 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 rounded-full transition-all active:scale-95 font-medium"
+              title="Remove duplicate timestamp frames"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Deduplicate</span>
+            </button>
           </div>
 
           {/* Filters */}
-
           <div className="flex items-center gap-2 text-xs">
-
             <select
-
               value={splitFilter}
-
               onChange={(e) => setSplitFilter(e.target.value)}
-
-              className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 outline-none"
-
+              className="bg-slate-100 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1.5 text-slate-800 dark:text-slate-200 outline-none text-xs"
             >
-
-              <option value="">All Splits</option>
-
-              <option value="train">Train</option>
-
-              <option value="val">Val</option>
-
-              <option value="test">Test</option>
-
+              <option value="" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">All Splits</option>
+              <option value="train" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Train</option>
+              <option value="val" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Val</option>
+              <option value="test" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Test</option>
             </select>
-
             <select
-
               value={statusFilter}
-
               onChange={(e) => setStatusFilter(e.target.value)}
-
-              className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 outline-none"
-
+              className="bg-slate-100 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1.5 text-slate-800 dark:text-slate-200 outline-none text-xs"
             >
-
-              <option value="">All Statuses</option>
-
-              <option value="unreviewed">Unreviewed</option>
-
-              <option value="approved">Approved</option>
-
-              <option value="rejected">Rejected</option>
-
+              <option value="" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">All Statuses</option>
+              <option value="unreviewed" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Unreviewed</option>
+              <option value="approved" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Approved</option>
+              <option value="rejected" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Rejected</option>
             </select>
-
           </div>
-
         </div>
 
         {/* Bulk Action Controls */}
-
         {frames.length > 0 && (
-
-          <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 bg-slate-850/90 rounded-xl border border-slate-800 text-xs shadow-inner">
-
+          <div className="flex flex-wrap items-center justify-between gap-2.5 p-3.5 bg-slate-50 dark:bg-white/[0.03] rounded-2xl border border-slate-200/80 dark:border-white/[0.06] text-xs">
             <div className="flex items-center gap-2">
-
               <button
-
                 onClick={selectedFrameIds.size === frames.length ? deselectAllFrames : selectAllFrames}
-
-                className="px-2.5 py-1 bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white rounded-lg border border-slate-700 transition-all flex items-center gap-1.5 font-medium"
-
+                className="px-3 py-1.5 bg-white dark:bg-white/[0.06] hover:bg-slate-100 dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-200 rounded-full border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1.5 font-medium shadow-xs active:scale-95"
               >
-
-                <CheckSquare className="w-3.5 h-3.5 text-brand-400" />
-
+                <CheckSquare className="w-3.5 h-3.5 text-blue-500" />
                 <span>{selectedFrameIds.size === frames.length ? 'Deselect All' : `Select All (${frames.length})`}</span>
-
               </button>
 
               <button
-
                 onClick={selectDuplicateFrames}
-
-                className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-lg border border-amber-500/30 transition-all flex items-center gap-1.5 font-medium"
-
+                className="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full border border-amber-500/30 transition-all flex items-center gap-1.5 font-medium active:scale-95"
                 title="Select all duplicate frames marked DUP"
-
               >
-
                 <Copy className="w-3.5 h-3.5" />
-
                 <span>Select Duplicates</span>
-
               </button>
 
               {selectedFrameIds.size > 0 && (
-
-                <span className="text-brand-300 font-semibold px-2 py-0.5 bg-brand-500/10 border border-brand-500/30 rounded-md">
-
-                  {selectedFrameIds.size} frame(s) selected
-
+                <span className="text-blue-600 dark:text-blue-400 font-semibold px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full">
+                  {selectedFrameIds.size} selected
                 </span>
-
               )}
-
             </div>
 
             {selectedFrameIds.size > 0 && (
-
               <div className="flex items-center gap-2">
-
                 {/* Bulk Split Selector */}
-
                 <select
-
                   onChange={(e) => {
-
                     if (e.target.value) {
-
                       handleBulkSplit(e.target.value);
-
                       e.target.value = '';
-
                     }
-
                   }}
-
                   defaultValue=""
-
-                  className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-300 outline-none text-xs"
-
+                  className="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1 text-slate-800 dark:text-slate-200 outline-none text-xs"
                 >
-
-                  <option value="" disabled>Assign Split...</option>
-
-                  <option value="train">Train</option>
-
-                  <option value="val">Val</option>
-
-                  <option value="test">Test</option>
-
-                  <option value="unassigned">Unassigned</option>
-
+                  <option value="" disabled className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Assign Split...</option>
+                  <option value="train" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Train</option>
+                  <option value="val" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Val</option>
+                  <option value="test" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Test</option>
+                  <option value="unassigned" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Unassigned</option>
                 </select>
 
                 {/* Bulk Delete Button */}
-
                 <button
-
                   onClick={handleBulkDelete}
-
                   disabled={bulkDeleting}
-
-                  className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg transition-all shadow-md shadow-rose-900/40 flex items-center gap-1.5 disabled:opacity-50"
-
+                  className="px-3.5 py-1 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-full transition-all shadow-md shadow-rose-600/25 flex items-center gap-1.5 disabled:opacity-50 active:scale-95"
                   title="Permanently delete selected frames and their files"
-
                 >
-
                   <Trash2 className="w-3.5 h-3.5" />
-
                   <span>{bulkDeleting ? 'Deleting...' : `Delete Selected (${selectedFrameIds.size})`}</span>
-
                 </button>
-
               </div>
-
             )}
-
           </div>
-
         )}
 
         {frames.length === 0 ? (
-
-          <div className="py-16 text-center text-xs text-slate-500">
-
+          <div className="py-16 text-center text-xs text-slate-500 dark:text-slate-400">
             No frames extracted yet. Configure parameters above and click 'Extract Frames'.
-
           </div>
-
         ) : (
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5">
             {frames.map((f) => (
-
               <div
-
                 key={f.id}
-
-                className={`group relative bg-slate-850 rounded-xl overflow-hidden border transition-all ${
-
+                className={`group relative bg-white dark:bg-[#0c101c] rounded-2xl overflow-hidden border transition-all ${
                   f.status === 'approved'
-
-                    ? 'border-emerald-500/50'
-
+                    ? 'border-emerald-500/50 shadow-sm'
                     : f.status === 'rejected'
-
                     ? 'border-rose-500/50 opacity-60'
-
-                    : 'border-slate-800 hover:border-slate-700'
-
+                    : 'border-slate-200/80 dark:border-white/[0.08] hover:border-blue-500/50 hover:shadow-md'
                 }`}
-
               >
-
                 {/* Thumbnail Image */}
-
                 <div
-
                   className="aspect-video bg-black cursor-pointer overflow-hidden relative"
-
                   onClick={() => setSelectedFrame(f)}
-
                 >
-
                   <img
-
                     src={`/api/v1/files/raw?path=${encodeURIComponent(f.thumbnail_path || f.file_path)}`}
-
                     alt="Frame thumbnail"
-
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-
                     loading="lazy"
-
                   />
 
-                                    {/* Bulk Selection Checkbox */}
+                  {/* Bulk Selection Checkbox */}
                   <div
-                    className="absolute top-1 right-1 z-10"
+                    className="absolute top-1.5 right-1.5 z-10"
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleFrameSelection(f.id);
@@ -1637,255 +1100,144 @@ export const FrameStudioView: React.FC = () => {
                       type="checkbox"
                       checked={selectedFrameIds.has(f.id)}
                       onChange={() => toggleFrameSelection(f.id)}
-                      className="w-4 h-4 rounded border-slate-700 bg-slate-900/90 text-brand-500 focus:ring-brand-500 cursor-pointer shadow"
+                      className="w-4 h-4 rounded border-slate-300 dark:border-slate-600 bg-white/90 dark:bg-slate-900/90 text-blue-600 focus:ring-blue-500 cursor-pointer shadow-sm"
                     />
                   </div>
 
                   {/* Badges */}
-                  <div className="absolute top-1 left-1 flex gap-1">
-
-                    <span className="text-[9px] font-mono bg-black/70 text-white px-1 rounded backdrop-blur-sm">
-
+                  <div className="absolute top-1.5 left-1.5 flex gap-1">
+                    <span className="text-[9px] font-mono bg-black/75 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full">
                       {f.timestamp_sec.toFixed(2)}s
-
                     </span>
-
                     {f.is_duplicate && (
-
-                      <span className="text-[9px] font-semibold bg-amber-500/90 text-black px-1 rounded">
-
+                      <span className="text-[9px] font-semibold bg-amber-500 text-black px-1.5 py-0.5 rounded-full">
                         DUP
-
                       </span>
-
                     )}
-
                   </div>
 
-                  <div className="absolute bottom-1 right-1">
-
-                    <span className="text-[9px] font-mono bg-black/70 text-slate-300 px-1 rounded">
-
+                  <div className="absolute bottom-1.5 right-1.5">
+                    <span className="text-[9px] font-mono bg-black/75 backdrop-blur-sm text-slate-300 px-1.5 py-0.5 rounded-full">
                       {Math.round(f.sharpness_score)} Q
-
                     </span>
-
                   </div>
-
                 </div>
 
                 {/* Footer Controls */}
-
-                <div className="p-2 flex items-center justify-between text-xs bg-slate-900/90 border-t border-slate-800/80">
-
-                  <div className="text-[10px] text-slate-400 font-mono">
-
+                <div className="p-2.5 flex items-center justify-between text-xs bg-slate-50/80 dark:bg-[#121826]/90 border-t border-slate-100 dark:border-white/[0.06]">
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                     {f.annotation_count || 0} box
-
                   </div>
 
                   <div className="flex items-center gap-1">
-
                     <button
-
                       onClick={() => handleReviewStatus(f.id, 'approved')}
-
                       title="Approve"
-
-                      className={`p-1 rounded hover:bg-slate-800 ${
-
-                        f.status === 'approved' ? 'text-emerald-400' : 'text-slate-500'
-
+                      className={`p-1 rounded-full hover:bg-slate-200 dark:hover:bg-white/[0.08] transition-colors ${
+                        f.status === 'approved' ? 'text-emerald-500' : 'text-slate-400'
                       }`}
-
                     >
-
                       <CheckCircle2 className="w-3.5 h-3.5" />
-
                     </button>
-
                     <button
-
                       onClick={() => handleReviewStatus(f.id, 'rejected')}
-
                       title="Reject"
-
-                      className={`p-1 rounded hover:bg-slate-800 ${
-
-                        f.status === 'rejected' ? 'text-rose-400' : 'text-slate-500'
-
+                      className={`p-1 rounded-full hover:bg-slate-200 dark:hover:bg-white/[0.08] transition-colors ${
+                        f.status === 'rejected' ? 'text-rose-500' : 'text-slate-400'
                       }`}
-
                     >
-
                       <XCircle className="w-3.5 h-3.5" />
-
                     </button>
-
                     <button
-
                       onClick={() => handleDeleteFrame(f.id)}
-
                       title="Delete Frame"
-
-                      className="p-1 rounded hover:bg-slate-800 text-slate-500 hover:text-rose-400"
-
+                      className="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-white/[0.08] text-slate-400 hover:text-rose-500 transition-colors"
                     >
-
                       <Trash2 className="w-3 h-3" />
-
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
-
             ))}
-
           </div>
-
         )}
-
       </div>
 
       {/* Frame Preview Modal */}
-
       {selectedFrame && (
-
         <div
-
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
-
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in"
           onClick={() => setSelectedFrame(null)}
-
         >
-
           <div
-
-            className="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-4 shadow-2xl space-y-3"
-
+            className="bg-white dark:bg-[#121826] border border-slate-200 dark:border-white/10 rounded-3xl max-w-3xl w-full p-6 shadow-2xl space-y-4"
             onClick={(e) => e.stopPropagation()}
-
           >
-
-            <div className="flex items-center justify-between text-xs text-white">
-
-              <span className="font-bold">Frame Inspector</span>
-
-              <span className="font-mono text-slate-400">
-
+            <div className="flex items-center justify-between text-xs text-slate-900 dark:text-white">
+              <span className="font-bold text-sm">Frame Inspector</span>
+              <span className="font-mono text-slate-500 dark:text-slate-400">
                 Timestamp: {selectedFrame.timestamp_sec.toFixed(3)}s &bull; Sharpness: {selectedFrame.sharpness_score}
-
               </span>
-
             </div>
 
-            <div className="bg-black rounded-xl overflow-hidden aspect-video flex items-center justify-center">
-
+            <div className="bg-black rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
               <img
-
                 src={`/api/v1/files/raw?path=${encodeURIComponent(selectedFrame.file_path)}`}
-
                 alt="Frame Full"
-
                 className="w-full h-full object-contain"
-
               />
-
             </div>
 
-            <div className="flex justify-end gap-2">
-
+            <div className="flex justify-end gap-2.5 pt-2">
               <button
-
                 onClick={() => setSelectedFrame(null)}
-
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold"
-
+                className="px-5 py-2 bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold transition-all active:scale-95"
               >
-
                 Close
-
               </button>
-
               <button
-
                 onClick={() => {
-
                   setSelectedFrame(null);
-
                   setStage('annotation');
-
                 }}
-
-                className="px-4 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold"
-
+                className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-600/25 transition-all active:scale-95"
               >
-
                 Open in Annotation Canvas
-
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       )}
 
       {/* Contact Sheet Modal */}
-
       {showContactSheet && (
-
         <div
-
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
-
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in"
           onClick={() => setShowContactSheet(false)}
-
         >
-
           <div
-
-            className="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-4 shadow-2xl space-y-3"
-
+            className="bg-white dark:bg-[#121826] border border-slate-200 dark:border-white/10 rounded-3xl max-w-4xl w-full p-6 shadow-2xl space-y-4"
             onClick={(e) => e.stopPropagation()}
-
           >
-
-            <div className="flex items-center justify-between text-xs text-white">
-
-              <span className="font-bold">Video Sequence Contact Sheet Mosaic</span>
-
-              <button onClick={() => setShowContactSheet(false)} className="text-slate-400 hover:text-white">
-
+            <div className="flex items-center justify-between text-xs text-slate-900 dark:text-white">
+              <span className="font-bold text-sm">Video Sequence Contact Sheet Mosaic</span>
+              <button
+                onClick={() => setShowContactSheet(false)}
+                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-white/[0.08] text-slate-500 dark:text-slate-400 transition-colors"
+              >
                 ✕
-
               </button>
-
             </div>
 
-            <div className="max-h-[70vh] overflow-y-auto bg-black rounded-xl p-2 flex items-center justify-center">
-
+            <div className="max-h-[70vh] overflow-y-auto bg-black rounded-2xl p-2 flex items-center justify-center">
               <img
-
                 src={`/api/v1/frames/contact-sheet?project_id=${activeProjectId}`}
-
                 alt="Contact sheet"
-
-                className="w-full h-auto object-contain"
-
+                className="w-full h-auto object-contain rounded-xl"
               />
-
             </div>
-
           </div>
-
         </div>
-
       )}
 
     </div>

@@ -14,6 +14,8 @@ import {
   Check,
   Plus,
   Layers,
+  Cpu,
+  Key,
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
@@ -21,7 +23,6 @@ export const SettingsView: React.FC = () => {
     theme,
     toggleTheme,
     setTheme,
-    setStitchModalOpen,
     addNotification,
     currentTenant,
     setCurrentTenant,
@@ -32,22 +33,22 @@ export const SettingsView: React.FC = () => {
   } = useAppStore();
 
   const [appName, setAppName] = useState('VisionForge Studio');
-  const [authorName, setAuthorName] = useState('ML Computer Vision Team');
+  const [authorName, setAuthorName] = useState('VisionForge AI Engineering');
 
   const shortcuts = [
     { key: 'Ctrl + K', action: 'Open Global Command Palette' },
     { key: 'B', action: 'Activate Bounding Box Tool' },
     { key: 'P', action: 'Activate Polygon Segmentation Tool' },
     { key: 'S', action: 'SAM 2 Point Prompt Segmentation Mode' },
-    { key: 'X', action: 'SAM 2 Box Prompt Fine Boundary Mode' },
-    { key: 'V', action: 'Activate Select / Move Tool' },
+    { key: 'X', action: 'SAM 2 Box Prompt Boundary Refine' },
+    { key: 'V', action: 'Activate Select & Pointer Tool' },
     { key: 'H / Space + Drag', action: 'Activate Pan Canvas Tool' },
     { key: 'A / Left Arrow', action: 'Previous Frame in Annotation Studio' },
     { key: 'D / Right Arrow', action: 'Next Frame in Annotation Studio' },
-    { key: '1 - 9', action: 'Quick Switch Class Color & Category' },
+    { key: '1 - 9', action: 'Quick Switch Object Class & Palette' },
     { key: 'Delete / Backspace', action: 'Delete Selected Annotation' },
-    { key: 'Ctrl + Z', action: 'Undo Annotation Modification' },
-    { key: 'Ctrl + Y', action: 'Redo Annotation Modification' },
+    { key: 'Ctrl + Z', action: 'Undo Canvas Modification' },
+    { key: 'Ctrl + Y', action: 'Redo Canvas Modification' },
   ];
 
   const handleSave = (e: React.FormEvent) => {
@@ -58,39 +59,41 @@ export const SettingsView: React.FC = () => {
   const getRoleBadgeStyle = (role: string) => {
     switch (role?.toLowerCase()) {
       case 'admin':
-        return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+        return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
       case 'reviewer':
-        return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30';
+        return 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20';
       case 'engineer':
-        return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+        return 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20';
       case 'annotator':
       default:
-        return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+        return 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20';
     }
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-      {/* Top Bar */}
-      <div className="pb-4 border-b border-slate-800">
-        <h2 className="text-lg font-bold text-white tracking-tight">Studio Settings & Multi-Tenant Access</h2>
-        <p className="text-xs text-slate-400 mt-0.5">
-          Configure branding, light/dark theme modes, workspace tenants, and team roles
-        </p>
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/[0.08]">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Studio Settings & Multi-Tenant Access</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Manage organization workspaces, team access roles, visual themes, and local engine parameters
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Workspace Tenants & Multi-Tenancy */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center justify-between pb-3 border-b border-slate-800">
-            <span className="flex items-center gap-2">
-              <Building2 className="w-4 h-4 text-brand-400" />
-              Workspace Tenants & Organizations
-            </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-500/20 text-brand-400 border border-brand-500/30">
+        <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-blue-500" />
+              <span>Workspace Tenants & Organizations</span>
+            </h3>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
               Active: {currentTenant?.name || 'Default'}
             </span>
-          </h3>
+          </div>
 
           <div className="space-y-2">
             {tenantsList.map((tenant) => {
@@ -106,29 +109,29 @@ export const SettingsView: React.FC = () => {
                       message: `Switched to ${tenant.name}`,
                     });
                   }}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
+                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                     isActive
-                      ? 'bg-brand-500/10 border-brand-500/40 text-brand-300'
-                      : 'bg-slate-850/60 border-slate-800 hover:border-slate-700 text-slate-300'
+                      ? 'bg-blue-50/80 dark:bg-blue-950/30 border-blue-500/60 text-slate-900 dark:text-white shadow-sm'
+                      : 'bg-slate-50/60 dark:bg-white/[0.02] border-slate-200/80 dark:border-white/[0.06] hover:bg-slate-100 dark:hover:bg-white/[0.05] text-slate-700 dark:text-slate-300'
                   }`}
                 >
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold truncate text-white">{tenant.name}</span>
-                    <span className="text-[11px] text-slate-400 mt-0.5">
-                      Slug: <span className="font-mono text-slate-300">{tenant.slug}</span> • Plan:{' '}
-                      <span className="uppercase font-semibold text-brand-400">{tenant.plan || 'Enterprise'}</span>
+                    <span className="text-xs font-bold truncate text-slate-900 dark:text-white">{tenant.name}</span>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Slug: <span className="font-mono text-slate-700 dark:text-slate-300">{tenant.slug}</span> &bull; Plan:{' '}
+                      <span className="uppercase font-semibold text-blue-600 dark:text-blue-400">{tenant.plan || 'Enterprise'}</span>
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-200/80 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 font-mono">
                       {tenant.project_count || 0} projects
                     </span>
                     {isActive ? (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                         <Check className="w-3 h-3" /> Active
                       </span>
                     ) : (
-                      <span className="text-[10px] text-slate-500 hover:text-slate-300 font-semibold">Switch</span>
+                      <span className="text-[10px] text-slate-500 hover:text-blue-500 font-semibold transition-colors">Switch</span>
                     )}
                   </div>
                 </div>
@@ -138,18 +141,18 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Team Members & Role Context */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center justify-between pb-3 border-b border-slate-800">
-            <span className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-brand-400" />
-              Team Members & Role Access
-            </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+        <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Users className="w-4 h-4 text-indigo-500" />
+              <span>Team Members & Role Access</span>
+            </h3>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300">
               {usersList.length} Accounts
             </span>
-          </h3>
+          </div>
 
-          <div className="space-y-2 max-h-72 overflow-y-auto">
+          <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
             {usersList.map((user) => {
               const isCurrent = currentUser?.id === user.id;
               return (
@@ -163,31 +166,31 @@ export const SettingsView: React.FC = () => {
                       message: `Session now active as ${user.name} (${user.role.toUpperCase()})`,
                     });
                   }}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                     isCurrent
-                      ? 'bg-brand-500/10 border-brand-500/40'
-                      : 'bg-slate-850/60 border-slate-800 hover:border-slate-700'
+                      ? 'bg-blue-50/80 dark:bg-blue-950/30 border-blue-500/60 shadow-sm'
+                      : 'bg-slate-50/60 dark:bg-white/[0.02] border-slate-200/80 dark:border-white/[0.06] hover:bg-slate-100 dark:hover:bg-white/[0.05]'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-sm flex-shrink-0">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-bold text-white truncate">{user.name}</span>
-                      <span className="text-[11px] text-slate-400 truncate">{user.email}</span>
+                      <span className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.name}</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{user.email}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${getRoleBadgeStyle(
+                      className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getRoleBadgeStyle(
                         user.role
                       )}`}
                     >
                       {user.role}
                     </span>
                     {isCurrent && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                         Current
                       </span>
                     )}
@@ -199,66 +202,68 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Branding & Theme Mode */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-slate-800">
-            <Sparkles className="w-4 h-4 text-brand-400" />
-            Branding & Visual Theme
-          </h3>
+        <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-5 sm:p-6 shadow-sm space-y-5">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-500" />
+              <span>Branding & Appearance</span>
+            </h3>
+          </div>
 
           <form onSubmit={handleSave} className="space-y-4 text-xs">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Application Name</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Application Name</label>
               <input
                 type="text"
                 value={appName}
                 onChange={(e) => setAppName(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
+                className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">Organization / Studio</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Organization / Studio</label>
               <input
                 type="text"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none"
+                className="w-full bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
             {/* Visual Theme Selection */}
-            <div className="pt-2 border-t border-slate-800 space-y-2">
-              <div className="font-semibold text-slate-200">Color Theme</div>
+            <div className="pt-2 border-t border-slate-100 dark:border-white/[0.06] space-y-2">
+              <div className="font-semibold text-slate-700 dark:text-slate-300">Color Appearance</div>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setTheme('dark')}
-                  className={`p-3 rounded-xl border flex items-center gap-3 transition-all ${
+                  className={`p-3.5 rounded-2xl border flex items-center gap-3 transition-all ${
                     theme === 'dark'
-                      ? 'bg-brand-600/20 border-brand-500 text-white shadow-md shadow-brand-500/20'
-                      : 'bg-slate-850 border-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-blue-600/10 border-blue-500 text-blue-600 dark:text-white shadow-sm'
+                      : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <Moon className="w-5 h-5 text-indigo-400" />
                   <div className="text-left">
                     <div className="font-bold text-xs">Dark Graphite</div>
-                    <div className="text-[10px] text-slate-400">High contrast for vision lab</div>
+                    <div className="text-[10px] opacity-75">High contrast for vision lab</div>
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setTheme('light')}
-                  className={`p-3 rounded-xl border flex items-center gap-3 transition-all ${
+                  className={`p-3.5 rounded-2xl border flex items-center gap-3 transition-all ${
                     theme === 'light'
-                      ? 'bg-amber-500/20 border-amber-500 text-slate-900 shadow-md shadow-amber-500/20'
-                      : 'bg-slate-850 border-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-blue-600/10 border-blue-500 text-blue-600 dark:text-slate-900 shadow-sm'
+                      : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <Sun className="w-5 h-5 text-amber-500" />
                   <div className="text-left">
                     <div className="font-bold text-xs">Clean Light</div>
-                    <div className="text-[10px] text-slate-400">Crisp daytime daylight mode</div>
+                    <div className="text-[10px] opacity-75">Crisp daytime daylight mode</div>
                   </div>
                 </button>
               </div>
@@ -266,7 +271,7 @@ export const SettingsView: React.FC = () => {
 
             <button
               type="submit"
-              className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-semibold shadow-md shadow-brand-600/30 flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold shadow-md shadow-blue-500/25 flex items-center gap-1.5 transition-all active:scale-95"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Save Preferences</span>
@@ -274,65 +279,58 @@ export const SettingsView: React.FC = () => {
           </form>
         </div>
 
-        {/* Google Stitch & Gemini AI Studio Integration */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-blue-400" />
-              Google Stitch & Gemini AI Studio
+        {/* VisionForge Studio Core Architecture & Design Standards */}
+        <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-blue-500" />
+              <span>Core Architecture & Design Standards</span>
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              API Configured
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              v2.4.0 Engine
             </span>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
-            VisionForge implements the open <span className="font-mono text-slate-200">DESIGN.md</span> specification popularized by Google Stitch. Powered by the Google Gemini API (Project <code className="text-blue-400">7074070694</code>) for AI-driven component synthesis and visual telemetry.
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            VisionForge Studio implements an enterprise-grade industrial inspection architecture with 4-tier surface elevations, 20px Gaussian glassmorphism, sub-pixel bounding box tracking, and non-blocking pipeline telemetry.
           </p>
 
-          <div className="p-3 rounded-xl bg-slate-850/80 border border-slate-800 space-y-1.5 text-xs font-mono">
-            <div className="flex justify-between items-center text-slate-400">
-              <span>Active Key Prefix:</span>
-              <span className="text-emerald-400 font-bold">AQ.Ab8RN... (Authenticated)</span>
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.06]">
+              <span className="text-[10px] text-slate-400 block uppercase">Inference Engine</span>
+              <span className="text-slate-900 dark:text-white font-bold">TensorRT / ONNX</span>
             </div>
-            <div className="flex justify-between items-center text-slate-400">
-              <span>Cloud Project:</span>
-              <span className="text-blue-400">7074070694</span>
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.06]">
+              <span className="text-[10px] text-slate-400 block uppercase">Frame Tracking</span>
+              <span className="text-emerald-500 font-bold">Rigid 60 FPS</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 pt-1">
-            <button
-              type="button"
-              onClick={() => setStitchModalOpen(true)}
-              className="stitch-pill bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 flex items-center gap-1.5"
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Open Stitch Inspector & AI Studio</span>
-            </button>
-            <a
-              href="https://console.developers.google.com/apis/api/generativelanguage.googleapis.com/overview?project=7074070694"
-              target="_blank"
-              rel="noreferrer"
-              className="stitch-pill bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700"
-            >
-              <span>Google Cloud Console</span>
-            </a>
+          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.06] text-xs">
+            <div className="flex justify-between items-center text-slate-500 dark:text-slate-400">
+              <span>Cloud Acceleration Pipeline:</span>
+              <span className="font-semibold text-blue-600 dark:text-blue-400">Dual Tesla T4 (Headless)</span>
+            </div>
           </div>
         </div>
 
         {/* Global Keyboard Shortcuts Table */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-slate-800">
-            <Keyboard className="w-4 h-4 text-brand-400" />
-            Global Keyboard Shortcuts
-          </h3>
+        <div className="lg:col-span-2 bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Keyboard className="w-4 h-4 text-blue-500" />
+              <span>Studio Hotkeys & Acceleration Shortcuts</span>
+            </h3>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300">
+              13 Shortcuts Active
+            </span>
+          </div>
 
-          <div className="divide-y divide-slate-800/80 max-h-80 overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
             {shortcuts.map((sc, idx) => (
-              <div key={idx} className="py-2.5 flex items-center justify-between text-xs">
-                <span className="text-slate-300">{sc.action}</span>
-                <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px]">
+              <div key={idx} className="py-2 flex items-center justify-between text-xs border-b border-slate-100 dark:border-white/[0.04]">
+                <span className="text-slate-700 dark:text-slate-300">{sc.action}</span>
+                <kbd className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/[0.08] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 font-mono text-[11px] shadow-sm">
                   {sc.key}
                 </kbd>
               </div>

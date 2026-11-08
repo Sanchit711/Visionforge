@@ -9,7 +9,6 @@ import { NotificationToast } from './components/NotificationToast';
 import { LoginModal } from './components/LoginModal';
 import { RolesModal } from './components/RolesModal';
 import { ProductTourModal } from './components/ProductTourModal';
-import { StitchDesignModal } from './components/StitchDesignModal';
 
 import { LoginView } from './views/LoginView';
 import { RBACRestrictedView } from './views/RBACRestrictedView';
@@ -159,7 +158,6 @@ export function App() {
       <LoginModal />
       <RolesModal />
       <ProductTourModal />
-      <StitchDesignModal />
 
       {/* Global Command Palette (Ctrl+K) */}
       <CommandPalette />

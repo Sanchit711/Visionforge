@@ -83,7 +83,6 @@ interface AppState {
   sidebarCollapsed: boolean;
   commandPaletteOpen: boolean;
   productTourOpen: boolean;
-  stitchModalOpen: boolean;
   notifications: ToastNotification[];
 
   setStage: (stage: StageId) => void;
@@ -111,7 +110,6 @@ interface AppState {
   toggleSidebar: () => void;
   setCommandPaletteOpen: (open: boolean) => void;
   setProductTourOpen: (open: boolean) => void;
-  setStitchModalOpen: (open: boolean) => void;
   addNotification: (notification: Omit<ToastNotification, 'id'>) => void;
   removeNotification: (id: string) => void;
 }
@@ -163,7 +161,6 @@ export const useAppStore = create<AppState>((set) => ({
   sidebarCollapsed: false,
   commandPaletteOpen: false,
   productTourOpen: false,
-  stitchModalOpen: false,
   notifications: [],
 
   setStage: (stage) => set({ currentStage: stage }),
@@ -241,7 +238,6 @@ export const useAppStore = create<AppState>((set) => ({
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
   setProductTourOpen: (open) => set({ productTourOpen: open }),
-  setStitchModalOpen: (open) => set({ stitchModalOpen: open }),
   addNotification: (notification) => {
     const id = Math.random().toString(36).substring(2, 9);
     set((state) => ({

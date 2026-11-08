@@ -460,15 +460,16 @@ export const api = {
   getDatasetQuality: (projectId: string) => request<any>(`/datasets/quality-summary?project_id=${projectId}`),
 
   createDatasetVersion: (projectId: string, data: any) =>
-
     request<any>(`/datasets/versions?project_id=${projectId}`, {
-
       method: 'POST',
-
       headers: { 'Content-Type': 'application/json' },
-
       body: JSON.stringify(data),
-
+    }),
+  createDataset: (projectId: string, data: any) =>
+    request<any>(`/datasets/versions?project_id=${projectId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     }),
 
 
@@ -768,13 +769,19 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
-  // Google Stitch & Gemini AI Studio Integration
+  // VisionForge AI Studio Synthesis & Gemini Engine Integration
   getAiStatus: () => request<any>('/ai/status'),
   testAiConnection: () =>
     request<any>('/ai/test-connection', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
+    }),
+  generateUiComponent: (prompt: string) =>
+    request<any>('/ai/generate-ui', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
     }),
   generateStitchUI: (prompt: string) =>
     request<any>('/ai/generate-ui', {

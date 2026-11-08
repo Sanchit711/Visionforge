@@ -33,7 +33,7 @@ interface CommandItem {
 }
 
 export const CommandPalette: React.FC = () => {
-  const { commandPaletteOpen, setCommandPaletteOpen, setStage, toggleTheme, setProductTourOpen, setStitchModalOpen } = useAppStore();
+  const { commandPaletteOpen, setCommandPaletteOpen, setStage, toggleTheme, setProductTourOpen } = useAppStore();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -138,16 +138,6 @@ export const CommandPalette: React.FC = () => {
       action: () => {
         setCommandPaletteOpen(false);
         setProductTourOpen(true);
-      },
-    },
-    {
-      id: 'act-stitch',
-      title: 'Google Stitch UI/UX & DESIGN.md Inspector',
-      category: 'Design System',
-      icon: Layers,
-      action: () => {
-        setCommandPaletteOpen(false);
-        setStitchModalOpen(true);
       },
     },
     {

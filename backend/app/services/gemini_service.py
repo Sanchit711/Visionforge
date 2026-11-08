@@ -164,7 +164,7 @@ export const {clean_name}: React.FC = () => {{
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Google Stitch UI</span>
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">VisionForge Glass</span>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">{prompt}</h3>
           </div>
         </div>
