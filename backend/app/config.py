@@ -43,6 +43,12 @@ class Settings(BaseSettings):
     AURELIX_WEIGHTS_DIR: Path = Path(os.getenv("AURELIX_WEIGHTS_DIR", str(BASE_DIR / "weights" / "aurelix")))
     MHYRA_WEIGHTS_DIR: Path = Path(os.getenv("MHYRA_WEIGHTS_DIR", str(BASE_DIR / "weights" / "mhyra")))
 
+    # AI & Google Stitch / Gemini API Keys
+    GEMINI_API_KEY: str = Field(default_factory=lambda: os.getenv("GEMINI_API_KEY", ""))
+    GOOGLE_API_KEY: str = Field(default_factory=lambda: os.getenv("GOOGLE_API_KEY", ""))
+    STITCH_API_KEY: str = Field(default_factory=lambda: os.getenv("STITCH_API_KEY", ""))
+    GOOGLE_PROJECT_ID: str = Field(default_factory=lambda: os.getenv("GOOGLE_PROJECT_ID", "7074070694"))
+
     # CORS
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",

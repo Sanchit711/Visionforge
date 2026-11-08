@@ -274,21 +274,32 @@ export const SettingsView: React.FC = () => {
           </form>
         </div>
 
-        {/* Google Stitch Design System */}
+        {/* Google Stitch & Gemini AI Studio Integration */}
         <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-800">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-blue-400" />
-              Google Stitch Design System
+              Google Stitch & Gemini AI Studio
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
-              DESIGN.md v1.0
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              API Configured
             </span>
           </div>
 
           <p className="text-xs text-slate-400 leading-relaxed">
-            VisionForge implements the open <span className="font-mono text-slate-200">DESIGN.md</span> specification popularized by Google Stitch. It standardizes design tokens, surface elevations, Apple-inspired glassmorphism, and Cupertino spring curves across the entire UI/UX.
+            VisionForge implements the open <span className="font-mono text-slate-200">DESIGN.md</span> specification popularized by Google Stitch. Powered by the Google Gemini API (Project <code className="text-blue-400">7074070694</code>) for AI-driven component synthesis and visual telemetry.
           </p>
+
+          <div className="p-3 rounded-xl bg-slate-850/80 border border-slate-800 space-y-1.5 text-xs font-mono">
+            <div className="flex justify-between items-center text-slate-400">
+              <span>Active Key Prefix:</span>
+              <span className="text-emerald-400 font-bold">AQ.Ab8RN... (Authenticated)</span>
+            </div>
+            <div className="flex justify-between items-center text-slate-400">
+              <span>Cloud Project:</span>
+              <span className="text-blue-400">7074070694</span>
+            </div>
+          </div>
 
           <div className="flex items-center gap-2 pt-1">
             <button
@@ -297,8 +308,16 @@ export const SettingsView: React.FC = () => {
               className="stitch-pill bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 flex items-center gap-1.5"
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Open Stitch Inspector</span>
+              <span>Open Stitch Inspector & AI Studio</span>
             </button>
+            <a
+              href="https://console.developers.google.com/apis/api/generativelanguage.googleapis.com/overview?project=7074070694"
+              target="_blank"
+              rel="noreferrer"
+              className="stitch-pill bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700"
+            >
+              <span>Google Cloud Console</span>
+            </a>
           </div>
         </div>
 

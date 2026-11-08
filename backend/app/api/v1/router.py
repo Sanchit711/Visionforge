@@ -16,11 +16,13 @@ from app.api.v1.endpoints import (
     validation,
     system,
     kaggle,
+    stitch_ai,
 )
 
 api_router = APIRouter()
 
 api_router.include_router(system.router, prefix="/system", tags=["System & Telemetry"])
+api_router.include_router(stitch_ai.router, prefix="/ai", tags=["Google Stitch & Gemini AI"])
 api_router.include_router(auth.router, prefix="/auth", tags=["Authentication & Access"])
 api_router.include_router(tenants.router, prefix="/tenants", tags=["Organization Tenants"])
 api_router.include_router(workspaces.router, prefix="/workspaces", tags=["Workspaces (Shared & Private)"])

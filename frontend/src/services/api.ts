@@ -768,5 +768,19 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
+  // Google Stitch & Gemini AI Studio Integration
+  getAiStatus: () => request<any>('/ai/status'),
+  testAiConnection: () =>
+    request<any>('/ai/test-connection', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    }),
+  generateStitchUI: (prompt: string) =>
+    request<any>('/ai/generate-ui', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+    }),
 };
 
