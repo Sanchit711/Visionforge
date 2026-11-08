@@ -752,7 +752,7 @@ export const TrainingView: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Trainer Configuration & Engine Selector */}
-        <div className="bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+        <div data-tour="training-engine-selector" className="bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">
             <h3 className="text-xs font-bold text-[#1d1d1f] dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Sliders className="w-4 h-4 text-[#0071e3]" />

@@ -244,7 +244,7 @@ export const ModelRegistryView: React.FC = () => {
       </div>
 
       {/* Model Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div data-tour="registry-model-cards" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {models.length === 0 ? (
           <div className="col-span-3 py-16 text-center text-xs text-slate-400 bg-white dark:bg-[#121826]/90 rounded-3xl border border-slate-200/80 dark:border-white/[0.08]">
             No models registered yet. Completed training runs will automatically register their best weights here.

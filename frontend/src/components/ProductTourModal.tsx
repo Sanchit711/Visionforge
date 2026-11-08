@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppStore, StageId } from '../stores/useAppStore';
 import {
   Sparkles,
@@ -27,17 +27,32 @@ import {
   MousePointer,
   RotateCcw,
   Zap,
+  MapPin,
+  Workflow,
+  Search,
+  Share2,
+  Lock,
+  Crop,
+  Check,
 } from 'lucide-react';
 
-interface TourStep {
+export interface HowItWorksStep {
+  stepNumber: number;
+  title: string;
+  description: string;
+}
+
+export interface TourStep {
   id: number;
   stageId: StageId;
+  target: string;
+  locationName: string;
   badge: string;
   title: string;
   subtitle: string;
-  description: string;
-  keyFeatures: string[];
-  ctaLabel: string;
+  whereLocated: string;
+  whatItDoes: string;
+  howItWorks: HowItWorksStep[];
   interactiveTip: string;
   icon: React.ElementType;
   accentColor: string;
@@ -49,18 +64,31 @@ const TOUR_STEPS: TourStep[] = [
   {
     id: 1,
     stageId: 'overview',
-    badge: 'Enterprise Architecture',
-    title: 'VisionForge Studio Overview',
-    subtitle: 'Industrial Computer Vision & Conveyor AI Platform',
-    description:
-      'VisionForge is built for high-velocity industrial inspection, conveyor tracking, and edge intelligence. From multi-camera video streams to compiled TensorRT weights in a unified interface.',
-    keyFeatures: [
-      'Dual Licensed: AGPLv3 Copyleft + Commercial Enterprise License',
-      'Zero Cloud Lock-in: Runs on local GPU or cloud clusters',
-      'End-to-end telemetry across videos, annotations, and model weights',
+    target: 'overview-kpis',
+    locationName: 'Overview Console › Metric Bento Row',
+    badge: 'Executive Telemetry',
+    title: 'Factory Dashboard & Real-Time KPIs',
+    subtitle: 'Unified Telemetry Across 8 Pipeline Stages',
+    whereLocated: 'Top bento grid directly beneath the main title bar on the Overview console.',
+    whatItDoes: 'Continuously aggregates factory video ingestion counts, frame decimation rates, annotated items, trained model weights, and online compute nodes across all industrial conveyor lines.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Background Daemon Polling',
+        description: 'SQLite transactions and GPU metrics are polled every 10 seconds without locking the UI thread.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Bento Telemetry Cards',
+        description: 'Displays live counts for Videos, Extracted Frames, Annotations, Datasets, and Checkpoints.',
+      },
+      {
+        stepNumber: 3,
+        title: '1-Click Stage Handoff',
+        description: 'Clicking any KPI card instantly transitions your workspace to that operational workstation.',
+      },
     ],
-    ctaLabel: 'Explore Overview Metrics',
-    interactiveTip: 'Observe real-time CPU/GPU telemetry, KPI statistics, and active project workflows.',
+    interactiveTip: 'Click on any KPI card to immediately jump into that pipeline stage.',
     icon: Sparkles,
     accentColor: 'from-blue-500 to-indigo-600',
     accentHex: '#0071e3',
@@ -68,143 +96,432 @@ const TOUR_STEPS: TourStep[] = [
   },
   {
     id: 2,
-    stageId: 'video_lab',
-    badge: 'Video Lab & ROI Framing',
-    title: 'High-Throughput Ingestion & ROI Framing',
-    subtitle: 'Transform Raw 4K Video into Industrial Training Sets',
-    description:
-      'Ingest continuous production video streams, designate normalized regions of interest (ROI), and isolate camera angles with persistent boundary presets.',
-    keyFeatures: [
-      'Interactive ROI boundary cropping for targeted conveyor belts',
-      'Synthetic demo video generator with simulated conveyor motion',
-      'Timestamp trimming and frame interval synchronization',
+    stageId: 'overview',
+    target: 'pipeline-flow',
+    locationName: 'Overview Console › Pipeline Flow Matrix',
+    badge: 'Factory Lifecycle',
+    title: '8-Stage Sequential Vision Pipeline',
+    subtitle: 'End-to-End Lineage from 4K Video to TensorRT',
+    whereLocated: 'Large central bento container on the left of the Overview view.',
+    whatItDoes: 'Enforces a strict engineering lifecycle that transforms raw 4K production video streams into optimized, zero-leakage TensorRT edge weights for factory conveyor sorting.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Continuous Upstream Ingest',
+        description: 'Video Lab & Frame Studio filter out blur and redundant stationary conveyor frames.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Assisted Annotation & Splitting',
+        description: 'SAM 2 and YOLO auto-label objects; datasets split chronologically to prevent accuracy inflation.',
+      },
+      {
+        stepNumber: 3,
+        title: 'GPU Training & Edge Verification',
+        description: 'Models train on Kaggle Dual-T4 or Colab, validate in quad-split sync, and register for Jetson deployment.',
+      },
     ],
-    ctaLabel: 'Inspect Video Lab',
-    interactiveTip: 'Click "Generate Demo Video" or upload a production MP4 to try ROI boundary cropping.',
+    interactiveTip: 'Click any stage tile (e.g. "4. AI Annotation") to navigate straight into that phase.',
+    icon: Workflow,
+    accentColor: 'from-blue-600 to-cyan-600',
+    accentHex: '#0071e3',
+    previewType: 'overview',
+  },
+  {
+    id: 3,
+    stageId: 'overview',
+    target: 'workspace-selector',
+    locationName: 'Top Navigation Header › Workspace Switcher',
+    badge: 'Security & Multi-Tenancy',
+    title: 'Multi-Tenant Workspaces & RBAC',
+    subtitle: 'Enterprise Team & Plant Line Segregation',
+    whereLocated: 'Top navigation header bar on the left, next to the VisionForge logo and breadcrumbs.',
+    whatItDoes: 'Isolates computer vision camera streams, models, and datasets across distinct factory facilities, client organizations, and engineering teams under strict role-based access control.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Partitioned Workspaces',
+        description: 'Segregates production lines into Shared Team Workspaces and Private Sandboxes.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Role-Based Access Control',
+        description: 'Five strict RBAC tiers: Admin, Reviewer, ML Engineer, Annotator, and Auditor Viewer.',
+      },
+      {
+        stepNumber: 3,
+        title: 'Cryptographic Tenant Isolation',
+        description: 'All database queries, S3 video assets, and model weights enforce strict tenant authorization.',
+      },
+    ],
+    interactiveTip: 'Click the Workspace pill in the header to view shared vs private sandboxes.',
+    icon: Share2,
+    accentColor: 'from-purple-500 to-indigo-600',
+    accentHex: '#8b5cf6',
+    previewType: 'overview',
+  },
+  {
+    id: 4,
+    stageId: 'overview',
+    target: 'spotlight-search',
+    locationName: 'Top Navigation Header › Center Spotlight Search',
+    badge: 'Command Center',
+    title: 'Global Spotlight Search (⌘K / Ctrl+K)',
+    subtitle: 'Instant Universal Fuzzy Navigation & Actions',
+    whereLocated: 'Center-right of the top navigation bar, featuring the ⌘K shortcut badge.',
+    whatItDoes: 'Provides macOS Spotlight-style keyboard navigation across all vision projects, training experiments, dataset versions, registered model checkpoints, and studio commands.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Instant Summon (⌘K / Ctrl+K)',
+        description: 'Press ⌘K anywhere in the application to summon the frosted spotlight palette without touching your mouse.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Universal Fuzzy Indexing',
+        description: 'Searches across models (yolo26l.pt), datasets (v1.2), pipeline stages, and documentation topics.',
+      },
+      {
+        stepNumber: 3,
+        title: 'Keyboard Execution',
+        description: 'Use Arrow keys to browse and Enter to immediately execute workflows or navigate.',
+      },
+    ],
+    interactiveTip: 'Press ⌘K or click the search box to test the global spotlight launcher.',
+    icon: Search,
+    accentColor: 'from-slate-700 to-blue-600',
+    accentHex: '#0071e3',
+    previewType: 'overview',
+  },
+  {
+    id: 5,
+    stageId: 'video_lab',
+    target: 'video-source-list',
+    locationName: 'Video Lab › Left Ingestion Drawer',
+    badge: 'Video Ingestion',
+    title: 'Industrial Video Stream Ingestion',
+    subtitle: 'High-Throughput Camera Feed Management',
+    whereLocated: 'Far-left panel in the Video Ingestion & Crop Lab.',
+    whatItDoes: 'Ingests high-framerate 4K/1080p production streams from conveyor IP cameras, RTSP feeds, or test MP4 video uploads.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Stream Upload & Synthetic Simulation',
+        description: 'Upload industrial camera videos or click "Generate Demo Video" for instant simulated conveyor footage.',
+      },
+      {
+        stepNumber: 2,
+        title: 'OpenCV Metadata Extraction',
+        description: 'Automatically detects video codec, resolution (e.g. 1920x1080), framerate (e.g. 60 FPS), and timestamp duration.',
+      },
+      {
+        stepNumber: 3,
+        title: 'Stream Lineage Indexing',
+        description: 'Computes cryptographic SHA-256 hash to guarantee provenance for regulatory compliance.',
+      },
+    ],
+    interactiveTip: 'Click "Generate Demo Video" in the top bar to synthesize an industrial conveyor video.',
     icon: Film,
     accentColor: 'from-sky-500 to-blue-600',
     accentHex: '#0284c7',
     previewType: 'video',
   },
   {
-    id: 3,
-    stageId: 'frame_studio',
-    badge: 'Frame Studio & Sharpness Decimation',
-    title: 'Laplacian Sharpness & Smart Decimation',
-    subtitle: 'Curate Pristine Training Keyframes Automatically',
-    description:
-      'Discard motion-blurred conveyor frames using automated Laplacian variance filtering, and decimate redundant stationary frames using perceptual hash (pHash) analysis.',
-    keyFeatures: [
-      'Laplacian variance filter: discards motion-blurred or distorted frames',
-      'Perceptual hash (pHash) decimation: reduces duplicate frames by up to 90%',
-      'Single-click batch extraction from multiple video clips',
+    id: 6,
+    stageId: 'video_lab',
+    target: 'video-crop-controls',
+    locationName: 'Video Lab › Central Video Viewport & ROI Sliders',
+    badge: 'ROI Cropping',
+    title: 'Interactive Normalized ROI Framing',
+    subtitle: 'Conveyor Isolation & Reusable Camera Presets',
+    whereLocated: 'Central video player and the lower ROI coordinates panel in Video Lab.',
+    whatItDoes: 'Isolates the active conveyor belt zone, discarding extraneous factory background, and trims timestamps before frame extraction.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Interactive Cyan ROI Box',
+        description: 'Drag the rectangular ROI box directly over the conveyor belt or tune the normalized coordinate sliders.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Normalized Coordinate Math',
+        description: 'Bounding coordinates are stored as floats (0.00 to 1.00), ensuring crops remain resolution-independent.',
+      },
+      {
+        stepNumber: 3,
+        title: 'Persistent Camera Angle Presets',
+        description: 'Save presets (e.g. "Entrance Focus 16:9") to reuse identical cropping across dozens of cameras.',
+      },
     ],
-    ctaLabel: 'View Frame Studio',
-    interactiveTip: 'Tune the Laplacian variance threshold slider to automatically filter blurred frames.',
+    interactiveTip: 'Click 1:1, 16:9, or 4:3 buttons above the scrubber to test aspect ratio presets.',
+    icon: Crop,
+    accentColor: 'from-blue-500 to-indigo-600',
+    accentHex: '#0071e3',
+    previewType: 'video',
+  },
+  {
+    id: 7,
+    stageId: 'frame_studio',
+    target: 'frame-studio-filters',
+    locationName: 'Frame Studio › Extraction Configuration Parameters',
+    badge: 'Smart Decimation',
+    title: 'Laplacian Sharpness & pHash Decimation',
+    subtitle: 'Automated Blur Rejection & Frame Deduplication',
+    whereLocated: 'Top configuration panel in the Frame Studio view.',
+    whatItDoes: 'Extracts pristine keyframes from video streams while automatically discarding motion blur and redundant stationary conveyor frames.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Laplacian Variance (∇²) Filter',
+        description: 'Measures pixel edge sharpness gradients; conveyor frames below threshold (e.g. < 100) are flagged as blurry rejects.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Perceptual Hash (pHash) Deduplication',
+        description: 'Calculates 64-bit DCT image fingerprints; duplicate frames (Hamming distance ≤ 3) are filtered out automatically.',
+      },
+      {
+        stepNumber: 3,
+        title: '85% Cost & Storage Reduction',
+        description: 'Downsamples thousands of raw video frames into the top 300-500 most informative, distinct training frames.',
+      },
+    ],
+    interactiveTip: 'Adjust the Min Sharpness slider and click "Extract Target Frames" to see real-time extraction.',
     icon: Layers,
-    accentColor: 'from-cyan-500 to-teal-600',
+    accentColor: 'from-teal-500 to-emerald-600',
     accentHex: '#0d9488',
     previewType: 'frame',
   },
   {
-    id: 4,
+    id: 8,
     stageId: 'annotation',
-    badge: 'AI Annotation Studio',
-    title: 'Prompt Grounding & Keyframe Tracking',
-    subtitle: 'Zero-Shot Florence-2, SAM 2 Masks, and Rigid Tracking',
-    description:
-      'Label conveyor items in minutes rather than days. Ground zero-shot bounding boxes via natural language with Microsoft Florence-2, refine boundaries with Meta SAM 2, and interpolate rigid bounding boxes across motion.',
-    keyFeatures: [
-      'Open-vocabulary zero-shot grounding with Microsoft Florence-2',
-      'Pixel-level mask segmentation via Meta SAM 2 interactive prompts',
-      'Rigid-body trajectory interpolation locks dimensions across conveyor velocity',
+    target: 'annotation-canvas-tools',
+    locationName: 'Annotation Studio › Top Floating Command HUD',
+    badge: 'Spatial Labeling',
+    title: 'Precision Canvas HUD & Spatial Tools',
+    subtitle: 'Sub-Pixel Bounding Boxes & Instance Polygons',
+    whereLocated: 'Floating top command toolbar positioned directly above the canvas viewport.',
+    whatItDoes: 'Provides high-speed annotation tools including Bounding Box (B), Polygon Segmentation (P), Point Prompting, Sub-pixel Zoom, Pan, and 100-step Undo/Redo.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Fast Keyboard Hotkeys',
+        description: 'Press "B" for Bounding Box or "P" for Polygon. Keys 1-9 switch classes instantly without mouse movement.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Sub-Pixel Canvas Engine',
+        description: 'Draw coordinates on conveyor packages; automatic vertex snapping and boundary edge detection.',
+      },
+      {
+        stepNumber: 3,
+        title: '100% History Stack',
+        description: 'Full undo (⌘Z) and redo (⌘Y) history preserves every edit with zero state corruption.',
+      },
     ],
-    ctaLabel: 'Test Annotation Canvas',
-    interactiveTip: 'Press "B" to draw bounding boxes or click the AI Wand icon for Florence-2 prompt grounding.',
+    interactiveTip: 'Press "B" on your keyboard to switch to Box mode, or "P" for Polygon mode.',
     icon: PencilRuler,
-    accentColor: 'from-violet-500 to-purple-600',
-    accentHex: '#7c3aed',
+    accentColor: 'from-blue-600 to-indigo-600',
+    accentHex: '#0071e3',
     previewType: 'annotation',
   },
   {
-    id: 5,
-    stageId: 'datasets',
-    badge: 'Dataset Studio',
-    title: 'Audit-Proof Temporal Partitioning',
-    subtitle: 'Zero-Leak Train/Val Splits for Continuous Video Streams',
-    description:
-      'Standard random dataset splits create catastrophic data leakage on continuous conveyor footage. VisionForge enforces contiguous chronological chunk splitting with temporal safety buffers.',
-    keyFeatures: [
-      'Temporal chunk splitting (split_strategy="temporal") prevents frame leakage',
-      'Automated YOLO format generation (data.yaml, class bounding coordinates)',
-      'Multi-format export: YOLOv8 / YOLOv11 / YOLO26, COCO JSON, Pascal VOC',
+    id: 9,
+    stageId: 'annotation',
+    target: 'annotation-ai-assist',
+    locationName: 'Annotation Studio › Right Inspector Sidebar',
+    badge: 'Zero-Shot AI Assist',
+    title: 'Meta SAM 2 & YOLO Auto-Labeling Engine',
+    subtitle: 'Zero-Shot Prompt Grounding & Video Propagation',
+    whereLocated: 'Right-hand sidebar drawer in the Annotation Studio.',
+    whatItDoes: 'Accelerates annotation velocity up to 10x using Meta SAM 2 point prompts, Florence-2 natural language grounding, and automated video trajectory propagation.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Single-Click Point Prompting',
+        description: 'Select SAM 2 mode and single-click any conveyor package; SAM 2 computes pixel-perfect boundary polygons in < 50ms.',
+      },
+      {
+        stepNumber: 2,
+        title: 'YOLO World Open-Vocabulary',
+        description: 'Type natural language prompts (e.g. "damaged cardboard box") to detect unseen defect categories automatically.',
+      },
+      {
+        stepNumber: 3,
+        title: 'Rigid Trajectory Propagation',
+        description: 'Locks box dimensions and propagates coordinates across subsequent conveyor frames using motion vectors.',
+      },
     ],
-    ctaLabel: 'Inspect Dataset Versions',
-    interactiveTip: 'Choose between Temporal Chunk Splitting and Stratified Splitting for 0% data leakage.',
+    interactiveTip: 'Click the "SAM 2 Point Prompt" toggle in the right sidebar to try interactive AI labeling.',
+    icon: Zap,
+    accentColor: 'from-purple-500 to-pink-600',
+    accentHex: '#a855f7',
+    previewType: 'annotation',
+  },
+  {
+    id: 10,
+    stageId: 'datasets',
+    target: 'dataset-split-controls',
+    locationName: 'Datasets View › Temporal Timeline Partition Bar',
+    badge: 'Zero Leakage',
+    title: 'Leakage-Free Temporal Video Splitting',
+    subtitle: 'Chronological Video Partitions vs Random Shuffling',
+    whereLocated: 'Top bento container in the Datasets Management view.',
+    whatItDoes: 'Partitions annotated frames into Train, Validation, and Test splits without chronological video leakage between adjacent frames.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'The Data Leakage Hazard',
+        description: 'Random frame shuffling puts consecutive 60fps frames into both Train and Test, producing fake 99% scores that fail in production.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Contiguous Temporal Partitions',
+        description: 'VisionForge enforces continuous timeline blocks (70% Train, 20% Val, 10% Test) with time buffer gaps between splits.',
+      },
+      {
+        stepNumber: 3,
+        title: 'YOLO data.yaml Export',
+        description: 'Generates standardized YOLO format directories, label text files, and yaml descriptors ready for training.',
+      },
+    ],
+    interactiveTip: 'Inspect the 70/20/10 timeline distribution partition bar in Datasets.',
     icon: Database,
-    accentColor: 'from-amber-500 to-orange-600',
-    accentHex: '#d97706',
+    accentColor: 'from-emerald-500 to-teal-600',
+    accentHex: '#10b981',
     previewType: 'dataset',
   },
   {
-    id: 6,
+    id: 11,
     stageId: 'training',
-    badge: 'Training Hub',
-    title: 'Cloud GPU Training & Telemetry Streaming',
-    subtitle: '1-Click Headless Kaggle Dual-T4 & P100 Cluster Execution',
-    description:
-      'Dispatch training jobs directly to remote cloud GPU clusters with one click. Stream real-time loss curves, learning rate dynamics, and validation mAP50 telemetry back to your local workstation.',
-    keyFeatures: [
-      'Automated headless Kaggle API submission and artifact retrieval',
-      'Dual NVIDIA T4 GPU acceleration (32GB VRAM aggregate)',
-      'Real-time loss curve streaming and automatic checkpoint synchronization',
+    target: 'training-engine-selector',
+    locationName: 'Model Training › Left Configuration & Engine Switcher',
+    badge: 'Cloud GPU Engine',
+    title: 'Kaggle Dual-T4 & Colab Pro GPU Clusters',
+    subtitle: 'Headless Cloud GPU Training with Checkpoint Failover',
+    whereLocated: 'Left configuration panel in the Training Center view.',
+    whatItDoes: 'Dispatches model training to Kaggle Dual Nvidia T4 clusters (32GB VRAM), Google Colab Pro GPUs, or local RTX workstations.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Compute Target Switcher',
+        description: 'Select Kaggle Dual-T4, Google Colab, or Local Station using the segmented control.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Headless Script & Dataset Push',
+        description: 'Packages your dataset version, base weights, and hyperparameter recipe (batch size, image resolution, learning rate).',
+      },
+      {
+        stepNumber: 3,
+        title: 'Automated Checkpoint Failover',
+        description: 'Syncs live epoch metrics (mAP50, Box Loss); auto-migrates checkpoints (last.pt) if cloud timeout limits occur.',
+      },
     ],
-    ctaLabel: 'Launch Training Hub',
-    interactiveTip: 'Select YOLO26 Large, set epochs to 50, and hit "Start Cloud Training" for dual-T4 dispatch.',
+    interactiveTip: 'Toggle between Kaggle Dual-T4 and Colab GPU segmented buttons to see hyperparameter presets.',
     icon: Cpu,
-    accentColor: 'from-rose-500 to-pink-600',
-    accentHex: '#e11d48',
+    accentColor: 'from-amber-500 to-orange-600',
+    accentHex: '#f59e0b',
     previewType: 'training',
   },
   {
-    id: 7,
-    stageId: 'model_registry',
-    badge: 'Model Registry',
-    title: 'Checkpoint Registry & Edge Exporter',
-    subtitle: 'Deploy Production Checkpoints to ONNX, TensorRT, and OpenVINO',
-    description:
-      'Track model checkpoints with immutable lineage, confusion matrices, and epoch comparisons. Export models directly in your browser to ONNX or hardware-accelerated runtimes with 1-click downloads.',
-    keyFeatures: [
-      'Immutable checkpoint registry with full training telemetry history',
-      '1-Click direct browser download for compiled ONNX models (50.8 MB)',
-      'Optimized edge runtimes: NVIDIA Jetson TensorRT FP16 & Intel OpenVINO',
-    ],
-    ctaLabel: 'View Model Registry',
-    interactiveTip: 'Click the "Download ONNX" pill badge to obtain the pre-compiled 50.8 MB production model.',
-    icon: Box,
-    accentColor: 'from-emerald-500 to-teal-600',
-    accentHex: '#059669',
-    previewType: 'registry',
-  },
-  {
-    id: 8,
+    id: 12,
     stageId: 'validation',
-    badge: 'Validation & Forensics',
-    title: 'In-Motion Forensics & Quad-Split Stress Lab',
-    subtitle: 'Quad-Split Synchronized Video Benchmarking & Jitter Auditing',
-    description:
-      'Test your models under real-world factory conveyor stress. Run 4 model checkpoints side-by-side in synchronized video playback, measure sub-pixel bounding box jitter, and verify zero roller bleed.',
-    keyFeatures: [
-      'Quad-split synchronized video playback comparing 4 model iterations',
-      'Sub-pixel spatial jitter analysis (verified σ < 0.8 px on conveyor stream)',
-      '3,394-frame raw video continuity audit with 100% detection stability',
+    target: 'validation-quad-split',
+    locationName: 'Validation Lab › Multi-Model Forensic Matrix',
+    badge: 'Forensic Audit',
+    title: 'In-Motion Temporal Forensic Benchmark',
+    subtitle: 'Parallel Multi-Model Video Audit & Tracking Stability',
+    whereLocated: 'Top model audit configuration panel of the Model Validation view.',
+    whatItDoes: 'Simultaneously benchmarks 2 to 4 model checkpoints against raw industrial conveyor video streams, measuring jitter, latency, and tracking stability.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Multi-Model Checkpoint Audit',
+        description: 'Select baseline (best_8.pt), fine-tuned (best_9.pt), and production master (yolo26l.pt) candidates.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Synchronized Parallel Inference',
+        description: 'Feeds identical video frames simultaneously to all models, synthesizing a 4-pane split comparison video.',
+      },
+      {
+        stepNumber: 3,
+        title: 'Forensic In-Motion Metrics',
+        description: 'Measures Bounding Box Centroid Jitter (σ), Package Ingress Latency (ms), and Tracking Continuity (%).',
+      },
     ],
-    ctaLabel: 'Launch Validation Lab',
-    interactiveTip: 'Press Play in the Quad-Split lab to benchmark 4 model checkpoints synchronized frame-by-frame.',
+    interactiveTip: 'Click "Launch Multi-Model Benchmark" in Validation to evaluate models side-by-side.',
     icon: ScanEye,
     accentColor: 'from-indigo-500 to-cyan-600',
     accentHex: '#4f46e5',
     previewType: 'validation',
+  },
+  {
+    id: 13,
+    stageId: 'model_registry',
+    target: 'registry-model-cards',
+    locationName: 'Model Registry › Registered Weights Grid',
+    badge: 'Model Governance',
+    title: 'Model Registry & TensorRT FP16 Compilation',
+    subtitle: 'Production Staging Gates & Nvidia Jetson Export',
+    whereLocated: 'Central cards grid in the Model Registry view.',
+    whatItDoes: 'Version-controls validated models, enforces RBAC production promotion gates, and compiles PyTorch checkpoints into high-speed TensorRT engines.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Automated Checkpoint Ingestion',
+        description: 'Completed training runs automatically register their best weights with mAP metrics and validation logs.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Production Promotion Gates',
+        description: 'RBAC controls allow only ML Engineers and Admins to promote models from Staging to Active Production.',
+      },
+      {
+        stepNumber: 3,
+        title: '1-Click Engine Compilation',
+        description: 'Exports direct ONNX, TensorRT FP16/INT8, and OpenVINO packages for sub-2ms edge deployment on Jetson Orin AGX.',
+      },
+    ],
+    interactiveTip: 'Click the ONNX or TensorRT download pills on any model card to inspect export formats.',
+    icon: Box,
+    accentColor: 'from-emerald-500 to-cyan-600',
+    accentHex: '#10b981',
+    previewType: 'registry',
+  },
+  {
+    id: 14,
+    stageId: 'overview',
+    target: 'sidebar-navigation',
+    locationName: 'Far-Left Vertical Navigation Rail',
+    badge: 'System Architecture',
+    title: 'Studio Navigation Rail & Edge Status',
+    subtitle: 'One-Click Pipeline Flow & Jetson Hardware Telemetry',
+    whereLocated: 'Leftmost vertical sidebar spanning the full height of your screen.',
+    whatItDoes: 'Provides instant one-click switching across all 8 factory stages, settings, compute runtimes, and displays live Jetson Orin AGX edge deployment status.',
+    howItWorks: [
+      {
+        stepNumber: 1,
+        title: 'Sequential Stage Rail',
+        description: 'Follows the factory manufacturing progression from Ingest to Deployment.',
+      },
+      {
+        stepNumber: 2,
+        title: 'Jetson Orin AGX Readiness Indicator',
+        description: 'Footer monitors edge hardware heartbeat, active TensorRT engine compatibility, and latency targets.',
+      },
+      {
+        stepNumber: 3,
+        title: 'Collapsible Rail for Wide Workspaces',
+        description: 'Can be collapsed to provide maximum widescreen space during intense annotation sessions.',
+      },
+    ],
+    interactiveTip: 'You can click any sidebar stage icon or use keyboard shortcuts to jump anywhere in VisionForge.',
+    icon: Compass,
+    accentColor: 'from-blue-600 to-indigo-600',
+    accentHex: '#0071e3',
+    previewType: 'overview',
   },
 ];
 
@@ -215,43 +532,108 @@ export const ProductTourModal: React.FC = () => {
   const [isMinimized, setIsMinimized] = useState(false);
   const [tourMode, setTourMode] = useState<'spotlight' | 'blueprint'>('spotlight');
   const [isPlayingAuto, setIsPlayingAuto] = useState(false);
-  const [autoPlayCountdown, setAutoPlayCountdown] = useState(6);
+  const [autoPlayCountdown, setAutoPlayCountdown] = useState(7);
+  const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
 
   const step = TOUR_STEPS[currentStepIndex];
   const isFirst = currentStepIndex === 0;
   const isLast = currentStepIndex === TOUR_STEPS.length - 1;
 
-  // Auto-trigger on initial user landing after 800ms if not completed previously
-  useEffect(() => {
-    const isCompleted = localStorage.getItem('vf_tour_completed');
-    if (!isCompleted) {
-      const timer = setTimeout(() => {
-        setProductTourOpen(true);
-      }, 800);
-      return () => clearTimeout(timer);
+  // Measure target DOM element
+  const measureTarget = useCallback(() => {
+    if (!step?.target) {
+      setTargetRect(null);
+      return;
     }
-  }, [setProductTourOpen]);
-
-  // Synchronize live application stage with tour step
-  useEffect(() => {
-    if (productTourOpen && step) {
-      setStage(step.stageId);
+    const el = document.querySelector(`[data-tour="${step.target}"]`) as HTMLElement;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setTargetRect(rect);
+        return;
+      }
     }
-  }, [productTourOpen, currentStepIndex]);
+    setTargetRect(null);
+  }, [step?.target]);
 
-  // Keyboard navigation: Left, Right, Escape, Space (auto-play toggle)
+  // Synchronize live application stage and scroll element into view
+  useEffect(() => {
+    if (!productTourOpen || !step) return;
+
+    // Switch stage
+    setStage(step.stageId);
+
+    // Initial check after short delay to allow React state updates to render the view
+    const t1 = setTimeout(() => {
+      const el = document.querySelector(`[data-tour="${step.target}"]`) as HTMLElement;
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        const rect = el.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          setTargetRect(rect);
+        }
+      }
+    }, 120);
+
+    // Secondary measurement after animations settle
+    const t2 = setTimeout(() => {
+      measureTarget();
+    }, 380);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [productTourOpen, currentStepIndex, step?.stageId, step?.target, measureTarget, setStage]);
+
+  // Window resize & scroll listeners to keep spotlight aligned
+  useEffect(() => {
+    if (!productTourOpen) return;
+    const handleUpdate = () => measureTarget();
+    window.addEventListener('resize', handleUpdate);
+    window.addEventListener('scroll', handleUpdate, true);
+    return () => {
+      window.removeEventListener('resize', handleUpdate);
+      window.removeEventListener('scroll', handleUpdate, true);
+    };
+  }, [productTourOpen, measureTarget]);
+
+  // Auto-play timer loop
+  useEffect(() => {
+    if (!productTourOpen || !isPlayingAuto) {
+      setAutoPlayCountdown(7);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setAutoPlayCountdown((prev) => {
+        if (prev <= 1) {
+          if (isLast) {
+            setIsPlayingAuto(false);
+            return 7;
+          }
+          setCurrentStepIndex((idx) => idx + 1);
+          return 7;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [productTourOpen, isPlayingAuto, isLast]);
+
+  // Keyboard navigation
   useEffect(() => {
     if (!productTourOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if user is typing in an input
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
         return;
       }
 
       if (e.key === 'Escape') {
         handleClose();
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
         handleNext();
       } else if (e.key === 'ArrowLeft') {
         handlePrev();
@@ -265,30 +647,6 @@ export const ProductTourModal: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [productTourOpen, currentStepIndex, isLast, isFirst]);
 
-  // Auto-play timer loop
-  useEffect(() => {
-    if (!productTourOpen || !isPlayingAuto) {
-      setAutoPlayCountdown(6);
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setAutoPlayCountdown((prev) => {
-        if (prev <= 1) {
-          if (isLast) {
-            setIsPlayingAuto(false);
-            return 6;
-          }
-          setCurrentStepIndex((idx) => idx + 1);
-          return 6;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [productTourOpen, isPlayingAuto, isLast]);
-
   if (!productTourOpen) return null;
 
   const handleClose = () => {
@@ -300,14 +658,14 @@ export const ProductTourModal: React.FC = () => {
   };
 
   const handleNext = () => {
-    setAutoPlayCountdown(6);
+    setAutoPlayCountdown(7);
     if (isLast) {
       localStorage.setItem('vf_tour_completed', 'true');
       handleClose();
       addNotification({
         type: 'success',
-        title: 'Tour Completed!',
-        message: 'You have explored all 8 VisionForge pipeline stages.',
+        title: 'Interactive Tour Completed!',
+        message: 'You have explored all 14 VisionForge industrial CV stations.',
       });
     } else {
       setCurrentStepIndex((prev) => prev + 1);
@@ -315,371 +673,90 @@ export const ProductTourModal: React.FC = () => {
   };
 
   const handlePrev = () => {
-    setAutoPlayCountdown(6);
+    setAutoPlayCountdown(7);
     if (!isFirst) {
       setCurrentStepIndex((prev) => prev - 1);
     }
   };
 
   const handleStepClick = (index: number) => {
-    setAutoPlayCountdown(6);
+    setAutoPlayCountdown(7);
     setCurrentStepIndex(index);
   };
 
-  // Render Visual Previews for Blueprint Mode
-  const renderVisualPreview = () => {
-    switch (step.previewType) {
-      case 'overview':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-blue-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="absolute -top-12 -right-12 w-48 h-48 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="flex items-center justify-between z-10">
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-400 text-xs font-medium">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Enterprise CV Pipeline</span>
-              </div>
-              <span className="text-[11px] font-mono text-slate-400">v2.4.0 High-Speed Core</span>
-            </div>
-
-            <div className="my-6 z-10">
-              <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-2">End-to-End Factory Cycle</div>
-              <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
-                <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                  <Film className="w-4 h-4 mx-auto text-sky-400 mb-1" />
-                  <span className="font-medium text-slate-200">Video Ingest</span>
-                </div>
-                <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                  <PencilRuler className="w-4 h-4 mx-auto text-purple-400 mb-1" />
-                  <span className="font-medium text-slate-200">Florence-2 AI</span>
-                </div>
-                <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                  <Cpu className="w-4 h-4 mx-auto text-rose-400 mb-1" />
-                  <span className="font-medium text-slate-200">Cloud Train</span>
-                </div>
-                <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                  <ScanEye className="w-4 h-4 mx-auto text-emerald-400 mb-1" />
-                  <span className="font-medium text-slate-200">Edge Verify</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2.5 z-10">
-              <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-center">
-                <div className="text-xl font-bold font-mono text-emerald-400">99.50%</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">mAP50 Accuracy</div>
-              </div>
-              <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-center">
-                <div className="text-xl font-bold font-mono text-sky-400">3,394</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Frames Evaluated</div>
-              </div>
-              <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-center">
-                <div className="text-xl font-bold font-mono text-indigo-400">&lt; 0.8 px</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Spatial Jitter σ</div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'video':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-sky-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-sky-400 flex items-center gap-1.5">
-                <Film className="w-3.5 h-3.5" />
-                conveyor_test_stream.mp4
-              </span>
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                ROI Active
-              </span>
-            </div>
-
-            <div className="my-4 relative h-32 rounded-xl bg-black/60 border border-slate-800 flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-20" />
-              <div className="w-48 h-20 border-2 border-dashed border-sky-400 rounded-lg bg-sky-500/10 flex flex-col items-center justify-center p-2">
-                <span className="text-[11px] font-mono text-sky-300 font-semibold">Conveyor Track ROI</span>
-                <span className="text-[9px] font-mono text-slate-400">[X: 120, Y: 80, W: 850, H: 420]</span>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-slate-400">Laplacian Blur Filter:</span>
-                <span className="text-emerald-400 font-semibold">Passed (Score 384.2)</span>
-              </div>
-              <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                <div className="bg-gradient-to-r from-sky-400 to-blue-500 h-full w-[90%]" />
-              </div>
-              <div className="flex justify-between text-[10px] text-slate-500">
-                <span>3,394 Raw Frames</span>
-                <span className="text-sky-300 font-semibold">350 Curated Keyframes (90% Saved)</span>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'frame':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-teal-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-teal-400 flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5" />
-                Sharpness Decimation Engine
-              </span>
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-teal-500/20 text-teal-300 border border-teal-500/30">
-                pHash Deduplicated
-              </span>
-            </div>
-
-            <div className="my-4 grid grid-cols-3 gap-2">
-              <div className="p-2 rounded-xl bg-black/60 border border-slate-800 text-center">
-                <div className="text-[10px] text-slate-400">Raw Stream</div>
-                <div className="text-lg font-bold font-mono text-slate-200 mt-1">3,394</div>
-                <div className="text-[8px] text-slate-500">Continuous 60fps</div>
-              </div>
-              <div className="p-2 rounded-xl bg-rose-950/30 border border-rose-500/30 text-center">
-                <div className="text-[10px] text-rose-300">Blur Discarded</div>
-                <div className="text-lg font-bold font-mono text-rose-400 mt-1">-1,820</div>
-                <div className="text-[8px] text-rose-300">Variance &lt; 100</div>
-              </div>
-              <div className="p-2 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-center">
-                <div className="text-[10px] text-emerald-300">Curated Keys</div>
-                <div className="text-lg font-bold font-mono text-emerald-400 mt-1">350</div>
-                <div className="text-[8px] text-emerald-300">Optimal diversity</div>
-              </div>
-            </div>
-
-            <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-[11px] font-mono">
-              <span className="text-slate-400">Storage Optimization:</span>
-              <span className="text-emerald-400 font-semibold">89.7% redundancy reduced</span>
-            </div>
-          </div>
-        );
-
-      case 'annotation':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-purple-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs text-purple-300 font-medium">
-                <PencilRuler className="w-3.5 h-3.5" />
-                <span>Florence-2 Grounding + Meta SAM 2</span>
-              </div>
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                Rigid Interpolation
-              </span>
-            </div>
-
-            <div className="my-4 relative h-32 rounded-xl bg-slate-950 border border-purple-900/30 flex items-center justify-center">
-              <div className="relative w-40 h-24 border-2 border-emerald-400 rounded bg-emerald-500/10 flex flex-col justify-between p-1.5 shadow-[0_0_15px_rgba(52,211,153,0.2)]">
-                <div className="flex items-center justify-between">
-                  <span className="bg-emerald-500 text-slate-950 font-bold font-mono text-[9px] px-1 rounded">
-                    conveyor_item 0.98
-                  </span>
-                  <span className="text-[8px] font-mono text-emerald-300">[120x85 px]</span>
-                </div>
-                <div className="flex items-center justify-between text-[8px] text-slate-300 font-mono">
-                  <span>Track ID #04</span>
-                  <span className="text-amber-300">DIMENSIONS LOCKED</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-[11px] font-mono">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-slate-300">Keyframe Interpolation:</span>
-              </div>
-              <span className="text-purple-300">Frame 15 ➔ Frame 45 (60 FPS)</span>
-            </div>
-          </div>
-        );
-
-      case 'dataset':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-amber-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-amber-400 flex items-center gap-1.5">
-                <Database className="w-3.5 h-3.5" />
-                split_strategy="temporal"
-              </span>
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                0% Leakage
-              </span>
-            </div>
-
-            <div className="my-4 space-y-2">
-              <div className="text-[10px] font-mono text-slate-400">Contiguous Chronological Split Partition:</div>
-              <div className="flex h-9 rounded-xl overflow-hidden border border-white/10 font-mono text-[10px] font-semibold text-center leading-9">
-                <div className="w-[70%] bg-blue-600/80 text-blue-100 border-r border-slate-900">
-                  TRAIN (70%)
-                </div>
-                <div className="w-[5%] bg-amber-500/40 text-amber-200 border-r border-slate-900 text-[8px]">
-                  GAP
-                </div>
-                <div className="w-[25%] bg-emerald-600/80 text-emerald-100">
-                  VAL (25%)
-                </div>
-              </div>
-              <div className="flex justify-between text-[10px] text-slate-400 font-mono">
-                <span>00:00 - 02:45 (Training Sequence)</span>
-                <span>03:00 - 03:55 (Val Holdout)</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
-              <div className="p-2 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                <span className="text-slate-400">Export Standard: </span>
-                <span className="text-amber-300 font-semibold">YOLOv8 / YOLO26</span>
-              </div>
-              <div className="p-2 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                <span className="text-slate-400">Class Balance: </span>
-                <span className="text-emerald-300 font-semibold">Optimal (1:1.04)</span>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'training':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-rose-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
-                <Cpu className="w-3.5 h-3.5" />
-                <span>Kaggle Dual-T4 GPU Engine</span>
-              </div>
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                COMPLETED
-              </span>
-            </div>
-
-            <div className="my-4 p-3 rounded-xl bg-black/70 border border-slate-800 font-mono text-[11px] space-y-1.5">
-              <div className="flex items-center justify-between text-slate-400">
-                <span>Job Status:</span>
-                <span className="text-emerald-400 font-semibold">Epoch 50/50 [100%]</span>
-              </div>
-              <div className="flex items-center justify-between text-slate-400">
-                <span>Validation mAP50:</span>
-                <span className="text-emerald-300 font-bold text-sm">0.9950 (99.50%)</span>
-              </div>
-              <div className="flex items-center justify-between text-slate-400">
-                <span>Box Loss / Cls Loss:</span>
-                <span className="text-sky-300">0.0124 / 0.0031</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 p-2 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-              <span>Hardware: Dual Nvidia T4 (32GB)</span>
-              <span className="text-rose-400">Headless API Push</span>
-            </div>
-          </div>
-        );
-
-      case 'registry':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-emerald-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-emerald-400 flex items-center gap-1.5">
-                <Box className="w-3.5 h-3.5" />
-                yolo26l_conveyor_best50.pt
-              </span>
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                Production Ready
-              </span>
-            </div>
-
-            <div className="my-4 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-400">Model Architecture:</span>
-                <span className="font-mono text-white font-semibold">YOLOv26 Large</span>
-              </div>
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-400">mAP50 / mAP50-95:</span>
-                <span className="font-mono text-emerald-400 font-semibold">99.50% / 88.20%</span>
-              </div>
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-400">Direct ONNX Package:</span>
-                <span className="font-mono text-sky-400 font-semibold">50.8 MB (Optimized)</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
-              <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 font-semibold flex items-center justify-center gap-1">
-                <Download className="w-3 h-3" />
-                <span>ONNX</span>
-              </div>
-              <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-300 font-semibold">
-                TensorRT FP16
-              </div>
-              <div className="p-2 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-300 font-semibold">
-                OpenVINO IR
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'validation':
-        return (
-          <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-cyan-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs text-cyan-400 font-medium">
-                <ScanEye className="w-3.5 h-3.5" />
-                <span>Quad-Split In-Motion Benchmark</span>
-              </div>
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                100% Continuity
-              </span>
-            </div>
-
-            <div className="my-3 grid grid-cols-2 gap-2 font-mono text-[10px]">
-              <div className="p-2 rounded-xl bg-black/60 border border-slate-800 text-center">
-                <div className="text-slate-400">Epoch 10</div>
-                <div className="text-amber-400 font-bold mt-0.5">91.2% mAP</div>
-                <div className="text-[8px] text-slate-500">Noticeable jitter</div>
-              </div>
-              <div className="p-2 rounded-xl bg-black/60 border border-slate-800 text-center">
-                <div className="text-slate-400">Epoch 25</div>
-                <div className="text-sky-400 font-bold mt-0.5">96.4% mAP</div>
-                <div className="text-[8px] text-slate-500">Minor boundary bleed</div>
-              </div>
-              <div className="p-2 rounded-xl bg-black/60 border border-slate-800 text-center">
-                <div className="text-slate-400">Epoch 35</div>
-                <div className="text-indigo-400 font-bold mt-0.5">98.1% mAP</div>
-                <div className="text-[8px] text-slate-500">High stability</div>
-              </div>
-              <div className="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-center shadow-[0_0_12px_rgba(16,185,129,0.15)]">
-                <div className="text-emerald-300 font-semibold">Epoch 50 (Best)</div>
-                <div className="text-emerald-400 font-bold mt-0.5">99.50% mAP</div>
-                <div className="text-[8px] text-emerald-400">Zero roller bleed</div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between text-[10px] font-mono p-2 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-              <span className="text-slate-400">Sub-pixel Jitter: σ = 0.72 px</span>
-              <span className="text-emerald-400 font-semibold">3,394/3,394 Frames Tracked</span>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
+  // Compute popover card position relative to targetRect
+  const getTooltipPositionStyle = (): React.CSSProperties => {
+    if (!targetRect || typeof window === 'undefined') {
+      return {
+        position: 'fixed',
+        bottom: '24px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 'min(560px, calc(100vw - 32px))',
+        maxHeight: 'calc(100vh - 48px)',
+        zIndex: 55,
+      };
     }
+
+    const padding = 16;
+    const cardWidth = Math.min(560, window.innerWidth - 32);
+    const cardHeightEstimate = 480;
+
+    const spaceBelow = window.innerHeight - targetRect.bottom;
+    const spaceAbove = targetRect.top;
+    const spaceRight = window.innerWidth - targetRect.right;
+    const spaceLeft = targetRect.left;
+
+    let top = 0;
+    let left = 0;
+
+    // Decide if below, above, or beside
+    if (spaceBelow >= 360) {
+      top = targetRect.bottom + padding;
+      left = Math.max(padding, Math.min(targetRect.left, window.innerWidth - cardWidth - padding));
+    } else if (spaceAbove >= 360) {
+      top = Math.max(padding, targetRect.top - cardHeightEstimate - padding);
+      left = Math.max(padding, Math.min(targetRect.left, window.innerWidth - cardWidth - padding));
+    } else if (spaceRight >= cardWidth + padding) {
+      top = Math.max(padding, Math.min(targetRect.top, window.innerHeight - cardHeightEstimate - padding));
+      left = targetRect.right + padding;
+    } else if (spaceLeft >= cardWidth + padding) {
+      top = Math.max(padding, Math.min(targetRect.top, window.innerHeight - cardHeightEstimate - padding));
+      left = targetRect.left - cardWidth - padding;
+    } else {
+      top = Math.max(padding, window.innerHeight - cardHeightEstimate - padding);
+      left = Math.max(padding, (window.innerWidth - cardWidth) / 2);
+    }
+
+    top = Math.max(padding, Math.min(top, window.innerHeight - 300));
+    left = Math.max(padding, Math.min(left, window.innerWidth - cardWidth - padding));
+
+    return {
+      position: 'fixed',
+      top: `${top}px`,
+      left: `${left}px`,
+      width: `${cardWidth}px`,
+      maxHeight: `calc(100vh - ${top + padding}px)`,
+      zIndex: 55,
+    };
   };
 
-  // Minimized Floating Pill View
+  // Minimized Floating Pill
   if (isMinimized) {
     return (
       <div className="fixed bottom-6 right-6 z-50 animate-bounce-subtle">
         <button
           onClick={() => setIsMinimized(false)}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-white/95 dark:bg-[#121826]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/10 shadow-2xl hover:scale-105 active:scale-95 transition-all group"
+          className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-white/95 dark:bg-[#121826]/95 backdrop-blur-2xl border border-[#e5e5ea] dark:border-white/10 shadow-2xl hover:scale-105 active:scale-95 transition-all group cursor-pointer"
         >
           <div className={`w-7 h-7 rounded-full bg-gradient-to-tr ${step.accentColor} flex items-center justify-center text-white shadow-md`}>
             <step.icon className="w-3.5 h-3.5" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-[10px] uppercase font-semibold text-slate-400">
-              Interactive Tour &bull; Step {step.id}/8
+            <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">
+              Interactive Tour &bull; Step {step.id}/{TOUR_STEPS.length}
             </span>
-            <span className="text-xs font-bold text-slate-800 dark:text-white group-hover:text-blue-500 transition-colors">
+            <span className="text-xs font-bold text-slate-800 dark:text-white group-hover:text-[#0071e3] transition-colors">
               {step.badge} (Resume)
             </span>
           </div>
@@ -689,75 +766,120 @@ export const ProductTourModal: React.FC = () => {
     );
   }
 
-  // SPOTLIGHT DYNAMIC HUD MODE: Non-blocking Floating HUD driving the live application
+  // SPOTLIGHT DYNAMIC ANCHORED HUD MODE
   if (tourMode === 'spotlight') {
     return (
-      <div className="fixed inset-0 z-50 pointer-events-none flex flex-col justify-end p-4 sm:p-6 md:p-8">
-        {/* Subtle Ambient Vignette to emphasize live application stage */}
-        <div className="absolute inset-0 bg-black/25 pointer-events-none transition-opacity duration-300" />
+      <div className="fixed inset-0 z-50 pointer-events-none">
+        {/* Fullscreen SVG Spotlight Cutout Mask */}
+        <svg className="fixed inset-0 w-full h-full pointer-events-none z-40 transition-all duration-300">
+          <defs>
+            <mask id="tour-spotlight-mask">
+              <rect x="0" y="0" width="100%" height="100%" fill="white" />
+              {targetRect && (
+                <rect
+                  x={Math.max(0, targetRect.left - 6)}
+                  y={Math.max(0, targetRect.top - 6)}
+                  width={targetRect.width + 12}
+                  height={targetRect.height + 12}
+                  rx="18"
+                  fill="black"
+                />
+              )}
+            </mask>
+          </defs>
+          <rect
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            fill="rgba(15, 23, 42, 0.65)"
+            mask="url(#tour-spotlight-mask)"
+          />
+        </svg>
 
-        {/* Floating Spotlight Glass HUD */}
-        <div className="pointer-events-auto relative w-full max-w-3xl mx-auto bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-2xl border border-[#e5e5ea] dark:border-white/15 rounded-[28px] shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden transition-all duration-300 animate-slide-up">
-          {/* Top Bar with Stage Navigator, Mode Switcher & Auto-Play */}
+        {/* Target Glowing Halo & Pulsing Beacon */}
+        {targetRect && (
+          <div
+            style={{
+              top: `${Math.max(0, targetRect.top - 6)}px`,
+              left: `${Math.max(0, targetRect.left - 6)}px`,
+              width: `${targetRect.width + 12}px`,
+              height: `${targetRect.height + 12}px`,
+            }}
+            className="fixed z-40 pointer-events-none rounded-[18px] border-2 border-[#0071e3] shadow-[0_0_30px_rgba(0,113,227,0.5)] ring-4 ring-[#0071e3]/20 transition-all duration-300"
+          >
+            <div className="absolute -top-3 -right-3 flex items-center justify-center">
+              <span className="animate-ping absolute inline-flex h-4 w-4 rounded-full bg-[#0071e3] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#0071e3] border-2 border-white shadow-md"></span>
+            </div>
+          </div>
+        )}
+
+        {/* Anchored Enterprise Guidance Popover Card */}
+        <div
+          style={getTooltipPositionStyle()}
+          className="pointer-events-auto bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-2xl border border-[#e5e5ea] dark:border-white/15 rounded-[28px] shadow-2xl shadow-black/30 overflow-hidden flex flex-col transition-all duration-300 animate-slide-up"
+        >
+          {/* Header Bar */}
           <div className="px-5 py-3 border-b border-[#e5e5ea] dark:border-white/[0.08] flex items-center justify-between gap-3 bg-[#f6f3f5] dark:bg-white/[0.02]">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${step.accentColor} flex items-center justify-center text-white shadow-sm flex-shrink-0`}>
+              <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${step.accentColor} flex items-center justify-center text-white shadow-sm shrink-0`}>
                 <step.icon className="w-4 h-4" />
               </div>
               <div className="truncate">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
-                    Live Stage {step.id} of {TOUR_STEPS.length}
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Stage {step.id} of {TOUR_STEPS.length}
                   </span>
-                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                    ACTIVE SCREEN
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
+                    SPOTLIGHT ACTIVE
                   </span>
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
-                  {step.badge}
+                <h3 className="text-xs sm:text-sm font-bold text-[#1d1d1f] dark:text-white truncate">
+                  {step.title}
                 </h3>
               </div>
             </div>
 
-            {/* Controls: Mode Switcher, Auto-Play, Minimize, Close */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Quick Action Tools */}
+            <div className="flex items-center gap-1.5 shrink-0">
               {/* Auto-Play Toggle */}
               <button
                 onClick={() => setIsPlayingAuto(!isPlayingAuto)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer ${
                   isPlayingAuto
-                    ? 'bg-amber-500/20 text-amber-500 dark:text-amber-300 border border-amber-500/30'
-                    : 'bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                    ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30'
+                    : 'bg-white dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 hover:bg-slate-100 border border-[#e5e5ea] dark:border-transparent'
                 }`}
                 title="Toggle Auto-Play Walkthrough (Space)"
               >
                 {isPlayingAuto ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-                <span className="hidden sm:inline">{isPlayingAuto ? `Auto (${autoPlayCountdown}s)` : 'Auto-Play'}</span>
+                <span className="hidden sm:inline">{isPlayingAuto ? `${autoPlayCountdown}s` : 'Auto'}</span>
               </button>
 
-              {/* Mode Switcher */}
+              {/* Blueprint Mode Switcher */}
               <button
                 onClick={() => setTourMode('blueprint')}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 text-[11px] font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-                title="Switch to Architecture Blueprint Mode"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0071e3]/10 text-[#0071e3] dark:text-blue-300 border border-[#0071e3]/20 text-[11px] font-medium hover:bg-[#0071e3]/20 transition-colors cursor-pointer"
+                title="Switch to Blueprint Architecture View"
               >
                 <Layers className="w-3 h-3" />
                 <span className="hidden md:inline">Blueprint</span>
               </button>
 
-              {/* Minimize to Canvas Pill */}
+              {/* Minimize to live interact */}
               <button
                 onClick={() => setIsMinimized(true)}
-                className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/[0.08] text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
-                title="Minimize Tour (Interact with live canvas)"
+                className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/[0.08] text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
+                title="Minimize Tour (Interact with live UI)"
               >
-                <Minimize2 className="w-4 h-4" />
+                <Minimize2 className="w-3.5 h-3.5" />
               </button>
 
               {/* Close Tour */}
               <button
                 onClick={handleClose}
-                className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/[0.08] text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+                className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/[0.08] text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
                 title="Exit Tour (Esc)"
               >
                 <X className="w-4 h-4" />
@@ -765,59 +887,88 @@ export const ProductTourModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Body Content */}
-          <div className="p-5 sm:p-6 space-y-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
-                  {step.subtitle}
+          {/* Body Content - Scrollable if compact */}
+          <div className="p-5 space-y-3.5 overflow-y-auto text-xs leading-relaxed">
+            {/* WHERE IT IS LOCATED */}
+            <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-500/20 text-[#1d1d1f] dark:text-blue-200">
+              <MapPin className="w-4 h-4 text-[#0071e3] shrink-0 mt-0.5" />
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0071e3] block mb-0.5">
+                  📍 Where It Is Located
                 </span>
+                <span className="text-xs font-medium text-slate-700 dark:text-slate-200">{step.whereLocated}</span>
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                {step.title}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
-                {step.description}
+            </div>
+
+            {/* WHAT IT DOES */}
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
+                ⚙️ What It Does
+              </span>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                {step.whatItDoes}
               </p>
             </div>
 
-            {/* Interactive Action Tip Pill */}
-            <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-500/20 text-xs text-blue-950 dark:text-blue-200">
-              <MousePointer className="w-4 h-4 text-blue-500 shrink-0 mt-0.5 animate-pulse" />
-              <div>
-                <span className="font-semibold text-blue-600 dark:text-blue-400 mr-1.5">Try on this screen:</span>
-                <span>{step.interactiveTip}</span>
+            {/* HOW IT WORKS (Sequential Step-by-Step Flow) */}
+            <div className="space-y-1.5 pt-1">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <Workflow className="w-3.5 h-3.5 text-[#0071e3]" />
+                <span>🔄 How It Works (Industrial Pipeline Flow)</span>
+              </div>
+              <div className="grid grid-cols-1 gap-1.5">
+                {step.howItWorks.map((hw, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-2.5 p-2 rounded-xl bg-[#f6f3f5] dark:bg-white/[0.03] border border-[#e5e5ea] dark:border-white/[0.06]"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-[#0071e3] text-white flex items-center justify-center font-bold text-[9px] shrink-0 mt-0.5 shadow-xs">
+                      {hw.stepNumber}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-xs text-[#1d1d1f] dark:text-white leading-tight">
+                        {hw.title}
+                      </div>
+                      <div className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                        {hw.description}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Key Feature Highlights */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-              {step.keyFeatures.map((feat, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-2 p-2 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/60 dark:border-white/[0.05] text-[11px] text-slate-700 dark:text-slate-300"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                  <span className="leading-snug">{feat}</span>
-                </div>
-              ))}
+            {/* INTERACTIVE ACTION TIP */}
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 dark:text-amber-200">
+              <div className="flex items-center gap-2 min-w-0">
+                <MousePointer className="w-4 h-4 text-amber-500 shrink-0 animate-pulse" />
+                <span className="truncate">
+                  <strong className="text-amber-700 dark:text-amber-300">Live Test:</strong> {step.interactiveTip}
+                </span>
+              </div>
+              <button
+                onClick={() => setIsMinimized(true)}
+                className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-800 dark:text-amber-200 font-semibold text-[10px] shrink-0 ml-2 transition-colors cursor-pointer"
+              >
+                Test Now
+              </button>
             </div>
           </div>
 
-          {/* Bottom Footer: Segmented Step Indicators & Action Controls */}
-          <div className="px-5 py-3.5 bg-slate-50/80 dark:bg-white/[0.02] border-t border-slate-100 dark:border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-3">
-            {/* Step Pills */}
-            <div className="flex items-center gap-1.5">
+          {/* Footer Controls */}
+          <div className="px-5 py-3 bg-[#f6f3f5]/80 dark:bg-white/[0.02] border-t border-[#e5e5ea] dark:border-white/[0.08] flex items-center justify-between gap-3">
+            {/* Step Dots */}
+            <div className="flex items-center gap-1.5 overflow-x-auto max-w-[180px] sm:max-w-none pr-1">
               {TOUR_STEPS.map((s, idx) => {
                 const isActive = idx === currentStepIndex;
                 return (
                   <button
                     key={idx}
                     onClick={() => handleStepClick(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                       isActive
-                        ? 'w-7 bg-[#0071e3] shadow-sm'
-                        : 'w-2 bg-slate-300 dark:bg-white/20 hover:bg-slate-400 dark:hover:bg-white/40'
+                        ? 'w-6 bg-[#0071e3] shadow-xs'
+                        : 'w-2 bg-slate-300 dark:bg-white/20 hover:bg-slate-400'
                     }`}
                     title={`Stage ${idx + 1}: ${s.badge}`}
                   />
@@ -825,35 +976,27 @@ export const ProductTourModal: React.FC = () => {
               })}
             </div>
 
-            {/* Prev / Next Buttons */}
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            {/* Previous / Next Buttons */}
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={handlePrev}
                 disabled={isFirst}
-                className={`flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   isFirst
                     ? 'opacity-30 cursor-not-allowed text-slate-400'
                     : 'text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/[0.08] active:scale-95'
                 }`}
               >
-                <ChevronLeft className="w-4 h-4" />
-                <span>Previous</span>
-              </button>
-
-              <button
-                onClick={() => setIsMinimized(true)}
-                className="px-3.5 py-1.5 rounded-full bg-slate-200/80 dark:bg-white/[0.08] hover:bg-slate-300 dark:hover:bg-white/[0.12] text-slate-800 dark:text-slate-200 text-xs font-medium transition-all cursor-pointer"
-                title="Interact directly with the live view"
-              >
-                Test Stage Live
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span>Prev</span>
               </button>
 
               <button
                 onClick={handleNext}
-                className="flex items-center gap-1.5 px-5 py-1.5 rounded-full bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs font-semibold shadow-md shadow-[#0071e3]/25 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs font-semibold shadow-md shadow-[#0071e3]/25 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
               >
                 <span>{isLast ? 'Complete Tour' : 'Next Stage'}</span>
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
@@ -862,44 +1005,43 @@ export const ProductTourModal: React.FC = () => {
     );
   }
 
-  // ARCHITECTURAL BLUEPRINT MODE: Comprehensive 2-Column Forensic View
+  // ARCHITECTURAL BLUEPRINT 2-COLUMN VIEW
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-fade-in">
       <div
-        className="relative w-full max-w-4xl bg-white dark:bg-[#121826]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col max-h-[92vh] transition-all"
+        className="relative w-full max-w-4xl bg-white dark:bg-[#121826]/95 backdrop-blur-2xl border border-[#e5e5ea] dark:border-white/10 rounded-3xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col max-h-[92vh] transition-all"
         role="dialog"
         aria-modal="true"
         aria-labelledby="tour-title"
       >
         {/* Top Header Bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-white/[0.06]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#e5e5ea] dark:border-white/[0.06]">
           <div className="flex items-center gap-2.5">
             <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${step.accentColor} flex items-center justify-center text-white shadow-sm`}>
               <step.icon className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Architectural Blueprint &bull; Stage {step.id} of {TOUR_STEPS.length}
               </span>
-              <h2 className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+              <h2 className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                 {step.badge}
               </h2>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Switch to Spotlight Mode */}
             <button
               onClick={() => setTourMode('spotlight')}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#0071e3]/10 hover:bg-[#0071e3]/20 text-xs font-semibold text-[#0071e3] transition-colors cursor-pointer"
             >
-              <Compass className="w-3.5 h-3.5 text-blue-500" />
+              <Compass className="w-3.5 h-3.5" />
               <span>Live Spotlight Mode</span>
             </button>
 
             <button
               onClick={handleClose}
-              className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/[0.08] text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+              className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/[0.08] text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
               title="Close Tour (Esc)"
             >
               <X className="w-5 h-5" />
@@ -911,86 +1053,90 @@ export const ProductTourModal: React.FC = () => {
         <div className="flex-1 overflow-y-auto p-6 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-stretch">
           {/* Left Column: Visual Mockup / Interactive Telemetry */}
           <div className="md:col-span-6 min-h-[260px] md:min-h-[320px]">
-            {renderVisualPreview()}
+            <div className="relative h-full flex flex-col justify-between p-6 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-950 to-blue-950/40 border border-white/[0.08] text-white overflow-hidden shadow-inner">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#0071e3] flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-[#0071e3]" />
+                  <span>{step.locationName}</span>
+                </span>
+                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  VERIFIED
+                </span>
+              </div>
+
+              <div className="my-4 space-y-2">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Operational Step Progression
+                </div>
+                {step.howItWorks.map((hw, i) => (
+                  <div key={i} className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs">
+                    <div className="font-semibold text-emerald-400 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] flex items-center justify-center font-bold">
+                        {hw.stepNumber}
+                      </span>
+                      <span>{hw.title}</span>
+                    </div>
+                    <div className="text-[11px] text-slate-300 mt-1">{hw.description}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>Hardware Target: Nvidia Jetson Orin AGX</span>
+                <span className="text-emerald-400">60 FPS Rigid</span>
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Explanatory Content & Feature Highlights */}
-          <div className="md:col-span-6 flex flex-col justify-between space-y-5">
+          <div className="md:col-span-6 flex flex-col justify-between space-y-4">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.08]">
-                <Compass className="w-3.5 h-3.5 text-blue-500" />
-                <span>{step.subtitle}</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#f6f3f5] dark:bg-white/[0.06] text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-white/[0.08]">
+                <MapPin className="w-3.5 h-3.5 text-[#0071e3]" />
+                <span>{step.whereLocated}</span>
               </div>
 
               <h1 id="tour-title" className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
                 {step.title}
               </h1>
 
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {step.description}
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                {step.whatItDoes}
               </p>
 
-              {/* Bullet Points */}
-              <div className="space-y-2 pt-2">
-                {step.keyFeatures.map((feat, idx) => (
-                  <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="leading-tight">{feat}</span>
-                  </div>
-                ))}
+              <div className="p-3 rounded-2xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-500/20 text-xs text-[#0071e3]">
+                <strong>Interactive Recommendation:</strong> {step.interactiveTip}
               </div>
             </div>
 
-            {/* Stage Action Shortcut */}
             <div className="pt-2">
               <button
                 onClick={() => {
                   setStage(step.stageId);
                   setTourMode('spotlight');
                 }}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/[0.08] text-xs font-semibold text-slate-800 dark:text-slate-200 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs font-semibold shadow-md shadow-[#0071e3]/20 transition-all cursor-pointer"
               >
-                <span>Switch to Live Stage</span>
-                <ArrowRight className="w-3.5 h-3.5 text-blue-500" />
+                <span>Switch to Live Spotlight on Screen</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Cupertino Footer: Pill Indicators & Nav Buttons */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-white/[0.02] border-t border-slate-100 dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Checkbox: Don't show again */}
+        {/* Footer */}
+        <div className="px-6 py-4 bg-[#f6f3f5] dark:bg-white/[0.02] border-t border-[#e5e5ea] dark:border-white/[0.06] flex items-center justify-between gap-4">
           <label className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={dontShowAgain}
               onChange={(e) => setDontShowAgain(e.target.checked)}
-              className="w-3.5 h-3.5 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-0 cursor-pointer"
+              className="w-3.5 h-3.5 rounded border-slate-300 dark:border-slate-700 text-[#0071e3] focus:ring-0 cursor-pointer"
             />
             <span>Don't show tour on startup</span>
           </label>
 
-          {/* Segmented Pill Step Indicators */}
-          <div className="flex items-center gap-1.5">
-            {TOUR_STEPS.map((_, idx) => {
-              const isActive = idx === currentStepIndex;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleStepClick(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    isActive
-                      ? 'w-7 bg-[#0071e3]'
-                      : 'w-2 bg-slate-300 dark:bg-white/20 hover:bg-slate-400 dark:hover:bg-white/40'
-                  }`}
-                  title={`Go to stage ${idx + 1}`}
-                />
-              );
-            })}
-          </div>
-
-          {/* Prev / Next Pill Buttons */}
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2">
             <button
               onClick={handlePrev}
               disabled={isFirst}

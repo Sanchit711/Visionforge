@@ -237,7 +237,7 @@ export const DatasetsView: React.FC = () => {
         </div>
 
         {/* Visual Partition Bar */}
-        <div className="space-y-2 pt-1">
+        <div data-tour="dataset-split-controls" className="space-y-2 pt-1">
           <div className="flex justify-between text-xs font-medium text-[#6e6e73]">
             <span>Timeline Distribution (Jan 2024 - Present)</span>
             <span className="font-mono text-[#0071e3]">100% Partitioned</span>

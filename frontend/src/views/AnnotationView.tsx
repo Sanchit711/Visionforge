@@ -1246,7 +1246,7 @@ export const AnnotationView: React.FC = () => {
         )}
 
         {/* Apple-Style Glass Floating Command Bar */}
-        <div className="h-14 border-b border-[#e5e5ea] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c121e]/85 backdrop-blur-2xl px-4 flex items-center justify-between z-20 shadow-xs">
+        <div data-tour="annotation-canvas-tools" className="h-14 border-b border-[#e5e5ea] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c121e]/85 backdrop-blur-2xl px-4 flex items-center justify-between z-20 shadow-xs">
           {/* Tool Segmented Switcher */}
           <div className="flex items-center gap-1 bg-[#f5f5f7] dark:bg-black/40 p-1 rounded-2xl border border-[#e5e5ea] dark:border-white/[0.08] shadow-inner">
             <button
@@ -1910,7 +1910,7 @@ export const AnnotationView: React.FC = () => {
       </div>
 
       {/* Right Sidebar: AI Studio & Enterprise Inspector */}
-      <div className="w-84 border-l border-[#e5e5ea] dark:border-white/[0.08] bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-2xl flex flex-col justify-between p-4 space-y-4 overflow-y-auto">
+      <div data-tour="annotation-ai-assist" className="w-84 border-l border-[#e5e5ea] dark:border-white/[0.08] bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-2xl flex flex-col justify-between p-4 space-y-4 overflow-y-auto">
         <div className="space-y-4">
           {/* Class Palette */}
           <div>

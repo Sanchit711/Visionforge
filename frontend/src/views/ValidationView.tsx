@@ -392,7 +392,7 @@ export const ValidationView: React.FC = () => {
       {/* TAB 1: MULTI-MODEL (.PT) DETAIL COMPARISON GENERATOR                      */}
       {/* ========================================================================= */}
       {activeTab === 'multi_model' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div data-tour="validation-quad-split" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Model Selection & Settings */}
           <div className="bg-white dark:bg-slate-900/90 border border-[#e5e5ea] dark:border-white/10 rounded-2xl p-5 shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-slate-800">

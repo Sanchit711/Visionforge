@@ -532,7 +532,7 @@ export const FrameStudioView: React.FC = () => {
       </div>
 
       {/* Extraction Configuration Panel */}
-      <div className="bg-white dark:bg-[#121826]/90 border border-slate-200/80 dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm space-y-4">
+      <div data-tour="frame-studio-filters" className="bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] backdrop-blur-2xl rounded-3xl p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.06]">
           <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
             <Sliders className="w-4 h-4 text-blue-500" />

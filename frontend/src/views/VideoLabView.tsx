@@ -260,7 +260,7 @@ export const VideoLabView: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Video List */}
-        <div className="bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] rounded-3xl p-4 shadow-sm flex flex-col h-[640px]">
+        <div data-tour="video-source-list" className="bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] rounded-3xl p-4 shadow-sm flex flex-col h-[640px]">
           <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-white/[0.06] text-xs font-bold text-[#1d1d1f] dark:text-white">
             <span className="flex items-center gap-2">
               <FileVideo className="w-4 h-4 text-[#0071e3]" />
@@ -309,7 +309,7 @@ export const VideoLabView: React.FC = () => {
         </div>
 
         {/* Right Column (2 cols): Interactive Video Player & Visual Crop */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] rounded-3xl p-5 shadow-sm flex flex-col justify-between">
+        <div data-tour="video-crop-controls" className="lg:col-span-2 bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/[0.08] rounded-3xl p-5 shadow-sm flex flex-col justify-between">
           {selectedVideo ? (
             <div className="space-y-4">
               {/* Video Preview Container with Rectangular Crop Overlay */}

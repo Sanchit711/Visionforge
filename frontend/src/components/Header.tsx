@@ -581,6 +581,7 @@ export const Header: React.FC = () => {
 
         {/* Spotlight Search Style (Stitch Apple Light UI) */}
         <button
+          data-tour="spotlight-search"
           onClick={() => setCommandPaletteOpen(true)}
           className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f5f5f7] hover:bg-[#eaeaea] dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-[#e5e5ea] dark:border-white/10 text-[#86868b] transition-all w-56 justify-between text-xs"
           title="Spotlight Search (Ctrl+K)"
