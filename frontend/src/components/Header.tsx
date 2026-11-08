@@ -28,6 +28,7 @@ import {
 export const Header: React.FC = () => {
   const {
     currentStage,
+    setStage,
     activeProjectId,
     activeProject,
     setActiveProject,
@@ -284,27 +285,29 @@ export const Header: React.FC = () => {
   const privateWorkspaces = workspacesList.filter((w) => !w.is_shared);
 
   return (
-    <header className="h-16 border-b border-black/5 dark:border-white/[0.08] bg-white/80 dark:bg-[#0c0e14]/80 backdrop-blur-2xl px-6 flex items-center justify-between z-20 transition-colors">
+    <header className="h-16 border-b border-slate-200/80 dark:border-white/[0.08] bg-white/90 dark:bg-[#0c0e14]/90 backdrop-blur-2xl px-4 sm:px-6 flex items-center justify-between z-20 transition-colors">
       {/* Left: Breadcrumb & Stage Title */}
-      <div className="flex items-center gap-4 min-w-0">
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-[#86868b] flex-shrink-0">
-          <span className="hover:text-slate-900 dark:hover:text-white transition-colors">VisionForge</span>
+      <div className="flex items-center gap-3 sm:gap-4 min-w-0 mr-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-slate-500 dark:text-[#86868b] flex-shrink-0">
+          <span className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer" onClick={() => setStage('overview')}>
+            VisionForge
+          </span>
           <span>/</span>
-          <span className="text-[#0071e3] font-medium capitalize">{currentStage.replace('_', ' ')}</span>
+          <span className="text-[#0071e3] font-medium capitalize truncate max-w-[100px] sm:max-w-none">{currentStage.replace('_', ' ')}</span>
         </div>
-        <div className="h-4 w-px bg-slate-300 dark:bg-white/[0.1] flex-shrink-0" />
-        <h1 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 truncate">
+        <div className="h-4 w-px bg-slate-300 dark:bg-white/[0.1] flex-shrink-0 hidden sm:block" />
+        <h1 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white tracking-tight truncate hidden sm:block">
           {stageTitles[currentStage] || currentStage}
         </h1>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
+      <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0 max-w-[75%] justify-end">
         {/* Workspace Switcher: Partitioned into Shared & Personal */}
-        <div className="relative" ref={workspaceMenuRef}>
+        <div className="relative hidden lg:block" ref={workspaceMenuRef} data-tour="workspace-selector">
           <button
             onClick={() => setShowWorkspaceMenu(!showWorkspaceMenu)}
-            className="flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 shadow-sm transition-all text-left"
+            className="flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300/80 dark:border-white/[0.08] rounded-full px-3 py-1.5 shadow-sm transition-all text-left"
             title="Switch Workspace (Shared Team or Private)"
           >
             {currentWorkspace?.is_shared ? (
@@ -312,18 +315,18 @@ export const Header: React.FC = () => {
             ) : (
               <Lock className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
             )}
-            <div className="flex flex-col min-w-0 max-w-[140px] sm:max-w-[190px]">
-              <span className="text-[10px] uppercase font-semibold text-[#86868b] leading-none flex items-center gap-1">
+            <div className="flex flex-col min-w-0 max-w-[120px] xl:max-w-[160px]">
+              <span className="text-[9px] uppercase font-semibold text-slate-500 dark:text-[#86868b] leading-none flex items-center gap-1">
                 Workspace
-                <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300">
+                <span className="text-[8px] px-1 py-0.2 rounded-full bg-slate-200 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300">
                   {currentWorkspace?.is_shared ? 'Shared' : 'Private'}
                 </span>
               </span>
               <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate leading-tight mt-0.5">
-                {currentWorkspace ? currentWorkspace.name : 'SVG Production & Conveyor Lab'}
+                {currentWorkspace ? currentWorkspace.name : 'Production Workspace'}
               </span>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-[#86868b] flex-shrink-0" />
+            <ChevronDown className="w-3 h-3 text-[#86868b] flex-shrink-0" />
           </button>
 
           {showWorkspaceMenu && (
@@ -410,17 +413,17 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Project Selector Dropdown */}
-        <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 shadow-sm">
+        <div className="hidden sm:flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] border border-slate-300/80 dark:border-white/[0.08] rounded-full px-3 py-1.5 shadow-sm">
           <Folder className="w-3.5 h-3.5 text-[#0071e3] flex-shrink-0" />
           <div className="flex flex-col min-w-0">
-            <span className="text-[10px] uppercase font-semibold text-[#86868b] leading-none">Project</span>
+            <span className="text-[9px] uppercase font-semibold text-slate-500 dark:text-[#86868b] leading-none">Project</span>
             <select
               value={activeProjectId || ''}
               onChange={(e) => {
                 const selected = projectsList.find((p) => p.id === e.target.value);
                 if (selected) setActiveProject(selected);
               }}
-              className="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-200 outline-none cursor-pointer max-w-[130px] sm:max-w-[170px] truncate leading-tight mt-0.5"
+              className="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-200 outline-none cursor-pointer max-w-[110px] sm:max-w-[150px] truncate leading-tight mt-0.5"
             >
               {projectsList.length === 0 && <option value="">No Projects</option>}
               {projectsList.map((p) => (
@@ -602,7 +605,7 @@ export const Header: React.FC = () => {
 
         {/* Compute Telemetry Badge */}
         {telemetry && (
-          <div className="hidden lg:flex items-center gap-2.5 bg-slate-100 dark:bg-white/[0.04] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 text-xs text-slate-700 dark:text-slate-300">
+          <div className="hidden xl:flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] border border-slate-300/80 dark:border-white/[0.08] rounded-full px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>

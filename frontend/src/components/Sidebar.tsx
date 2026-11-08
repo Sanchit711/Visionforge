@@ -60,22 +60,23 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`relative flex flex-col border-r border-white/[0.08] bg-[#0c0e14]/95 backdrop-blur-2xl transition-all duration-300 z-30 select-none ${
+      data-tour="sidebar-navigation"
+      className={`relative flex flex-col border-r border-slate-200/80 dark:border-white/[0.08] bg-white/95 dark:bg-[#0c0e14]/95 backdrop-blur-2xl transition-all duration-300 z-30 select-none ${
         sidebarCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.06]">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200/80 dark:border-white/[0.06]">
         <div className="flex items-center gap-3 overflow-hidden cursor-pointer" onClick={() => setStage('overview')}>
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0071e3] to-[#6366f1] flex items-center justify-center shadow-lg shadow-blue-500/15 flex-shrink-0">
             <Flame className="w-5 h-5 text-white" />
           </div>
           {!sidebarCollapsed && (
             <div className="flex flex-col truncate">
-              <span className="font-semibold text-[15px] tracking-tight text-white flex items-center gap-1.5">
-                VisionForge <span className="text-[10px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">STUDIO</span>
+              <span className="font-semibold text-[15px] tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                VisionForge <span className="text-[10px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10">STUDIO</span>
               </span>
-              <span className="text-[11px] text-[#86868b] truncate">Computer Vision Suite</span>
+              <span className="text-[11px] text-slate-500 dark:text-[#86868b] truncate">Computer Vision Suite</span>
             </div>
           )}
         </div>
@@ -83,28 +84,28 @@ export const Sidebar: React.FC = () => {
 
       {/* Active Workspace & User Role Banner */}
       {!sidebarCollapsed && (
-        <div className="px-3.5 py-3 mx-3 mt-3 rounded-2xl bg-white/[0.03] border border-white/[0.07] backdrop-blur-md flex flex-col gap-1.5 shadow-sm">
+        <div className="px-3.5 py-3 mx-3 mt-3 rounded-2xl bg-slate-50/80 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.07] backdrop-blur-md flex flex-col gap-1.5 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-semibold text-[#86868b] tracking-wider">Workspace</span>
-            <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-300 border border-white/[0.08]">
+            <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-[#86868b] tracking-wider">Workspace</span>
+            <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-slate-200 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-300/80 dark:border-white/[0.08]">
               {currentTenant?.plan || 'ENTERPRISE'}
             </span>
           </div>
-          <div className="text-xs font-semibold text-white truncate">
+          <div className="text-xs font-semibold text-slate-900 dark:text-white truncate">
             {currentTenant ? currentTenant.name : 'SVG Enterprise Global'}
           </div>
 
-          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[11px]">
-            <span className="text-[#86868b]">Role:</span>
+          <div className="pt-2 border-t border-slate-200 dark:border-white/[0.06] flex items-center justify-between text-[11px]">
+            <span className="text-slate-500 dark:text-[#86868b]">Role:</span>
             <span className={`text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border ${roleDef.badgeClass}`}>
               {roleDef.badge}
             </span>
           </div>
 
           {activeProject && (
-            <div className="pt-1.5 border-t border-white/[0.04] flex items-center justify-between text-[11px]">
-              <span className="text-[#86868b]">Project:</span>
-              <span className="font-medium text-slate-200 truncate max-w-[130px]">{activeProject.name}</span>
+            <div className="pt-1.5 border-t border-slate-200 dark:border-white/[0.04] flex items-center justify-between text-[11px]">
+              <span className="text-slate-500 dark:text-[#86868b]">Project:</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200 truncate max-w-[130px]">{activeProject.name}</span>
             </div>
           )}
         </div>
@@ -124,7 +125,7 @@ export const Sidebar: React.FC = () => {
           return (
             <React.Fragment key={item.id}>
               {showCategoryHeader && (
-                <div className="pt-3 pb-1 px-3 text-[10px] uppercase font-semibold text-[#86868b] tracking-wider">
+                <div className="pt-3 pb-1 px-3 text-[10px] uppercase font-semibold text-slate-400 dark:text-[#86868b] tracking-wider">
                   {item.category}
                 </div>
               )}
@@ -139,8 +140,8 @@ export const Sidebar: React.FC = () => {
                   isActive
                     ? 'bg-[#0071e3] text-white shadow-md shadow-blue-500/20 font-medium'
                     : isAllowed
-                    ? 'text-slate-300 hover:text-white hover:bg-white/[0.05]'
-                    : 'text-slate-600 hover:text-slate-500 hover:bg-white/[0.02] opacity-60'
+                    ? 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.05]'
+                    : 'text-slate-400 dark:text-slate-600 hover:bg-slate-100/50 dark:hover:bg-white/[0.02] opacity-60'
                 }`}
               >
                 <Icon
