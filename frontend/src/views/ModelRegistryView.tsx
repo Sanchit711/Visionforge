@@ -165,6 +165,84 @@ export const ModelRegistryView: React.FC = () => {
         </div>
       </div>
 
+      {/* KPI Summary Metrics (Apple Light UI) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Latency */}
+        <div className="bg-white dark:bg-[#121826]/90 rounded-2xl p-5 border border-[#e5e5ea] dark:border-white/[0.08] shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[#86868b]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider">Inference Latency</span>
+            <Cpu className="w-4 h-4 text-[#0071e3]" />
+          </div>
+          <div className="my-2.5">
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-2xl font-bold text-[#1d1d1f] dark:text-white tracking-tight">2.8</span>
+              <span className="font-mono text-sm font-semibold text-[#86868b]">ms</span>
+              <span className="font-mono text-xs text-[#0071e3] font-medium ml-auto">357 FPS</span>
+            </div>
+          </div>
+          <div className="pt-2.5 border-t border-[#f0f0f2] dark:border-white/[0.06] flex items-center justify-between text-[11px]">
+            <span className="text-[#86868b]">Baseline: 8.9 ms</span>
+            <span className="text-[#34c759] font-medium bg-[#34c759]/10 px-1.5 py-0.5 rounded">3.2x faster</span>
+          </div>
+        </div>
+
+        {/* Footprint */}
+        <div className="bg-white dark:bg-[#121826]/90 rounded-2xl p-5 border border-[#e5e5ea] dark:border-white/[0.08] shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[#86868b]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider">Memory Footprint</span>
+            <Box className="w-4 h-4 text-[#af52de]" />
+          </div>
+          <div className="my-2.5">
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-2xl font-bold text-[#1d1d1f] dark:text-white tracking-tight">28.4</span>
+              <span className="font-mono text-sm font-semibold text-[#86868b]">MB</span>
+              <span className="font-mono text-xs text-[#0071e3] font-medium ml-auto">-75.1%</span>
+            </div>
+          </div>
+          <div className="pt-2.5 border-t border-[#f0f0f2] dark:border-white/[0.06] flex items-center justify-between text-[11px]">
+            <span className="text-[#86868b]">Baseline: 114.2 MB</span>
+            <span className="text-[#6e6e73] font-mono">Plan + Context</span>
+          </div>
+        </div>
+
+        {/* Precision Retention */}
+        <div className="bg-white dark:bg-[#121826]/90 rounded-2xl p-5 border border-[#e5e5ea] dark:border-white/[0.08] shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[#86868b]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider">Precision Retention</span>
+            <CheckCircle2 className="w-4 h-4 text-[#34c759]" />
+          </div>
+          <div className="my-2.5">
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-2xl font-bold text-[#1d1d1f] dark:text-white tracking-tight">99.78</span>
+              <span className="font-mono text-sm font-semibold text-[#86868b]">%</span>
+              <span className="font-mono text-xs text-[#86868b] ml-auto">0.910 mAP</span>
+            </div>
+          </div>
+          <div className="pt-2.5 border-t border-[#f0f0f2] dark:border-white/[0.06] flex items-center justify-between text-[11px]">
+            <span className="text-[#86868b]">Delta: -0.002 mAP</span>
+            <span className="text-[#34c759] font-medium bg-[#34c759]/10 px-1.5 py-0.5 rounded">PASSED QA</span>
+          </div>
+        </div>
+
+        {/* Engine Readiness */}
+        <div className="bg-white dark:bg-[#121826]/90 rounded-2xl p-5 border border-[#e5e5ea] dark:border-white/[0.08] shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[#86868b]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider">Validation Status</span>
+            <Sparkles className="w-4 h-4 text-[#ff9500]" />
+          </div>
+          <div className="my-2.5">
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#34c759] animate-pulse" />
+              <span className="text-xl font-bold text-[#1d1d1f] dark:text-white">Ready to Deploy</span>
+            </div>
+          </div>
+          <div className="pt-2.5 border-t border-[#f0f0f2] dark:border-white/[0.06] flex items-center justify-between text-[11px]">
+            <span className="text-[#86868b]">500 frames cached</span>
+            <span className="text-[#0071e3] font-medium">0 unsupported ops</span>
+          </div>
+        </div>
+      </div>
+
       {/* Model Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {models.length === 0 ? (

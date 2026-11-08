@@ -139,7 +139,7 @@ export function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 transition-colors duration-200">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#f5f5f7] dark:bg-[#0b0f19] text-[#1d1d1f] dark:text-slate-100 transition-colors duration-200 font-sans">
       {/* Collapsible Left Sidebar with 13 Stages & RBAC Indicators */}
       <Sidebar />
 
@@ -149,7 +149,7 @@ export function App() {
         <Header />
 
         {/* Dynamic Stage View (Guarded by RBAC Policy) */}
-        <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50 dark:bg-[#0b0f19] transition-colors duration-200">
+        <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#f5f5f7] dark:bg-[#0b0f19] transition-colors duration-200">
           {renderCurrentView()}
         </main>
       </div>

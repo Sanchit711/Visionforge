@@ -1227,28 +1227,28 @@ export const AnnotationView: React.FC = () => {
   const selectedAnnotation = annotations.find((a) => a.id === selectedAnnId);
 
   return (
-    <div className="flex-1 flex overflow-hidden bg-[#090d16] text-slate-100 select-none">
+    <div className="flex-1 flex overflow-hidden bg-[#f5f5f7] dark:bg-[#090d16] text-[#1d1d1f] dark:text-slate-100 select-none">
       {/* Central Canvas Workspace */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
         {/* Auditor Read-Only Mode Banner */}
         {isReadOnly && (
-          <div className="bg-cyan-500/10 border-b border-cyan-500/20 px-4 py-1.5 flex items-center justify-between text-xs text-cyan-300 z-30">
+          <div className="bg-cyan-500/10 border-b border-cyan-500/20 px-4 py-1.5 flex items-center justify-between text-xs text-cyan-700 dark:text-cyan-300 z-30">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              <ShieldCheck className="w-4 h-4 text-cyan-500" />
               <span>
                 <strong>Auditor Read-Only Mode:</strong> You are viewing annotations in audit mode. Canvas edits and object tracking are restricted for the Viewer role.
               </span>
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">
               AUDIT PERSPECTIVE
             </span>
           </div>
         )}
 
         {/* Apple-Style Glass Floating Command Bar */}
-        <div className="h-14 border-b border-white/[0.08] bg-[#0c121e]/85 backdrop-blur-2xl px-4 flex items-center justify-between z-20 shadow-lg">
+        <div className="h-14 border-b border-[#e5e5ea] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c121e]/85 backdrop-blur-2xl px-4 flex items-center justify-between z-20 shadow-xs">
           {/* Tool Segmented Switcher */}
-          <div className="flex items-center gap-1 bg-black/40 p-1 rounded-2xl border border-white/[0.08] shadow-inner">
+          <div className="flex items-center gap-1 bg-[#f5f5f7] dark:bg-black/40 p-1 rounded-2xl border border-[#e5e5ea] dark:border-white/[0.08] shadow-inner">
             <button
               onClick={() => { setTool('bbox'); setSelectedAnnId(null); }}
               title="Bounding Box Tool (B)"

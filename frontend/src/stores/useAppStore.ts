@@ -120,7 +120,7 @@ const getInitialTheme = (): 'dark' | 'light' => {
     const saved = localStorage.getItem('vf_theme');
     if (saved === 'light' || saved === 'dark') return saved;
   }
-  return 'dark';
+  return 'light';
 };
 
 const initialTheme = getInitialTheme();

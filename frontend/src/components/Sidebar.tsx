@@ -171,8 +171,24 @@ export const Sidebar: React.FC = () => {
         })}
       </nav>
 
+      {/* Active Hardware Footer (Stitch Apple Light UI) */}
+      {!sidebarCollapsed && (
+        <div className="p-3 border-t border-[#e5e5ea] dark:border-white/[0.06] space-y-2">
+          <div className="p-2.5 rounded-xl bg-white dark:bg-white/[0.04] border border-[#e5e5ea] dark:border-white/[0.08] shadow-xs flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-2 h-2 rounded-full bg-[#34c759] shrink-0 animate-pulse" />
+              <div className="truncate">
+                <div className="text-[11px] font-semibold text-[#1d1d1f] dark:text-white truncate">Jetson Orin AGX</div>
+                <div className="text-[10px] font-mono text-[#86868b] truncate">10.0.4.12 • 5G Link</div>
+              </div>
+            </div>
+            <Cpu className="w-3.5 h-3.5 text-[#0071e3]" />
+          </div>
+        </div>
+      )}
+
       {/* Collapse Toggle Footer */}
-      <div className="p-3 border-t border-slate-200/80 dark:border-white/[0.06] flex items-center justify-between">
+      <div className="p-3 border-t border-[#e5e5ea] dark:border-white/[0.06] flex items-center justify-between">
         <button
           onClick={toggleSidebar}
           className="w-full flex items-center justify-center p-2 rounded-xl bg-slate-100/80 dark:bg-white/[0.03] hover:bg-slate-200 dark:hover:bg-white/[0.06] text-slate-600 dark:text-[#86868b] hover:text-slate-900 dark:hover:text-white transition-all text-xs gap-2"

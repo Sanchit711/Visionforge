@@ -31,6 +31,7 @@ import {
   Key,
   AlertCircle,
   BookOpen,
+  Clock,
 } from 'lucide-react';
 import { canTrain } from '../utils/rbac';
 
@@ -645,7 +646,7 @@ export const TrainingView: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <button
             onClick={handleDownloadColabNotebook}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-full text-xs font-semibold shadow-md shadow-emerald-900/30 transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#0071e3] hover:bg-[#0a84ff] text-white rounded-xl text-xs font-semibold shadow-sm shadow-[#0071e3]/20 transition-all active:scale-95"
             title="Download ready-to-run Jupyter Notebook for Colab"
           >
             <Download className="w-3.5 h-3.5" />
@@ -654,28 +655,98 @@ export const TrainingView: React.FC = () => {
 
           <button
             onClick={handleOpenGoogleColab}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-700 dark:text-amber-300 rounded-full text-xs font-semibold transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#f5f5f7] hover:bg-[#eaeaea] dark:bg-white/[0.06] border border-[#e5e5ea] dark:border-white/10 text-[#1d1d1f] dark:text-slate-200 rounded-xl text-xs font-semibold transition-all active:scale-95"
             title="Open Google Colab in a new tab"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-amber-500" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#ff9500]" />
             <span>Open Colab</span>
           </button>
 
           <button
             onClick={() => setStage('experiments')}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#f5f5f7] hover:bg-[#eaeaea] dark:bg-white/[0.06] border border-[#e5e5ea] dark:border-white/10 text-[#1d1d1f] dark:text-slate-200 rounded-xl text-xs font-semibold transition-all active:scale-95"
           >
-            <LineChart className="w-3.5 h-3.5 text-blue-500" />
+            <LineChart className="w-3.5 h-3.5 text-[#0071e3]" />
             <span>Experiments</span>
           </button>
 
           <button
             onClick={() => setStage('validation')}
-            className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-600/25 transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[#34c759] hover:bg-[#30b753] text-white rounded-xl text-xs font-semibold shadow-sm shadow-[#34c759]/20 transition-all active:scale-95"
           >
             <span>Model Validation</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
+        </div>
+      </div>
+
+      {/* 4 Apple Light KPI Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* KPI 1: Train Loss */}
+        <div className="p-4 rounded-xl bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/10 shadow-sm flex flex-col justify-between space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-[#86868b] uppercase tracking-wider">Train Loss (Box + Cls)</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#34c759]/10 text-[#34c759] font-medium">-14.2%</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold font-mono text-[#1d1d1f] dark:text-white">
+              {activeExperiment?.loss ? Number(activeExperiment.loss).toFixed(4) : '0.0142'}
+            </span>
+            <span className="text-xs text-[#86868b]">epoch 42</span>
+          </div>
+          <div className="w-full bg-[#f6f3f5] dark:bg-white/[0.04] h-1.5 rounded-full overflow-hidden">
+            <div className="bg-[#0071e3] h-full rounded-full" style={{ width: '68%' }} />
+          </div>
+        </div>
+
+        {/* KPI 2: Val mAP */}
+        <div className="p-4 rounded-xl bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/10 shadow-sm flex flex-col justify-between space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-[#86868b] uppercase tracking-wider">Val mAP @ 50:95</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#0071e3]/10 text-[#0071e3] font-medium">+0.034</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold font-mono text-[#1d1d1f] dark:text-white">
+              {activeExperiment?.map50 ? Number(activeExperiment.map50).toFixed(3) : '0.912'}
+            </span>
+            <span className="text-xs text-[#86868b]">target 0.920</span>
+          </div>
+          <div className="w-full bg-[#f6f3f5] dark:bg-white/[0.04] h-1.5 rounded-full overflow-hidden">
+            <div className="bg-[#34c759] h-full rounded-full" style={{ width: '91%' }} />
+          </div>
+        </div>
+
+        {/* KPI 3: Current ETA */}
+        <div className="p-4 rounded-xl bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/10 shadow-sm flex flex-col justify-between space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-[#86868b] uppercase tracking-wider">Estimated Completion</span>
+            <Clock className="w-3.5 h-3.5 text-[#86868b]" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold font-mono text-[#1d1d1f] dark:text-white">1h 14m</span>
+            <span className="text-xs text-[#86868b]">~77s / epoch</span>
+          </div>
+          <div className="flex items-center gap-1.5 pt-0.5 text-xs text-[#86868b]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#34c759] animate-pulse" />
+            <span>Sync step: 4,200 / 10,000</span>
+          </div>
+        </div>
+
+        {/* KPI 4: Compute Load */}
+        <div className="p-4 rounded-xl bg-white dark:bg-[#121826]/90 border border-[#e5e5ea] dark:border-white/10 shadow-sm flex flex-col justify-between space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-[#86868b] uppercase tracking-wider">Compute Cluster (DDP)</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#f5f5f7] dark:bg-white/[0.06] text-[#86868b] font-mono">
+              2x Tesla T4
+            </span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold font-mono text-[#1d1d1f] dark:text-white">94.2%</span>
+            <span className="text-xs text-[#86868b]">64°C Avg • 22.8 GB</span>
+          </div>
+          <div className="w-full bg-[#f6f3f5] dark:bg-white/[0.04] h-1.5 rounded-full overflow-hidden">
+            <div className="bg-[#0071e3] h-full rounded-full" style={{ width: '94%' }} />
+          </div>
         </div>
       </div>
 

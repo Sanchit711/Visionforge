@@ -579,22 +579,34 @@ export const Header: React.FC = () => {
           <span className="hidden sm:inline">Tour</span>
         </button>
 
-        {/* Command Palette Trigger */}
+        {/* Spotlight Search Style (Stitch Apple Light UI) */}
         <button
           onClick={() => setCommandPaletteOpen(true)}
-          className="hidden xl:flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300 dark:border-white/[0.08] rounded-full px-3.5 py-1.5 text-xs text-slate-600 dark:text-[#86868b] hover:text-slate-900 dark:hover:text-white transition-all"
-          title="Command Palette (Ctrl+K)"
+          className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f5f5f7] hover:bg-[#eaeaea] dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-[#e5e5ea] dark:border-white/10 text-[#86868b] transition-all w-56 justify-between text-xs"
+          title="Spotlight Search (Ctrl+K)"
         >
-          <Search className="w-3.5 h-3.5 text-[#86868b]" />
-          <span>Search</span>
-          <kbd className="px-1.5 py-0.5 text-[10px] bg-slate-200 dark:bg-white/[0.08] rounded-full border border-slate-300 dark:border-white/[0.1] font-mono text-slate-400">
-            Ctrl+K
+          <div className="flex items-center gap-2 min-w-0">
+            <Search className="w-3.5 h-3.5 text-[#86868b]" />
+            <span className="text-[11px] truncate">Search runs, layers...</span>
+          </div>
+          <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-white dark:bg-white/[0.1] text-[#86868b] border border-[#d2d2d7]/50 shadow-xs">
+            ⌘K
           </kbd>
         </button>
 
+        {/* Device Pulse Badge (Stitch Apple Light UI) */}
+        <div className="hidden lg:flex items-center gap-2 font-mono text-[11px] px-3 py-1.5 rounded-xl bg-white dark:bg-white/[0.04] border border-[#e5e5ea] dark:border-white/10 text-[#6e6e73] dark:text-[#86868b] shadow-xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#34c759] animate-pulse" />
+          <span className="font-semibold text-[#1d1d1f] dark:text-white">RTX 4090</span>
+          <span className="text-[#d2d2d7] dark:text-white/20">•</span>
+          <span>68% Util</span>
+          <span className="text-[#d2d2d7] dark:text-white/20">•</span>
+          <span className="text-[#1d1d1f] dark:text-white">62°C</span>
+        </div>
+
         {/* Compute Telemetry Badge */}
         {telemetry && (
-          <div className="hidden xl:flex items-center gap-2 bg-slate-100 dark:bg-white/[0.04] border border-slate-300/80 dark:border-white/[0.08] rounded-full px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
+          <div className="hidden 2xl:flex items-center gap-2 bg-[#f5f5f7] dark:bg-white/[0.04] border border-[#e5e5ea] dark:border-white/[0.08] rounded-xl px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -612,7 +624,7 @@ export const Header: React.FC = () => {
         {/* Theme Toggle (Dark / Light) */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-full bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-300 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm active:scale-95"
+          className="p-2 rounded-xl bg-[#f5f5f7] hover:bg-[#eaeaea] dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-[#e5e5ea] dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:text-[#1d1d1f] dark:hover:text-white transition-all shadow-xs active:scale-95"
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
         >
           {theme === 'dark' ? (
