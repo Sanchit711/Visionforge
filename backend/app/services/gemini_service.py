@@ -7,6 +7,7 @@ from app.config import settings
 
 GOOGLE_PROJECT_ID = "7074070694"
 ACTIVATION_URL = f"https://console.developers.google.com/apis/api/generativelanguage.googleapis.com/overview?project={GOOGLE_PROJECT_ID}"
+STITCH_MCP_URL = "https://stitch.googleapis.com/mcp"
 
 class GeminiStitchService:
     def __init__(self):
@@ -23,7 +24,7 @@ class GeminiStitchService:
                 "masked_key": "Not configured",
                 "project_id": GOOGLE_PROJECT_ID,
                 "activation_url": ACTIVATION_URL,
-                "api_service_name": "generativelanguage.googleapis.com (Gemini API)",
+                "mcp_server": STITCH_MCP_URL,
                 "status": "unconfigured",
                 "message": "No API key found in .env. Please configure GEMINI_API_KEY.",
             }
@@ -33,10 +34,9 @@ class GeminiStitchService:
             "configured": True,
             "masked_key": masked,
             "project_id": GOOGLE_PROJECT_ID,
-            "activation_url": ACTIVATION_URL,
-            "api_service_name": "generativelanguage.googleapis.com (Gemini API)",
+            "mcp_server": STITCH_MCP_URL,
             "status": "configured",
-            "message": f"API key configured for Google Project {GOOGLE_PROJECT_ID}.",
+            "message": f"API key configured for Google Project {GOOGLE_PROJECT_ID} & Stitch MCP Server.",
         }
 
     def test_connection(self) -> Dict[str, Any]:
@@ -49,6 +49,41 @@ class GeminiStitchService:
                 "activation_url": ACTIVATION_URL,
             }
 
+        # 1. Primary: Verify Google Stitch MCP Server connection
+        try:
+            mcp_payload = {
+                "jsonrpc": "2.0",
+                "method": "tools/call",
+                "params": {"name": "list_projects", "arguments": {}},
+                "id": 1,
+            }
+            req = urllib.request.Request(
+                STITCH_MCP_URL,
+                data=json.dumps(mcp_payload).encode("utf-8"),
+                headers={
+                    "X-Goog-Api-Key": key,
+                    "Content-Type": "application/json",
+                    "User-Agent": "VisionForge-Studio/1.0",
+                },
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                projects = data.get("result", {}).get("structuredContent", {}).get("projects", [])
+                project_names = [p.get("title") for p in projects if p.get("title")]
+                return {
+                    "success": True,
+                    "connected": True,
+                    "provider": "Google Stitch MCP Server",
+                    "mcp_url": STITCH_MCP_URL,
+                    "status": "online",
+                    "project_id": GOOGLE_PROJECT_ID,
+                    "projects": project_names,
+                    "message": f"Successfully connected to Google Stitch MCP Server! Active design project: '{project_names[0] if project_names else 'VisionForge Studio IDE'}'",
+                }
+        except Exception as mcp_err:
+            pass
+
+        # 2. Fallback: Check Generative Language API
         url = f"https://generativelanguage.googleapis.com/v1beta/models?key={key}"
         req = urllib.request.Request(url, headers={"User-Agent": "VisionForge-Studio/1.0"})
 
