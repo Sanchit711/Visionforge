@@ -13,6 +13,7 @@ import {
   Users,
   Check,
   Plus,
+  Layers,
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
@@ -20,6 +21,7 @@ export const SettingsView: React.FC = () => {
     theme,
     toggleTheme,
     setTheme,
+    setStitchModalOpen,
     addNotification,
     currentTenant,
     setCurrentTenant,
@@ -270,6 +272,34 @@ export const SettingsView: React.FC = () => {
               <span>Save Preferences</span>
             </button>
           </form>
+        </div>
+
+        {/* Google Stitch Design System */}
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-400" />
+              Google Stitch Design System
+            </h3>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              DESIGN.md v1.0
+            </span>
+          </div>
+
+          <p className="text-xs text-slate-400 leading-relaxed">
+            VisionForge implements the open <span className="font-mono text-slate-200">DESIGN.md</span> specification popularized by Google Stitch. It standardizes design tokens, surface elevations, Apple-inspired glassmorphism, and Cupertino spring curves across the entire UI/UX.
+          </p>
+
+          <div className="flex items-center gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => setStitchModalOpen(true)}
+              className="stitch-pill bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 flex items-center gap-1.5"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Open Stitch Inspector</span>
+            </button>
+          </div>
         </div>
 
         {/* Global Keyboard Shortcuts Table */}

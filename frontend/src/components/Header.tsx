@@ -49,6 +49,7 @@ export const Header: React.FC = () => {
     toggleTheme,
     setCommandPaletteOpen,
     setProductTourOpen,
+    setStitchModalOpen,
     setLoginModalOpen,
     setRolesModalOpen,
     login,
@@ -574,6 +575,16 @@ export const Header: React.FC = () => {
         >
           <Compass className="w-3.5 h-3.5 text-blue-500" />
           <span className="hidden sm:inline">Tour</span>
+        </button>
+
+        {/* Google Stitch Design System Trigger */}
+        <button
+          onClick={() => setStitchModalOpen(true)}
+          className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60 rounded-full px-3 py-1.5 text-xs font-medium transition-all shadow-sm active:scale-95"
+          title="Google Stitch UI/UX & DESIGN.md Inspector"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+          <span className="hidden md:inline">Stitch UI</span>
         </button>
 
         {/* Command Palette Trigger */}
