@@ -226,6 +226,8 @@ class DatasetService:
 
             total_annotations = 0
             class_counts = Counter()
+            has_pose = False
+            has_obb = False
 
             split_mapping = [
                 ("train", train_frames),
@@ -256,7 +258,7 @@ class DatasetService:
                         class_counts[norm_name] += 1
                         cid = class_name_to_id.get(norm_name, class_name_to_id.get(ann.class_name, ann.class_id))
 
-                        if ann.annotation_type == "bbox" and len(ann.coordinates) == 4:
+                        if ann.annotation_type == "bbox" and isinstance(ann.coordinates, list) and len(ann.coordinates) == 4:
                             x, y, w, h = ann.coordinates
                             # YOLO format is center_x, center_y, width, height (normalized)
                             cx = round(x + w / 2.0, 6)
@@ -264,10 +266,61 @@ class DatasetService:
                             nw = round(w, 6)
                             nh = round(h, 6)
                             label_lines.append(f"{cid} {cx} {cy} {nw} {nh}")
-                        elif ann.annotation_type == "polygon" and isinstance(ann.coordinates, list):
+                        elif ann.annotation_type in ("polygon", "segmentation", "mask") and isinstance(ann.coordinates, list):
                             # YOLO segmentation format: class x1 y1 x2 y2 ...
                             coords_str = " ".join([f"{pt[0]:.6f} {pt[1]:.6f}" for pt in ann.coordinates])
                             label_lines.append(f"{cid} {coords_str}")
+                        elif ann.annotation_type in ("obb", "oriented_bbox"):
+                            has_obb = True
+                            # YOLO OBB format: class x1 y1 x2 y2 x3 y3 x4 y4
+                            import math
+                            if isinstance(ann.coordinates, dict) and "points" in ann.coordinates:
+                                pts = ann.coordinates["points"]
+                                coords_str = " ".join([f"{pt[0]:.6f} {pt[1]:.6f}" for pt in pts[:4]])
+                                label_lines.append(f"{cid} {coords_str}")
+                            elif isinstance(ann.coordinates, list) and len(ann.coordinates) == 4 and isinstance(ann.coordinates[0], list):
+                                coords_str = " ".join([f"{pt[0]:.6f} {pt[1]:.6f}" for pt in ann.coordinates[:4]])
+                                label_lines.append(f"{cid} {coords_str}")
+                            elif isinstance(ann.coordinates, list) and len(ann.coordinates) == 8:
+                                coords_str = " ".join([f"{v:.6f}" for v in ann.coordinates])
+                                label_lines.append(f"{cid} {coords_str}")
+                            elif isinstance(ann.coordinates, dict) and "cx" in ann.coordinates:
+                                cx, cy = ann.coordinates["cx"], ann.coordinates["cy"]
+                                w, h = ann.coordinates["w"], ann.coordinates["h"]
+                                rad = math.radians(ann.coordinates.get("angle", 0.0))
+                                cos_a, sin_a = math.cos(rad), math.sin(rad)
+                                hw, hh = w / 2.0, h / 2.0
+                                corners = [
+                                    (cx - hw * cos_a + hh * sin_a, cy - hw * sin_a - hh * cos_a),
+                                    (cx + hw * cos_a + hh * sin_a, cy + hw * sin_a - hh * cos_a),
+                                    (cx + hw * cos_a - hh * sin_a, cy + hw * sin_a + hh * cos_a),
+                                    (cx - hw * cos_a - hh * sin_a, cy - hw * sin_a + hh * cos_a)
+                                ]
+                                coords_str = " ".join([f"{pt[0]:.6f} {pt[1]:.6f}" for pt in corners])
+                                label_lines.append(f"{cid} {coords_str}")
+                        elif ann.annotation_type in ("pose", "keypoints"):
+                            has_pose = True
+                            # YOLO Pose format: class cx cy w h px1 py1 v1 px2 py2 v2 ...
+                            if isinstance(ann.coordinates, dict):
+                                bbox = ann.coordinates.get("bbox", [0.5, 0.5, 0.2, 0.2])
+                                kpts = ann.coordinates.get("keypoints", [])
+                            elif isinstance(ann.coordinates, list):
+                                bbox = [0.5, 0.5, 0.2, 0.2]
+                                kpts = ann.coordinates
+                            else:
+                                bbox, kpts = [0.5, 0.5, 0.2, 0.2], []
+
+                            x, y, w, h = bbox
+                            cx = round(x + w / 2.0, 6)
+                            cy = round(y + h / 2.0, 6)
+                            kpts_str_list = []
+                            for kp in kpts:
+                                if len(kp) >= 3:
+                                    kpts_str_list.append(f"{kp[0]:.6f} {kp[1]:.6f} {int(kp[2])}")
+                                elif len(kp) == 2:
+                                    kpts_str_list.append(f"{kp[0]:.6f} {kp[1]:.6f} 2")
+                            kpts_line = " ".join(kpts_str_list)
+                            label_lines.append(f"{cid} {cx} {cy} {round(w, 6)} {round(h, 6)} {kpts_line}".strip())
 
                     label_filename = f"{f.id}.txt"
                     dst_label_path = version_dir / "labels" / split_name / label_filename
@@ -292,6 +345,10 @@ class DatasetService:
                 "nc": len(sorted_names),
                 "names": sorted_names,
             }
+
+            if has_pose:
+                yaml_data["kpt_shape"] = [17, 3]
+                yaml_data["flip_idx"] = [0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15]
 
             yaml_path = version_dir / "data.yaml"
             with open(yaml_path, "w", encoding="utf-8") as yf:

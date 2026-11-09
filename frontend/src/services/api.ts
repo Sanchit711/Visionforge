@@ -659,6 +659,22 @@ export const api = {
   exportModel: (id: string, format: string = 'onnx') =>
     request<any>(`/models/${id}/export?format=${format}`, { method: 'POST' }),
 
+  getSupportedEdgeTargets: () => request<any[]>('/models/supported-edge-targets'),
+
+  exportEdgeModel: (id: string, data: { format: string; imgsz?: number; half?: boolean; int8?: boolean; dynamic?: boolean; simplify?: boolean }) =>
+    request<any>(`/models/${id}/export-edge`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }),
+
+  predictFrameEdge: (id: string, data: { image_base64: string; conf_threshold?: number; iou_threshold?: number }) =>
+    request<any>(`/models/${id}/predict-frame`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }),
+
 
 
   // Compute Runtimes

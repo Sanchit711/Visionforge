@@ -23,22 +23,26 @@ VisionForge Studio replaces the fragmented chaos of modern computer vision devel
 
 ### 🌐 Core Developer Capabilities
 [![Computer Vision](https://img.shields.io/badge/Domain-Computer_Vision-007ACC?style=flat-square&logo=opencv&logoColor=white)](https://github.com/topics/computer-vision)
+[![Multi-Task CV](https://img.shields.io/badge/Multi--Task-YOLO--Pose_%7C_OBB_%7C_Seg-8A2BE2?style=flat-square&logo=target&logoColor=white)](https://github.com/topics/pose-estimation)
 [![Selective Frames](https://img.shields.io/badge/Frame_Studio-Laplacian_%2B_pHash_Decimation-FF6F00?style=flat-square&logo=target&logoColor=white)](https://github.com/topics/video-annotation)
 [![AI Annotation](https://img.shields.io/badge/AI_Annotation-Florence--2_%2B_SAM_2.1-FF1493?style=flat-square&logo=huggingface&logoColor=white)](https://github.com/topics/florence-2)
 [![YOLO Models](https://img.shields.io/badge/Models-YOLOv8_%2F_YOLOv11-00FFFF?style=flat-square&logo=ultralytics&logoColor=black)](https://github.com/topics/yolo)
 [![Cloud Training](https://img.shields.io/badge/Cloud_Compute-Kaggle_Dual--T4_GPU-20BEFF?style=flat-square&logo=kaggle&logoColor=white)](https://github.com/topics/kaggle)
 [![Model Comparison](https://img.shields.io/badge/Validation-Side--by--Side_Model_Comparison-10B981?style=flat-square&logo=speedtest&logoColor=white)](https://github.com/topics/object-detection)
-[![Edge Export](https://img.shields.io/badge/Deployment-1--Click_ONNX_Export-76B900?style=flat-square&logo=nvidia&logoColor=white)](https://github.com/topics/edge-ai)
+[![Edge Export Engine](https://img.shields.io/badge/Deployment-ONNX_%7C_OpenVINO_%7C_TensorRT_%7C_CoreML-76B900?style=flat-square&logo=nvidia&logoColor=white)](https://github.com/topics/edge-ai)
+[![Live Webcam HUD](https://img.shields.io/badge/Tester-In--Browser_Live_Webcam_HUD-0071E3?style=flat-square&logo=webrtc&logoColor=white)](https://github.com/topics/computer-vision)
 
 ---
 
 ### 💡 Why VisionForge? The "One-Stop" Developer Experience
+* **Multi-Task AI Suite**: Unified annotation and YOLO training pipeline supporting standard Bounding Boxes (`B`), 5-parameter Oriented Bounding Boxes (`O` with angular heading ray), 17-point Humanoid Pose rigs (`K` with COCO skeletal bones), and sub-pixel polygon masks (`P`).
 * **Selective Frame Extraction**: Ingest raw video, set an ROI crop, and let automated Laplacian sharpness filters and perceptual hash deduplication curate only the sharp, non-redundant frames (saves up to 90% of storage and labeling time).
 * **AI-Assisted Annotation**: Zero-shot prompt grounding with **Microsoft Florence-2**, pixel-exact boundary masks with **Meta SAM 2**, and **rigid-body keyframe trajectory interpolation** that tracks objects across frames with physical dimensions locked.
-* **Leak-Proof Dataset Engineering**: Enforce contiguous chronological/temporal chunk splitting (`split_strategy="temporal"`), preventing consecutive video frames from bleeding between Train and Val sets.
+* **Leak-Proof Dataset Engineering**: Enforce contiguous chronological/temporal chunk splitting (`split_strategy="temporal"`), preventing consecutive video frames from bleeding between Train and Val sets. Automatically exports YOLO formats with `kpt_shape: [17, 3]` and `flip_idx`.
 * **1-Click Headless Cloud Training**: Push training runs directly to remote cloud GPUs (Kaggle Dual Tesla T4s) with live streaming loss curves, learning rate dynamics, and validation mAP50 telemetry—without touching notebooks.
+* **Edge Model Export Engine**: 1-Click hardware compilation to **ONNX Universal** (with OnnxSlim), **Intel OpenVINO** (`.xml`/`.bin`), **NVIDIA TensorRT** (`.engine`), **Apple Silicon CoreML** (`.mlpackage`), and **TensorFlow Lite** (`.tflite`).
+* **In-Browser Live Webcam / Video Tester**: Run real-time edge inference directly inside your browser on live video feeds with live sub-30ms latency HUD, FPS counter, and 1-click snapshot downloads.
 * **Side-by-Side Model Comparison**: Compare multiple trained checkpoints simultaneously on synchronized video playback, measuring real latency (ms), throughput (FPS), and sub-pixel stability.
-* **1-Click Edge Export**: Download optimized ONNX and TensorRT weights with dynamic batching directly in your browser.
 * **Enterprise 14-Station Interactive Tour**: Pinpoint visual spotlighting with SVG cutout masks, step-by-step operational lifecycle flows, and immediate live-test triggers for seamless operator onboarding.
 
 ---

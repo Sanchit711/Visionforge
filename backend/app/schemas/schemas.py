@@ -237,8 +237,8 @@ class AnnotationCreate(BaseModel):
     frame_id: str
     class_id: int
     class_name: str
-    annotation_type: str = "bbox"  # "bbox", "polygon", "mask"
-    coordinates: Union[List[float], List[List[float]]]  # [x, y, w, h] normalized or [[x,y],...]
+    annotation_type: str = "bbox"  # "bbox", "polygon", "obb", "pose", "keypoints", "mask"
+    coordinates: Any  # bbox: [x,y,w,h], polygon: [[x,y],...], obb: [x1,y1,...] or dict, pose: dict or [[x,y,v],...]
     confidence: float = 1.0
     source: str = "manual"  # manual, yolo_assisted, sam_assisted, propagated
     is_reviewed: bool = False
@@ -246,7 +246,8 @@ class AnnotationCreate(BaseModel):
 class AnnotationUpdate(BaseModel):
     class_id: Optional[int] = None
     class_name: Optional[str] = None
-    coordinates: Optional[Union[List[float], List[List[float]]]] = None
+    annotation_type: Optional[str] = None
+    coordinates: Optional[Any] = None
     is_reviewed: Optional[bool] = None
     confidence: Optional[float] = None
 
@@ -471,6 +472,18 @@ class ModelClassCompatibilityCheck(BaseModel):
     recommendation: str
 
 # ----------------- Model Registry -----------------
+class EdgeExportRequest(BaseModel):
+    format: str = "onnx"  # onnx, openvino, engine, coreml, tflite
+    imgsz: int = 640
+    half: bool = False
+    dynamic: bool = True
+    simplify: bool = True
+
+class EdgeInferenceRequest(BaseModel):
+    image_base64: str  # data URL or base64 jpeg
+    conf_threshold: float = 0.25
+    iou_threshold: float = 0.45
+
 class RegisteredModelCreate(BaseModel):
     name: str
     version: str = "v1.0"

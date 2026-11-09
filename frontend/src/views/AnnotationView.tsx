@@ -43,8 +43,43 @@ import {
   Info,
   Tag,
   CopyPlus,
+  RotateCw,
+  Activity,
 } from 'lucide-react';
 import { isReadOnlyRole } from '../utils/rbac';
+
+// Multi-Task Standard: COCO 17-Keypoint Landmarks
+export const COCO_KEYPOINTS = [
+  { id: 0, name: 'Nose', color: '#ff3b30' },
+  { id: 1, name: 'Left Eye', color: '#ff9500' },
+  { id: 2, name: 'Right Eye', color: '#ff9500' },
+  { id: 3, name: 'Left Ear', color: '#ffcc00' },
+  { id: 4, name: 'Right Ear', color: '#ffcc00' },
+  { id: 5, name: 'Left Shoulder', color: '#34c759' },
+  { id: 6, name: 'Right Shoulder', color: '#30b0c7' },
+  { id: 7, name: 'Left Elbow', color: '#34c759' },
+  { id: 8, name: 'Right Elbow', color: '#30b0c7' },
+  { id: 9, name: 'Left Wrist', color: '#34c759' },
+  { id: 10, name: 'Right Wrist', color: '#30b0c7' },
+  { id: 11, name: 'Left Hip', color: '#0071e3' },
+  { id: 12, name: 'Right Hip', color: '#af52de' },
+  { id: 13, name: 'Left Knee', color: '#0071e3' },
+  { id: 14, name: 'Right Knee', color: '#af52de' },
+  { id: 15, name: 'Left Ankle', color: '#0071e3' },
+  { id: 16, name: 'Right Ankle', color: '#af52de' },
+];
+
+// Multi-Task Standard: COCO 15 Anatomical Bones
+export const SKELETON_BONES: [number, number][] = [
+  [0, 1], [0, 2], [1, 3], [2, 4], // facial
+  [5, 6], // shoulders
+  [5, 7], [7, 9], // left arm
+  [6, 8], [8, 10], // right arm
+  [5, 11], [6, 12], // torso
+  [11, 12], // pelvic girdle
+  [11, 13], [13, 15], // left leg
+  [12, 14], [14, 16], // right leg
+];
 
 export const AnnotationView: React.FC = () => {
   const { activeProjectId, activeProject, addNotification, currentUser } = useAppStore();
@@ -55,13 +90,18 @@ export const AnnotationView: React.FC = () => {
   const [annotations, setAnnotations] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Canvas tool state
-  const [tool, setTool] = useState<'bbox' | 'polygon' | 'sam_point' | 'sam_box' | 'select' | 'pan'>('bbox');
+  // Canvas tool state (Expanded for Multi-Task CV: OBB & Pose)
+  const [tool, setTool] = useState<'bbox' | 'polygon' | 'obb' | 'pose' | 'sam_point' | 'sam_box' | 'select' | 'pan'>('bbox');
   const [activeClassId, setActiveClassId] = useState(0);
   const [zoom, setZoom] = useState(1.0);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+
+  // Multi-Task Dynamic Rig & Rotation States
+  const [isRotatingObb, setIsRotatingObb] = useState(false);
+  const [rotatingAnnId, setRotatingAnnId] = useState<string | null>(null);
+  const [draggingKeypoint, setDraggingKeypoint] = useState<{ annId: string; index: number } | null>(null);
 
   // Drawing & Selection state
   const [drawingStart, setDrawingStart] = useState<{ x: number; y: number } | null>(null);
@@ -176,6 +216,28 @@ export const AnnotationView: React.FC = () => {
 
   const roundCoord = (val: number) => Math.round(val * 10000) / 10000;
 
+  const generateDefaultPoseKeypoints = (cx: number, cy: number, scaleW = 0.16, scaleH = 0.38): [number, number, number][] => {
+    return [
+      [roundCoord(cx), roundCoord(cy - 0.42 * scaleH), 2], // 0: nose
+      [roundCoord(cx - 0.12 * scaleW), roundCoord(cy - 0.45 * scaleH), 2], // 1: left_eye
+      [roundCoord(cx + 0.12 * scaleW), roundCoord(cy - 0.45 * scaleH), 2], // 2: right_eye
+      [roundCoord(cx - 0.25 * scaleW), roundCoord(cy - 0.43 * scaleH), 2], // 3: left_ear
+      [roundCoord(cx + 0.25 * scaleW), roundCoord(cy - 0.43 * scaleH), 2], // 4: right_ear
+      [roundCoord(cx - 0.40 * scaleW), roundCoord(cy - 0.25 * scaleH), 2], // 5: left_shoulder
+      [roundCoord(cx + 0.40 * scaleW), roundCoord(cy - 0.25 * scaleH), 2], // 6: right_shoulder
+      [roundCoord(cx - 0.55 * scaleW), roundCoord(cy - 0.05 * scaleH), 2], // 7: left_elbow
+      [roundCoord(cx + 0.55 * scaleW), roundCoord(cy - 0.05 * scaleH), 2], // 8: right_elbow
+      [roundCoord(cx - 0.65 * scaleW), roundCoord(cy + 0.15 * scaleH), 2], // 9: left_wrist
+      [roundCoord(cx + 0.65 * scaleW), roundCoord(cy + 0.15 * scaleH), 2], // 10: right_wrist
+      [roundCoord(cx - 0.25 * scaleW), roundCoord(cy + 0.05 * scaleH), 2], // 11: left_hip
+      [roundCoord(cx + 0.25 * scaleW), roundCoord(cy + 0.05 * scaleH), 2], // 12: right_hip
+      [roundCoord(cx - 0.30 * scaleW), roundCoord(cy + 0.28 * scaleH), 2], // 13: left_knee
+      [roundCoord(cx + 0.30 * scaleW), roundCoord(cy + 0.28 * scaleH), 2], // 14: right_knee
+      [roundCoord(cx - 0.32 * scaleW), roundCoord(cy + 0.48 * scaleH), 2], // 15: left_ankle
+      [roundCoord(cx + 0.32 * scaleW), roundCoord(cy + 0.48 * scaleH), 2], // 16: right_ankle
+    ];
+  };
+
   // Load frames
   useEffect(() => {
     if (!activeProjectId) return;
@@ -274,6 +336,9 @@ export const AnnotationView: React.FC = () => {
     setPolygonPoints([]);
     setIsPanning(false);
     setShowShortcutsModal(false);
+    setIsRotatingObb(false);
+    setRotatingAnnId(null);
+    setDraggingKeypoint(null);
   }, []);
 
   // Precision Nudge selected box position
@@ -442,6 +507,85 @@ export const AnnotationView: React.FC = () => {
     setPolygonPoints([]);
   };
 
+  // Precision Rotate OBB
+  const handleRotateObb = async (deltaAngle: number, absolute = false) => {
+    if (!selectedAnnId) return;
+    const ann = annotations.find((a) => a.id === selectedAnnId);
+    if (!ann || ann.annotation_type !== 'obb') return;
+    const coords = Array.isArray(ann.coordinates) ? [...ann.coordinates] : [0.5, 0.5, 0.2, 0.2, 0];
+    let newAngle = absolute ? deltaAngle : (coords[4] || 0) + deltaAngle;
+    while (newAngle > 180) newAngle -= 360;
+    while (newAngle < -180) newAngle += 360;
+    coords[4] = Math.round(newAngle * 10) / 10;
+    const updated = annotations.map((a) => (a.id === ann.id ? { ...a, coordinates: coords } : a));
+    setAnnotations(updated);
+    pushHistory(updated);
+    try {
+      await api.updateAnnotation(ann.id, { coordinates: coords });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Create Standard COCO 17-Keypoint Skeletal Rig
+  const handleCreatePoseRig = async (normX: number, normY: number) => {
+    if (!currentFrame) return;
+    const scaleW = 0.16;
+    const scaleH = 0.38;
+    const keypoints = generateDefaultPoseKeypoints(normX, normY, scaleW, scaleH);
+    const newAnn = {
+      frame_id: currentFrame.id,
+      class_id: activeClass.id,
+      class_name: activeClass.name,
+      annotation_type: 'pose',
+      coordinates: {
+        bbox: [
+          roundCoord(Math.max(0, normX - scaleW / 2)),
+          roundCoord(Math.max(0, normY - scaleH / 2)),
+          scaleW,
+          scaleH,
+        ],
+        keypoints,
+      },
+      confidence: 1.0,
+      source: 'manual',
+      is_reviewed: true,
+    };
+
+    try {
+      const saved = await api.createAnnotation(newAnn);
+      pushHistory([...annotations, saved]);
+      setSelectedAnnId(saved.id);
+      addNotification({
+        type: 'success',
+        title: 'Pose Rig Created',
+        message: '17-Point COCO Skeletal rig ready. Drag joints to fit landmarks.',
+      });
+    } catch (err: any) {
+      addNotification({ type: 'error', title: 'Pose Rig Failed', message: err.message });
+    }
+  };
+
+  // Reset Pose Rig to Default Humanoid Coordinates
+  const handleResetPose = async (annId: string) => {
+    const ann = annotations.find((a) => a.id === annId);
+    if (!ann || ann.annotation_type !== 'pose') return;
+    const bbox = ann.coordinates?.bbox || [0.42, 0.3, 0.16, 0.38];
+    const cx = bbox[0] + bbox[2] / 2;
+    const cy = bbox[1] + bbox[3] / 2;
+    const keypoints = generateDefaultPoseKeypoints(cx, cy, bbox[2], bbox[3]);
+    const updatedCoords = { bbox, keypoints };
+    const next = annotations.map((a) => (a.id === annId ? { ...a, coordinates: updatedCoords } : a));
+    setAnnotations(next);
+    pushHistory(next);
+    try {
+      await api.updateAnnotation(annId, { coordinates: updatedCoords });
+      addNotification({ type: 'info', title: 'Pose Reset', message: 'Re-aligned keypoints to default humanoid stance.' });
+    } catch (err: any) {
+      addNotification({ type: 'error', title: 'Reset Failed', message: err.message });
+    }
+  };
+
   // Review Frame (Approve / Reject)
   const handleReviewFrame = async (newStatus: 'approved' | 'rejected') => {
     if (!currentFrame || reviewing) return;
@@ -526,8 +670,10 @@ export const AnnotationView: React.FC = () => {
         return;
       }
 
-      // Tool Switching
+      // Tool Switching (Standard + Multi-Task CV)
       if (e.key === 'b' || e.key === 'B') { setTool('bbox'); setSelectedAnnId(null); return; }
+      if (e.key === 'o' || e.key === 'O') { setTool('obb'); setSelectedAnnId(null); return; }
+      if (e.key === 'k' || e.key === 'K') { setTool('pose'); setSelectedAnnId(null); return; }
       if (e.key === 'p' || e.key === 'P') { setTool('polygon'); setSelectedAnnId(null); return; }
       if (e.key === 's' || e.key === 'S') { setTool('sam_point'); setSelectedAnnId(null); return; }
       if (e.key === 'x' || e.key === 'X') { setTool('sam_box'); setSelectedAnnId(null); return; }
@@ -554,6 +700,18 @@ export const AnnotationView: React.FC = () => {
         if (e.key === 'Delete' || e.key === 'Backspace') {
           e.preventDefault();
           handleDeleteAnnotation(selectedAnnId);
+          return;
+        }
+
+        // Rotate OBB shortcuts ([ and ] rotate by -5° / +5°)
+        if (e.key === '[' || e.key === '{') {
+          e.preventDefault();
+          handleRotateObb(e.shiftKey ? -15 : -5);
+          return;
+        }
+        if (e.key === ']' || e.key === '}') {
+          e.preventDefault();
+          handleRotateObb(e.shiftKey ? 15 : 5);
           return;
         }
 
@@ -672,7 +830,13 @@ export const AnnotationView: React.FC = () => {
       return;
     }
 
-    if (tool === 'bbox' || tool === 'sam_box') {
+    if (tool === 'pose') {
+      const pt = getNormalizedPoint(e);
+      handleCreatePoseRig(pt.x, pt.y);
+      return;
+    }
+
+    if (tool === 'bbox' || tool === 'sam_box' || tool === 'obb') {
       const pt = getNormalizedPoint(e);
       setDrawingStart(pt);
       setCurrentBox({ x: pt.x, y: pt.y, w: 0, h: 0 });
@@ -698,6 +862,50 @@ export const AnnotationView: React.FC = () => {
 
     if (isPanning) {
       setPanOffset({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
+      return;
+    }
+
+    // Dragging a Pose Landmark Joint
+    if (draggingKeypoint && imageRef.current) {
+      const normPt = getNormalizedPoint(e);
+      setAnnotations((prev) =>
+        prev.map((a) => {
+          if (a.id !== draggingKeypoint.annId) return a;
+          const kpts = Array.isArray(a.coordinates?.keypoints)
+            ? [...a.coordinates.keypoints]
+            : Array.isArray(a.coordinates)
+            ? [...a.coordinates]
+            : [];
+          if (kpts[draggingKeypoint.index]) {
+            const cur = kpts[draggingKeypoint.index];
+            kpts[draggingKeypoint.index] = [roundCoord(normPt.x), roundCoord(normPt.y), cur[2] || 2];
+          }
+          if (a.coordinates?.keypoints) {
+            return { ...a, coordinates: { ...a.coordinates, keypoints: kpts } };
+          }
+          return { ...a, coordinates: kpts };
+        })
+      );
+      return;
+    }
+
+    // Interactive Drag-to-Rotate OBB
+    if (isRotatingObb && rotatingAnnId && imageRef.current) {
+      const normPt = getNormalizedPoint(e);
+      setAnnotations((prev) =>
+        prev.map((a) => {
+          if (a.id !== rotatingAnnId) return a;
+          const coords = Array.isArray(a.coordinates) ? [...a.coordinates] : [0.5, 0.5, 0.2, 0.2, 0];
+          const cx = coords[0];
+          const cy = coords[1];
+          const rad = Math.atan2(normPt.y - cy, normPt.x - cx);
+          let deg = Math.round((rad * 180) / Math.PI) + 90;
+          while (deg > 180) deg -= 360;
+          while (deg < -180) deg += 360;
+          coords[4] = deg;
+          return { ...a, coordinates: coords };
+        })
+      );
       return;
     }
 
@@ -746,8 +954,8 @@ export const AnnotationView: React.FC = () => {
       return;
     }
 
-    // Drawing box in progress
-    if ((tool === 'bbox' || tool === 'sam_box') && drawingStart) {
+    // Drawing box in progress (Standard BBox, SAM Box, or Rotated OBB)
+    if ((tool === 'bbox' || tool === 'sam_box' || tool === 'obb') && drawingStart) {
       const pt = getNormalizedPoint(e);
       const x = Math.min(drawingStart.x, pt.x);
       const y = Math.min(drawingStart.y, pt.y);
@@ -761,6 +969,41 @@ export const AnnotationView: React.FC = () => {
   const handleMouseUp = async () => {
     if (isPanning) {
       setIsPanning(false);
+      return;
+    }
+
+    // Sync Dragged Pose Landmark Joint
+    if (draggingKeypoint) {
+      const kp = draggingKeypoint;
+      setDraggingKeypoint(null);
+      const ann = annotations.find((a) => a.id === kp.annId);
+      if (ann) {
+        try {
+          await api.updateAnnotation(ann.id, { coordinates: ann.coordinates });
+          pushHistory(annotations);
+        } catch (e) {
+          console.error('Failed to sync pose landmark:', e);
+        }
+      }
+      return;
+    }
+
+    // Sync Rotated OBB
+    if (isRotatingObb) {
+      const rotId = rotatingAnnId;
+      setIsRotatingObb(false);
+      setRotatingAnnId(null);
+      if (rotId) {
+        const ann = annotations.find((a) => a.id === rotId);
+        if (ann) {
+          try {
+            await api.updateAnnotation(ann.id, { coordinates: ann.coordinates });
+            pushHistory(annotations);
+          } catch (e) {
+            console.error('Failed to sync rotated OBB:', e);
+          }
+        }
+      }
       return;
     }
 
@@ -817,6 +1060,44 @@ export const AnnotationView: React.FC = () => {
           setSelectedAnnId(saved.id);
         } catch (err: any) {
           addNotification({ type: 'error', title: 'Save failed', message: err.message });
+        }
+      }
+      return;
+    }
+
+    // Handle OBB (Oriented Bounding Box) Completion
+    if (tool === 'obb' && drawingStart && currentBox) {
+      const boxToSave = { ...currentBox };
+      setDrawingStart(null);
+      setCurrentBox(null);
+
+      if (boxToSave.w > 0.01 && boxToSave.h > 0.01 && currentFrame) {
+        const cx = roundCoord(boxToSave.x + boxToSave.w / 2);
+        const cy = roundCoord(boxToSave.y + boxToSave.h / 2);
+        const w = roundCoord(boxToSave.w);
+        const h = roundCoord(boxToSave.h);
+        const newAnn = {
+          frame_id: currentFrame.id,
+          class_id: activeClass.id,
+          class_name: activeClass.name,
+          annotation_type: 'obb',
+          coordinates: [cx, cy, w, h, 0], // [cx, cy, w, h, angle_deg]
+          confidence: 1.0,
+          source: 'manual',
+          is_reviewed: true,
+        };
+
+        try {
+          const saved = await api.createAnnotation(newAnn);
+          pushHistory([...annotations, saved]);
+          setSelectedAnnId(saved.id);
+          addNotification({
+            type: 'success',
+            title: 'OBB Created',
+            message: 'Rotated box ready. Drag the top orientation handle or use the HUD slider to angle.',
+          });
+        } catch (err: any) {
+          addNotification({ type: 'error', title: 'OBB save failed', message: err.message });
         }
       }
       return;
@@ -1381,6 +1662,32 @@ export const AnnotationView: React.FC = () => {
             </button>
 
             <button
+              onClick={() => { setTool('obb'); setSelectedAnnId(null); }}
+              title="Oriented BBox (O) - 5-parameter rotated bounding box"
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active:scale-[0.98] ${
+                tool === 'obb'
+                  ? 'bg-[#0071e3] text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/[0.06]'
+              }`}
+            >
+              <RotateCw className="w-3.5 h-3.5" />
+              <span>OBB</span>
+            </button>
+
+            <button
+              onClick={() => { setTool('pose'); setSelectedAnnId(null); }}
+              title="Pose Estimation (K) - 17-Keypoint COCO skeletal landmark rig"
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active:scale-[0.98] ${
+                tool === 'pose'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-xs'
+                  : 'text-emerald-600 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-white hover:bg-emerald-50/70 dark:hover:bg-white/[0.06]'
+              }`}
+            >
+              <Activity className="w-3.5 h-3.5" />
+              <span>Pose</span>
+            </button>
+
+            <button
               onClick={() => { setTool('polygon'); setSelectedAnnId(null); }}
               title="Polygon Tool (P)"
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active:scale-[0.98] ${
@@ -1884,6 +2191,223 @@ export const AnnotationView: React.FC = () => {
                       />
                     </svg>
                   );
+                } else if (ann.annotation_type === 'obb') {
+                  const [cx, cy, w, h, angle = 0] = Array.isArray(ann.coordinates)
+                    ? ann.coordinates
+                    : [
+                        ann.coordinates?.cx || 0.5,
+                        ann.coordinates?.cy || 0.5,
+                        ann.coordinates?.w || 0.2,
+                        ann.coordinates?.h || 0.2,
+                        ann.coordinates?.angle || 0,
+                      ];
+
+                  return (
+                    <svg
+                      key={ann.id}
+                      viewBox="0 0 100 100"
+                      preserveAspectRatio="none"
+                      className="absolute inset-0 w-full h-full pointer-events-none z-20"
+                      style={{ overflow: 'visible' }}
+                    >
+                      <g transform={`translate(${cx * 100}, ${cy * 100}) rotate(${angle})`}>
+                        {/* Rotated Rect Body */}
+                        <rect
+                          x={-w * 50}
+                          y={-h * 50}
+                          width={w * 100}
+                          height={h * 100}
+                          rx="0.4"
+                          fill={isBelowConf ? `${color}10` : `${color}25`}
+                          stroke={isSelected ? '#38bdf8' : isBelowConf ? '#64748b' : color}
+                          strokeWidth={isSelected ? '0.6' : '0.4'}
+                          strokeDasharray={isBelowConf ? '1, 1' : undefined}
+                          className="pointer-events-auto cursor-pointer hover:stroke-white transition-all"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedAnnId(ann.id);
+                          }}
+                        />
+
+                        {/* Orientation Heading Ray */}
+                        <line
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2={-h * 50 - 3.5}
+                          stroke={isSelected ? '#38bdf8' : color}
+                          strokeWidth="0.4"
+                          strokeDasharray="1 1"
+                        />
+                        {/* Orientation / Rotation Knob */}
+                        <circle
+                          cx="0"
+                          cy={-h * 50 - 3.5}
+                          r={isSelected ? '1.4' : '1.0'}
+                          fill="#ffffff"
+                          stroke={isSelected ? '#0284c7' : color}
+                          strokeWidth="0.5"
+                          className="pointer-events-auto cursor-grab active:cursor-grabbing hover:scale-130 transition-transform shadow"
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            setSelectedAnnId(ann.id);
+                            setIsRotatingObb(true);
+                            setRotatingAnnId(ann.id);
+                          }}
+                        >
+                          <title>Drag to rotate OBB heading</title>
+                        </circle>
+
+                        {/* Top Floating Badge with Class & Heading */}
+                        <g transform={`translate(${-w * 50}, ${-h * 50 - 2.5})`}>
+                          <rect
+                            x="0"
+                            y="-3.5"
+                            width={Math.max(16, ann.class_name.length * 2.2 + 10)}
+                            height="4.5"
+                            rx="1"
+                            fill={isBelowConf ? '#475569' : color}
+                            className="shadow-sm"
+                          />
+                          <text
+                            x="2"
+                            y="-0.4"
+                            fill="#ffffff"
+                            fontSize="2.6"
+                            fontWeight="bold"
+                            fontFamily="monospace"
+                          >
+                            {ann.class_name} {Math.round(angle)}°
+                          </text>
+                        </g>
+
+                        {/* 4 Corner Rotation / Resize Anchors when selected */}
+                        {isSelected && (
+                          <>
+                            <circle cx={-w * 50} cy={-h * 50} r="0.9" fill="#ffffff" stroke="#000" strokeWidth="0.3" />
+                            <circle cx={w * 50} cy={-h * 50} r="0.9" fill="#ffffff" stroke="#000" strokeWidth="0.3" />
+                            <circle cx={w * 50} cy={h * 50} r="0.9" fill="#ffffff" stroke="#000" strokeWidth="0.3" />
+                            <circle cx={-w * 50} cy={h * 50} r="0.9" fill="#ffffff" stroke="#000" strokeWidth="0.3" />
+                          </>
+                        )}
+                      </g>
+                    </svg>
+                  );
+                } else if (ann.annotation_type === 'pose') {
+                  const kpts: number[][] = Array.isArray(ann.coordinates?.keypoints)
+                    ? ann.coordinates.keypoints
+                    : Array.isArray(ann.coordinates) && ann.coordinates.length === 17
+                    ? ann.coordinates
+                    : [];
+
+                  return (
+                    <svg
+                      key={ann.id}
+                      viewBox="0 0 100 100"
+                      preserveAspectRatio="none"
+                      className="absolute inset-0 w-full h-full pointer-events-none z-25"
+                      style={{ overflow: 'visible' }}
+                    >
+                      {/* 15 Anatomical Bones */}
+                      {SKELETON_BONES.map(([i, j], bIdx) => {
+                        const ptA = kpts[i];
+                        const ptB = kpts[j];
+                        if (!ptA || !ptB || ptA[2] === 0 || ptB[2] === 0) return null;
+                        const boneColor =
+                          i <= 4
+                            ? '#eab308'
+                            : i === 5 && j === 6
+                            ? '#6366f1'
+                            : [7, 9, 13, 15].includes(j)
+                            ? '#10b981'
+                            : '#06b6d4';
+                        return (
+                          <line
+                            key={`bone-${bIdx}`}
+                            x1={ptA[0] * 100}
+                            y1={ptA[1] * 100}
+                            x2={ptB[0] * 100}
+                            y2={ptB[1] * 100}
+                            stroke={isSelected ? '#38bdf8' : boneColor}
+                            strokeWidth={isSelected ? '0.7' : '0.5'}
+                            strokeLinecap="round"
+                            opacity={ptA[2] === 1 || ptB[2] === 1 ? 0.45 : 0.9}
+                          />
+                        );
+                      })}
+
+                      {/* 17 Interactive Landmark Keypoints */}
+                      {kpts.map((pt, kpIdx) => {
+                        if (pt[2] === 0) return null;
+                        const kpDef = COCO_KEYPOINTS[kpIdx] || { name: `Joint ${kpIdx}`, color: '#0071e3' };
+                        const isKpSelected = draggingKeypoint?.annId === ann.id && draggingKeypoint?.index === kpIdx;
+                        return (
+                          <g key={`kp-${kpIdx}`} className="pointer-events-auto">
+                            <circle
+                              cx={pt[0] * 100}
+                              cy={pt[1] * 100}
+                              r={isKpSelected ? '1.5' : isSelected ? '1.1' : '0.8'}
+                              fill={kpDef.color}
+                              stroke="#ffffff"
+                              strokeWidth="0.3"
+                              className="cursor-grab active:cursor-grabbing hover:scale-150 transition-transform shadow"
+                              onMouseDown={(e) => {
+                                e.stopPropagation();
+                                setSelectedAnnId(ann.id);
+                                setDraggingKeypoint({ annId: ann.id, index: kpIdx });
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedAnnId(ann.id);
+                              }}
+                            >
+                              <title>{`${kpDef.name} (${Math.round(pt[0] * 100)}%, ${Math.round(pt[1] * 100)}%)`}</title>
+                            </circle>
+                            {isSelected && (
+                              <text
+                                x={pt[0] * 100}
+                                y={pt[1] * 100 - 1.8}
+                                textAnchor="middle"
+                                fill="#ffffff"
+                                fontSize="1.8"
+                                fontWeight="bold"
+                                fontFamily="sans-serif"
+                                className="pointer-events-none drop-shadow"
+                              >
+                                {kpDef.name}
+                              </text>
+                            )}
+                          </g>
+                        );
+                      })}
+
+                      {/* Pose Class Header Chip */}
+                      {kpts[0] && (
+                        <g transform={`translate(${kpts[0][0] * 100}, ${kpts[0][1] * 100 - 6})`}>
+                          <rect
+                            x="-10"
+                            y="-3.5"
+                            width="24"
+                            height="4.5"
+                            rx="1"
+                            fill={color}
+                            className="shadow-sm"
+                          />
+                          <text
+                            x="2"
+                            y="-0.4"
+                            textAnchor="middle"
+                            fill="#ffffff"
+                            fontSize="2.5"
+                            fontWeight="bold"
+                            fontFamily="monospace"
+                          >
+                            {ann.class_name} (Pose)
+                          </text>
+                        </g>
+                      )}
+                    </svg>
+                  );
                 }
                 return null;
               })}
@@ -2038,7 +2562,7 @@ export const AnnotationView: React.FC = () => {
                 </div>
               )}
 
-              {/* Scale Pill */}
+              {/* Scale Pill (for standard bbox) */}
               {selectedAnnotation.annotation_type === 'bbox' && (
                 <div className="flex items-center gap-1 bg-[#f6f3f5] dark:bg-black/40 px-2 py-1 rounded-xl border border-[#e5e5ea] dark:border-white/[0.06]">
                   <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mr-0.5">Scale:</span>
@@ -2059,16 +2583,78 @@ export const AnnotationView: React.FC = () => {
                 </div>
               )}
 
-              {/* Sub-Pixel Snap to Edges */}
-              <button
-                onClick={handleSnapBBoxWithSam}
-                disabled={segmentingSam}
-                className="px-3 py-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-[0_2px_12px_rgba(99,102,241,0.35)] transition-all active:scale-95 disabled:opacity-50"
-                title="Automatically snap bounding box tightly to object physical edges (SAM 2)"
-              >
-                {segmentingSam ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
-                <span>Snap to Edges</span>
-              </button>
+              {/* OBB Precision Rotation Controller */}
+              {selectedAnnotation.annotation_type === 'obb' && (
+                <div className="flex items-center gap-2 bg-[#f6f3f5] dark:bg-black/40 px-2.5 py-1 rounded-xl border border-[#e5e5ea] dark:border-white/[0.06]">
+                  <RotateCw className="w-3 h-3 text-blue-500" />
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">Angle:</span>
+                  <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 min-w-[36px]">
+                    {Array.isArray(selectedAnnotation.coordinates) ? Math.round(selectedAnnotation.coordinates[4] || 0) : 0}°
+                  </span>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    value={Array.isArray(selectedAnnotation.coordinates) ? selectedAnnotation.coordinates[4] || 0 : 0}
+                    onChange={(e) => handleRotateObb(parseFloat(e.target.value), true)}
+                    className="w-20 sm:w-28 accent-blue-600 cursor-pointer"
+                    title="Drag to smoothly adjust rotation angle (-180° to +180°)"
+                  />
+                  <div className="flex items-center gap-0.5 font-mono text-[9px]">
+                    <button
+                      onClick={() => handleRotateObb(-5)}
+                      className="px-1 py-0.5 rounded bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent font-bold"
+                      title="Rotate -5° ([)"
+                    >
+                      -5°
+                    </button>
+                    <button
+                      onClick={() => handleRotateObb(5)}
+                      className="px-1 py-0.5 rounded bg-white dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-slate-700 dark:text-slate-200 border border-[#e5e5ea] dark:border-transparent font-bold"
+                      title="Rotate +5° (])"
+                    >
+                      +5°
+                    </button>
+                    <button
+                      onClick={() => handleRotateObb(0, true)}
+                      className="px-1 py-0.5 rounded bg-slate-200 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 font-bold"
+                      title="Reset rotation to 0°"
+                    >
+                      0°
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Pose Estimation HUD Status */}
+              {selectedAnnotation.annotation_type === 'pose' && (
+                <div className="flex items-center gap-2 bg-[#f6f3f5] dark:bg-black/40 px-2.5 py-1 rounded-xl border border-[#e5e5ea] dark:border-white/[0.06]">
+                  <Activity className="w-3 h-3 text-emerald-500" />
+                  <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
+                    COCO 17-Point Skeleton Rig
+                  </span>
+                  <button
+                    onClick={() => handleResetPose(selectedAnnotation.id)}
+                    className="px-2 py-0.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold font-mono transition-colors"
+                    title="Reset skeleton joints to standard anatomical posture"
+                  >
+                    Reset Stance
+                  </button>
+                </div>
+              )}
+
+              {/* Sub-Pixel Snap to Edges (for standard bbox) */}
+              {selectedAnnotation.annotation_type === 'bbox' && (
+                <button
+                  onClick={handleSnapBBoxWithSam}
+                  disabled={segmentingSam}
+                  className="px-3 py-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-[0_2px_12px_rgba(99,102,241,0.35)] transition-all active:scale-95 disabled:opacity-50"
+                  title="Automatically snap bounding box tightly to object physical edges (SAM 2)"
+                >
+                  {segmentingSam ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
+                  <span>Snap to Edges</span>
+                </button>
+              )}
 
               {/* Utility Action Buttons */}
               <div className="flex items-center gap-1 pl-2 border-l border-[#e5e5ea] dark:border-white/[0.1]">
@@ -2757,7 +3343,13 @@ export const AnnotationView: React.FC = () => {
                       <div className="flex items-center gap-2 truncate">
                         <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: isBelow ? '#64748b' : cls.color }} />
                         <span className="font-semibold truncate">{ann.class_name}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">({ann.annotation_type})</span>
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          {ann.annotation_type === 'obb'
+                            ? `OBB ${Math.round(Array.isArray(ann.coordinates) ? ann.coordinates[4] || 0 : 0)}°`
+                            : ann.annotation_type === 'pose'
+                            ? 'Pose 17-pt'
+                            : ann.annotation_type}
+                        </span>
                         {isOutside && showConveyorRoi && (
                           <span className="text-[8px] bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30 px-1 rounded">Out</span>
                         )}
@@ -2923,6 +3515,14 @@ export const AnnotationView: React.FC = () => {
                     <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">B</kbd>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Oriented BBox (Rotated)</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">O</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">COCO Pose Keypoints Rig</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">K</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
                     <span className="text-slate-700 dark:text-slate-300">Vector Polygon Tool</span>
                     <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">P</kbd>
                   </div>
@@ -2962,6 +3562,10 @@ export const AnnotationView: React.FC = () => {
                   <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
                     <span className="text-slate-700 dark:text-slate-300">Precision Nudge Box</span>
                     <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">↑ ↓ ← →</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Rotate OBB Heading</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">[ and ]</kbd>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
                     <span className="text-slate-700 dark:text-slate-300">Resize Dimensions</span>
