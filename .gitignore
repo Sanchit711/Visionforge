@@ -62,6 +62,7 @@ runs/
 kaggle.json
 .env
 .env.*
+!.env.example
 *.key
 *.pem
 credentials.json

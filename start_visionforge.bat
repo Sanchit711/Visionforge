@@ -8,6 +8,16 @@ echo.
 
 cd /d "%~dp0"
 
+:: 0. Check if .env exists; if not, initialize from .env.example
+if not exist ".env" (
+    if exist ".env.example" (
+        echo [*] Initializing .env configuration from .env.example...
+        copy /y ".env.example" ".env" >nul
+        echo [OK] Created .env configuration file!
+        echo.
+    )
+)
+
 :: 1. Check if Frontend Production Build exists; if not, auto-build
 if not exist "frontend\dist\index.html" (
     echo [*] Production frontend build not detected. Initializing build...

@@ -86,7 +86,7 @@ VisionForge is expanding beyond standard 2D axis-aligned bounding boxes into a f
 2. **Projects & Workspaces**: Multi-tenant RBAC workspaces with configurable classes, stage timeline graphs, and dependency tracking.
 3. **Video Lab**: Drag-and-drop video ingestion, synthetic demo video generator, video player with frame stepping, start/end trimming, interactive normalized ROI crop overlay, and reusable crop presets.
 4. **Frame Studio**: Frame extraction engine (second interval, frame interval, target FPS), Laplacian blur rejection, perceptual hash deduplication, contact sheet mosaic generator, and JSON manifest generation.
-5. **AI Annotation Studio**: Interactive HTML5 canvas with zoom/pan, bounding box (`B`) and polygon segmentation (`P`) tools, class hotkeys (`1-9`), undo/redo (`Ctrl+Z`/`Ctrl+Y`), pluggable AI assistance (Ultralytics YOLO and SAM 2/SAM 3 adapters), and one-click batch auto-annotation across the project.
+5. **AI Annotation Studio**: Interactive HTML5 canvas with zoom/pan, bounding box (`B`) and polygon segmentation (`P`) tools, interactive Shortcuts Cheat Sheet (`?`), First-Time Quick-Start onboarding banner, 1-click object reclassification with hotkeys (`1-9`), auto-closing polygon loops (click start vertex or press `Enter`), single-vertex undo (`Backspace`), 1-click sequence cloning (`Ctrl+Shift+D`), on-canvas floating zoom & view HUD, pluggable AI assistance (Ultralytics YOLO and SAM 2/SAM 3 adapters), and batch auto-annotation.
 6. **Datasets & Quality Curation**: Class distribution and severe imbalance detection, box anomaly audits (tiny boxes, out-of-bounds), **source-video leakage prevention** (grouping frames by source video into identical splits), and one-click export of valid YOLO `data.yaml` + ZIP packages.
 7. **Training Control Center**: Ultralytics YOLO training and fine-tuning runner with **class alignment safeguards**, real-time epoch progress, streaming metric plots, automated checkpointing (`best.pt`, `last.pt`), and safe abort.
 8. **Experiments**: Persistent training experiment archive with multi-run side-by-side comparison matrix.
@@ -105,11 +105,28 @@ VisionForge is expanding beyond standard 2D axis-aligned bounding boxes into a f
 - Node.js 18+ (Recommended: Node 20+)
 - (Optional) NVIDIA GPU with CUDA or Kaggle API Token for Cloud Dual-T4 Training
 
-### 1. Clone & Setup Environment
+### Option A: 1-Click Automated Launcher (Recommended)
+VisionForge includes automated launch scripts that check requirements, auto-initialize `.env` from `.env.example`, compile the Apple UI production bundle if needed, and boot the server daemon:
+
+- **Windows**: Double-click [`start_visionforge.bat`](start_visionforge.bat) (or run in CMD / PowerShell: `.\start_visionforge.bat`)
+- **Linux / macOS**: Run [`./start_visionforge.sh`](start_visionforge.sh) (ensure executable: `chmod +x start_visionforge.sh`)
+
+---
+
+### Option B: Step-by-Step Manual Setup
+
+#### 1. Clone & Setup Environment
 ```bash
 # Clone repository
 git clone https://github.com/Sanchit711/Visionforge.git
 cd Visionforge
+
+# (Recommended) Create and activate a Python virtual environment
+python -m venv .venv
+# On Windows (PowerShell / CMD):
+.venv\Scripts\activate
+# On Linux / macOS:
+source .venv/bin/activate
 
 # Install Python backend dependencies
 pip install -r requirements.txt
@@ -121,19 +138,26 @@ npm run build
 cd ..
 ```
 
-### 2. Configure Environment (Optional)
+#### 2. Configure Environment (Optional)
 ```bash
-# Copy environment template
+# Initialize configuration from template
+# Linux / macOS:
 cp .env.example .env
 
-# Set your Kaggle API credentials (optional, can also be configured via UI)
+# Windows (Command Prompt):
+copy .env.example .env
+
+# Windows (PowerShell):
+Copy-Item .env.example .env
+
+# Configure your Kaggle API credentials (optional, can also be configured via Web UI Settings)
 # KAGGLE_USERNAME=your_kaggle_username
 # KAGGLE_API_TOKEN=your_kaggle_api_token
 ```
 
-### 3. Launch VisionForge Studio
+#### 3. Launch VisionForge Studio
 ```bash
-# Start backend server daemon
+# Start backend server daemon (serves both API & Frontend SPA)
 python backend/run_backend.py
 ```
 

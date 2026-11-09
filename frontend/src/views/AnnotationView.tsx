@@ -38,6 +38,11 @@ import {
   Zap,
   GitCommit,
   Waypoints,
+  HelpCircle,
+  Keyboard,
+  Info,
+  Tag,
+  CopyPlus,
 } from 'lucide-react';
 import { isReadOnlyRole } from '../utils/rbac';
 
@@ -107,8 +112,16 @@ export const AnnotationView: React.FC = () => {
   const [history, setHistory] = useState<any[][]>([]);
   const [historyStep, setHistoryStep] = useState(0);
 
-  // Confirmation Modals
+  // Confirmation & Help Modals
   const [showClearProjectModal, setShowClearProjectModal] = useState(false);
+  const [showShortcutsModal, setShowShortcutsModal] = useState(false);
+  const [showQuickTip, setShowQuickTip] = useState(() => {
+    try {
+      return localStorage.getItem('vf_hide_ann_tip') !== 'true';
+    } catch {
+      return true;
+    }
+  });
 
   // AI Assist & Engine State
   const [aiProvider, setAiProvider] = useState<'florence2' | 'sam2' | 'ultralytics_yolo'>('florence2');
@@ -260,116 +273,8 @@ export const AnnotationView: React.FC = () => {
     setDragStartBox(null);
     setPolygonPoints([]);
     setIsPanning(false);
+    setShowShortcutsModal(false);
   }, []);
-
-  // Keyboard Shortcuts Listener
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-
-      // Escape key cancels all interactions unconditionally
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        handleUniversalCancel();
-        return;
-      }
-
-      // Tool Switching
-      if (e.key === 'b' || e.key === 'B') { setTool('bbox'); setSelectedAnnId(null); return; }
-      if (e.key === 'p' || e.key === 'P') { setTool('polygon'); setSelectedAnnId(null); return; }
-      if (e.key === 's' || e.key === 'S') { setTool('sam_point'); setSelectedAnnId(null); return; }
-      if (e.key === 'x' || e.key === 'X') { setTool('sam_box'); setSelectedAnnId(null); return; }
-      if (e.key === 'v' || e.key === 'V') { setTool('select'); return; }
-      if (e.key === 'h' || e.key === 'H') { setTool('pan'); return; }
-      if (e.key === 'c' || e.key === 'C') { setShowCrosshairs((prev) => !prev); return; }
-
-      // Frame Review shortcuts
-      if (e.key === 'f' || e.key === 'F') { e.preventDefault(); handleReviewFrame('approved'); return; }
-      if (e.key === 'r' || e.key === 'R') { e.preventDefault(); handleReviewFrame('rejected'); return; }
-
-      // Undo / Redo
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-        e.preventDefault();
-        if (e.shiftKey) handleRedo();
-        else handleUndo();
-        return;
-      }
-
-      // Selected annotation nudging and precision adjustments
-      if (selectedAnnId) {
-        const step = nudgeCoarse ? (e.shiftKey ? 0.05 : 0.01) : (e.shiftKey ? 0.01 : 0.002);
-
-        if (e.key === 'Delete' || e.key === 'Backspace') {
-          e.preventDefault();
-          handleDeleteAnnotation(selectedAnnId);
-          return;
-        }
-
-        if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
-          e.preventDefault();
-          handleDuplicateToNextFrame();
-          return;
-        }
-
-        if (e.altKey) {
-          if (e.key === 'ArrowUp') { e.preventDefault(); handleResizeBox(0, -step); return; }
-          if (e.key === 'ArrowDown') { e.preventDefault(); handleResizeBox(0, step); return; }
-          if (e.key === 'ArrowLeft') { e.preventDefault(); handleResizeBox(-step, 0); return; }
-          if (e.key === 'ArrowRight') { e.preventDefault(); handleResizeBox(step, 0); return; }
-        } else {
-          if (e.key === 'ArrowUp') { e.preventDefault(); handleNudge(0, -step); return; }
-          if (e.key === 'ArrowDown') { e.preventDefault(); handleNudge(0, step); return; }
-          if (e.key === 'ArrowLeft') { e.preventDefault(); handleNudge(-step, 0); return; }
-          if (e.key === 'ArrowRight') { e.preventDefault(); handleNudge(step, 0); return; }
-        }
-      } else {
-        // Frame navigation when no box is actively selected
-        if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
-          if (currentFrameIndex > 0) setCurrentFrameIndex((prev) => prev - 1);
-        }
-        if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') {
-          if (currentFrameIndex < frames.length - 1) setCurrentFrameIndex((prev) => prev + 1);
-        }
-      }
-
-      // Class hotkeys 1-9
-      const num = parseInt(e.key);
-      if (!isNaN(num) && num >= 1 && num <= classes.length) {
-        setActiveClassId(classes[num - 1].id);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedAnnId, currentFrameIndex, frames.length, classes, historyStep, history, nudgeCoarse, handleUniversalCancel]);
-
-  // Global Mouse Up Listener to catch drags ending outside container
-  useEffect(() => {
-    const handleGlobalMouseUp = async () => {
-      if (isDraggingBox || resizeHandle) {
-        setIsDraggingBox(false);
-        setResizeHandle(null);
-        setDragStartBox(null);
-        if (selectedAnnId) {
-          const ann = annotations.find((a) => a.id === selectedAnnId);
-          if (ann) {
-            try {
-              await api.updateAnnotation(ann.id, { coordinates: ann.coordinates });
-              pushHistory(annotations);
-            } catch (err) {
-              console.error('Failed to sync updated box coordinates:', err);
-            }
-          }
-        }
-      }
-      if (isPanning) {
-        setIsPanning(false);
-      }
-    };
-
-    window.addEventListener('mouseup', handleGlobalMouseUp);
-    return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
-  }, [isDraggingBox, resizeHandle, selectedAnnId, annotations, isPanning]);
 
   // Precision Nudge selected box position
   const handleNudge = async (dx: number, dy: number) => {
@@ -460,6 +365,285 @@ export const AnnotationView: React.FC = () => {
     }
   };
 
+  // Copy All Annotations on Current Frame to Next Frame
+  const handleCopyAllToNextFrame = async () => {
+    if (currentFrameIndex >= frames.length - 1 || annotations.length === 0) return;
+    const nextFrame = frames[currentFrameIndex + 1];
+    try {
+      let createdCount = 0;
+      for (const ann of annotations) {
+        await api.createAnnotation({
+          frame_id: nextFrame.id,
+          class_id: ann.class_id,
+          class_name: ann.class_name,
+          annotation_type: ann.annotation_type,
+          coordinates: ann.coordinates,
+          confidence: ann.confidence || 1.0,
+          source: 'manual_cloned_all',
+          is_reviewed: true,
+        });
+        createdCount++;
+      }
+      addNotification({
+        type: 'success',
+        title: 'Copied All to Next Frame',
+        message: `Cloned ${createdCount} annotations to Frame ${currentFrameIndex + 2}.`,
+      });
+      setCurrentFrameIndex((prev) => prev + 1);
+    } catch (err: any) {
+      addNotification({ type: 'error', title: 'Copy All Failed', message: err.message });
+    }
+  };
+
+  // Reclassify Selected Annotation in 1 Click
+  const handleChangeAnnotationClass = async (annId: string, newClassId: number) => {
+    const targetCls = classes.find((c: any) => c.id === newClassId);
+    if (!targetCls) return;
+    const prevAnns = [...annotations];
+    const updated = annotations.map((a) => (a.id === annId ? { ...a, class_id: newClassId, class_name: targetCls.name } : a));
+    setAnnotations(updated);
+    pushHistory(updated);
+    try {
+      await api.updateAnnotation(annId, { class_id: newClassId, class_name: targetCls.name });
+      addNotification({
+        type: 'info',
+        title: 'Class Updated',
+        message: `Reclassified object to '${targetCls.name}'.`,
+      });
+    } catch (err: any) {
+      setAnnotations(prevAnns);
+      addNotification({ type: 'error', title: 'Update failed', message: err.message });
+    }
+  };
+
+  // Close Polygon and Save
+  const handleFinishPolygon = async () => {
+    if (polygonPoints.length < 3 || !currentFrame) return;
+
+    const newAnn = {
+      frame_id: currentFrame.id,
+      class_id: activeClass.id,
+      class_name: activeClass.name,
+      annotation_type: 'polygon',
+      coordinates: polygonPoints,
+      confidence: 1.0,
+      source: 'manual',
+      is_reviewed: true,
+    };
+
+    try {
+      const saved = await api.createAnnotation(newAnn);
+      pushHistory([...annotations, saved]);
+      setSelectedAnnId(saved.id);
+    } catch (err: any) {
+      addNotification({ type: 'error', title: 'Polygon save failed', message: err.message });
+    }
+
+    setPolygonPoints([]);
+  };
+
+  // Review Frame (Approve / Reject)
+  const handleReviewFrame = async (newStatus: 'approved' | 'rejected') => {
+    if (!currentFrame || reviewing) return;
+    setReviewing(true);
+    try {
+      await api.reviewFrame(currentFrame.id, newStatus);
+
+      setFrames((prev) =>
+        prev.map((f) => (f.id === currentFrame.id ? { ...f, status: newStatus } : f))
+      );
+
+      setAnnotations((prev) =>
+        prev.map((a) => ({ ...a, is_reviewed: newStatus === 'approved' }))
+      );
+
+      addNotification({
+        type: newStatus === 'approved' ? 'success' : 'info',
+        title: newStatus === 'approved' ? 'Frame Approved' : 'Frame Rejected',
+        message: `Frame ${currentFrameIndex + 1} marked as ${newStatus}.`,
+      });
+
+      if (currentFrameIndex < frames.length - 1) {
+        setTimeout(() => {
+          setCurrentFrameIndex((prev) => Math.min(frames.length - 1, prev + 1));
+        }, 180);
+      }
+    } catch (err: any) {
+      addNotification({
+        type: 'error',
+        title: 'Review failed',
+        message: err.message || 'Could not update review status',
+      });
+    } finally {
+      setReviewing(false);
+    }
+  };
+
+  // Delete single annotation
+  const handleDeleteAnnotation = async (annId: string) => {
+    try {
+      await api.deleteAnnotation(annId);
+      const next = annotations.filter((a) => a.id !== annId);
+      pushHistory(next);
+      if (selectedAnnId === annId) setSelectedAnnId(null);
+    } catch (err: any) {
+      addNotification({ type: 'error', title: 'Delete failed', message: err.message });
+    }
+  };
+
+  // Keyboard Shortcuts Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      // Escape key cancels all interactions unconditionally
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleUniversalCancel();
+        return;
+      }
+
+      // Help & Shortcuts modal toggle (? or /)
+      if ((e.key === '?' || (e.shiftKey && e.key === '/')) && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setShowShortcutsModal((prev) => !prev);
+        return;
+      }
+
+      // Close polygon on Enter
+      if (e.key === 'Enter') {
+        if (polygonPoints.length >= 3) {
+          e.preventDefault();
+          handleFinishPolygon();
+          return;
+        }
+      }
+
+      // Undo last point in polygon on Backspace or Delete when drawing polygon
+      if ((e.key === 'Backspace' || e.key === 'Delete') && polygonPoints.length > 0 && !selectedAnnId) {
+        e.preventDefault();
+        setPolygonPoints((prev) => prev.slice(0, -1));
+        return;
+      }
+
+      // Tool Switching
+      if (e.key === 'b' || e.key === 'B') { setTool('bbox'); setSelectedAnnId(null); return; }
+      if (e.key === 'p' || e.key === 'P') { setTool('polygon'); setSelectedAnnId(null); return; }
+      if (e.key === 's' || e.key === 'S') { setTool('sam_point'); setSelectedAnnId(null); return; }
+      if (e.key === 'x' || e.key === 'X') { setTool('sam_box'); setSelectedAnnId(null); return; }
+      if (e.key === 'v' || e.key === 'V') { setTool('select'); return; }
+      if (e.key === 'h' || e.key === 'H') { setTool('pan'); return; }
+      if (e.key === 'c' || e.key === 'C') { setShowCrosshairs((prev) => !prev); return; }
+
+      // Frame Review shortcuts
+      if (e.key === 'f' || e.key === 'F') { e.preventDefault(); handleReviewFrame('approved'); return; }
+      if (e.key === 'r' || e.key === 'R') { e.preventDefault(); handleReviewFrame('rejected'); return; }
+
+      // Undo / Redo
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) handleRedo();
+        else handleUndo();
+        return;
+      }
+
+      // Selected annotation nudging and precision adjustments
+      if (selectedAnnId) {
+        const step = nudgeCoarse ? (e.shiftKey ? 0.05 : 0.01) : (e.shiftKey ? 0.01 : 0.002);
+
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+          e.preventDefault();
+          handleDeleteAnnotation(selectedAnnId);
+          return;
+        }
+
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
+          e.preventDefault();
+          if (e.shiftKey) {
+            handleCopyAllToNextFrame();
+          } else {
+            handleDuplicateToNextFrame();
+          }
+          return;
+        }
+
+        if (e.altKey) {
+          if (e.key === 'ArrowUp') { e.preventDefault(); handleResizeBox(0, -step); return; }
+          if (e.key === 'ArrowDown') { e.preventDefault(); handleResizeBox(0, step); return; }
+          if (e.key === 'ArrowLeft') { e.preventDefault(); handleResizeBox(-step, 0); return; }
+          if (e.key === 'ArrowRight') { e.preventDefault(); handleResizeBox(step, 0); return; }
+        } else {
+          if (e.key === 'ArrowUp') { e.preventDefault(); handleNudge(0, -step); return; }
+          if (e.key === 'ArrowDown') { e.preventDefault(); handleNudge(0, step); return; }
+          if (e.key === 'ArrowLeft') { e.preventDefault(); handleNudge(-step, 0); return; }
+          if (e.key === 'ArrowRight') { e.preventDefault(); handleNudge(step, 0); return; }
+        }
+      } else {
+        // Frame navigation when no box is actively selected
+        if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
+          if (currentFrameIndex > 0) setCurrentFrameIndex((prev) => prev - 1);
+        }
+        if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') {
+          if (currentFrameIndex < frames.length - 1) setCurrentFrameIndex((prev) => prev + 1);
+        }
+      }
+
+      // Class hotkeys 1-9 (Switches active class, or reclassifies selected object)
+      const num = parseInt(e.key);
+      if (!isNaN(num) && num >= 1 && num <= classes.length) {
+        const targetClass = classes[num - 1];
+        setActiveClassId(targetClass.id);
+        if (selectedAnnId) {
+          handleChangeAnnotationClass(selectedAnnId, targetClass.id);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    selectedAnnId,
+    currentFrameIndex,
+    frames.length,
+    classes,
+    historyStep,
+    history,
+    nudgeCoarse,
+    handleUniversalCancel,
+    polygonPoints,
+    handleChangeAnnotationClass,
+    handleCopyAllToNextFrame,
+    handleFinishPolygon,
+  ]);
+
+  // Global Mouse Up Listener to catch drags ending outside container
+  useEffect(() => {
+    const handleGlobalMouseUp = async () => {
+      if (isDraggingBox || resizeHandle) {
+        setIsDraggingBox(false);
+        setResizeHandle(null);
+        setDragStartBox(null);
+        if (selectedAnnId) {
+          const ann = annotations.find((a) => a.id === selectedAnnId);
+          if (ann) {
+            try {
+              await api.updateAnnotation(ann.id, { coordinates: ann.coordinates });
+              pushHistory(annotations);
+            } catch (err) {
+              console.error('Failed to sync updated box coordinates:', err);
+            }
+          }
+        }
+      }
+      if (isPanning) {
+        setIsPanning(false);
+      }
+    };
+
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
+  }, [isDraggingBox, resizeHandle, selectedAnnId, annotations, isPanning]);
+
   // Canvas Mouse Down
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     // Middle click or Pan tool: start pan
@@ -494,6 +678,15 @@ export const AnnotationView: React.FC = () => {
       setCurrentBox({ x: pt.x, y: pt.y, w: 0, h: 0 });
     } else if (tool === 'polygon') {
       const pt = getNormalizedPoint(e);
+      // Auto-close loop if clicked near the initial point (at least 3 vertices)
+      if (polygonPoints.length >= 3) {
+        const firstPt = polygonPoints[0];
+        const dist = Math.hypot(pt.x - firstPt[0], pt.y - firstPt[1]);
+        if (dist < 0.025) {
+          handleFinishPolygon();
+          return;
+        }
+      }
       setPolygonPoints((prev) => [...prev, [pt.x, pt.y]]);
     }
   };
@@ -634,32 +827,6 @@ export const AnnotationView: React.FC = () => {
     setCurrentBox(null);
   };
 
-  // Close Polygon
-  const handleFinishPolygon = async () => {
-    if (polygonPoints.length < 3 || !currentFrame) return;
-
-    const newAnn = {
-      frame_id: currentFrame.id,
-      class_id: activeClass.id,
-      class_name: activeClass.name,
-      annotation_type: 'polygon',
-      coordinates: polygonPoints,
-      confidence: 1.0,
-      source: 'manual',
-      is_reviewed: true,
-    };
-
-    try {
-      const saved = await api.createAnnotation(newAnn);
-      pushHistory([...annotations, saved]);
-      setSelectedAnnId(saved.id);
-    } catch (err: any) {
-      addNotification({ type: 'error', title: 'Polygon save failed', message: err.message });
-    }
-
-    setPolygonPoints([]);
-  };
-
   // Interactive SAM 2 Point Click
   const handleSamPointClick = async (normX: number, normY: number) => {
     if (!currentFrame) return;
@@ -770,55 +937,6 @@ export const AnnotationView: React.FC = () => {
       addNotification({ type: 'error', title: 'SAM 2 Failed', message: err.message });
     } finally {
       setSegmentingSam(false);
-    }
-  };
-
-  // Review Frame (Approve / Reject)
-  const handleReviewFrame = async (newStatus: 'approved' | 'rejected') => {
-    if (!currentFrame || reviewing) return;
-    setReviewing(true);
-    try {
-      await api.reviewFrame(currentFrame.id, newStatus);
-
-      setFrames((prev) =>
-        prev.map((f) => (f.id === currentFrame.id ? { ...f, status: newStatus } : f))
-      );
-
-      setAnnotations((prev) =>
-        prev.map((a) => ({ ...a, is_reviewed: newStatus === 'approved' }))
-      );
-
-      addNotification({
-        type: newStatus === 'approved' ? 'success' : 'info',
-        title: newStatus === 'approved' ? 'Frame Approved' : 'Frame Rejected',
-        message: `Frame ${currentFrameIndex + 1} marked as ${newStatus}.`,
-      });
-
-      if (currentFrameIndex < frames.length - 1) {
-        setTimeout(() => {
-          setCurrentFrameIndex((prev) => Math.min(frames.length - 1, prev + 1));
-        }, 180);
-      }
-    } catch (err: any) {
-      addNotification({
-        type: 'error',
-        title: 'Review failed',
-        message: err.message || 'Could not update review status',
-      });
-    } finally {
-      setReviewing(false);
-    }
-  };
-
-  // Delete single annotation
-  const handleDeleteAnnotation = async (annId: string) => {
-    try {
-      await api.deleteAnnotation(annId);
-      const next = annotations.filter((a) => a.id !== annId);
-      pushHistory(next);
-      if (selectedAnnId === annId) setSelectedAnnId(null);
-    } catch (err: any) {
-      addNotification({ type: 'error', title: 'Delete failed', message: err.message });
     }
   };
 
@@ -1394,16 +1512,32 @@ export const AnnotationView: React.FC = () => {
               </span>
             </div>
 
-            <button
-              onClick={() => {
-                setZoom(1.0);
-                setPanOffset({ x: 0, y: 0 });
-              }}
-              className="px-2.5 py-1 bg-white dark:bg-white/[0.06] hover:bg-slate-100 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 rounded-xl text-xs font-mono font-medium border border-[#e5e5ea] dark:border-white/[0.06] transition-all shadow-xs"
-              title="Reset Zoom to 100%"
-            >
-              {Math.round(zoom * 100)}%
-            </button>
+            <div className="flex items-center gap-0.5 bg-white dark:bg-white/[0.06] rounded-xl border border-[#e5e5ea] dark:border-white/[0.06] shadow-xs p-0.5">
+              <button
+                onClick={() => setZoom((z) => Math.max(0.2, Number((z - 0.25).toFixed(2))))}
+                className="p-1 text-slate-500 hover:text-[#1d1d1f] dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.1] transition-colors"
+                title="Zoom Out"
+              >
+                <ZoomOut className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => {
+                  setZoom(1.0);
+                  setPanOffset({ x: 0, y: 0 });
+                }}
+                className="px-2 py-0.5 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-mono font-medium hover:bg-slate-100 dark:hover:bg-white/[0.1] transition-all"
+                title="Reset Zoom to 100%"
+              >
+                {Math.round(zoom * 100)}%
+              </button>
+              <button
+                onClick={() => setZoom((z) => Math.min(5.0, Number((z + 0.25).toFixed(2))))}
+                className="p-1 text-slate-500 hover:text-[#1d1d1f] dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.1] transition-colors"
+                title="Zoom In"
+              >
+                <ZoomIn className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
             {polygonPoints.length >= 3 && (
               <button
@@ -1416,31 +1550,90 @@ export const AnnotationView: React.FC = () => {
             )}
           </div>
 
-          {/* Right Frame Navigator Pill */}
-          <div className="flex items-center gap-1 bg-[#f5f5f7] dark:bg-black/40 px-2 py-1 rounded-2xl border border-[#e5e5ea] dark:border-white/[0.08]">
-            <button
-              onClick={() => currentFrameIndex > 0 && setCurrentFrameIndex(currentFrameIndex - 1)}
-              disabled={currentFrameIndex <= 0}
-              className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-20 rounded-lg hover:bg-white dark:hover:bg-white/[0.08] transition-colors"
-              title="Previous Frame (A or ←)"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
+          {/* Right Frame Navigator Pill & Quick Help */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 bg-[#f5f5f7] dark:bg-black/40 px-2 py-1 rounded-2xl border border-[#e5e5ea] dark:border-white/[0.08]">
+              <button
+                onClick={() => currentFrameIndex > 0 && setCurrentFrameIndex(currentFrameIndex - 1)}
+                disabled={currentFrameIndex <= 0}
+                className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-20 rounded-lg hover:bg-white dark:hover:bg-white/[0.08] transition-colors"
+                title="Previous Frame (A or ←)"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
 
-            <span className="text-xs font-mono text-[#1d1d1f] dark:text-slate-200 px-2 min-w-[70px] text-center font-medium">
-              {frames.length > 0 ? `${currentFrameIndex + 1} / ${frames.length}` : '0 / 0'}
-            </span>
+              <span className="text-xs font-mono text-[#1d1d1f] dark:text-slate-200 px-2 min-w-[70px] text-center font-medium">
+                {frames.length > 0 ? `${currentFrameIndex + 1} / ${frames.length}` : '0 / 0'}
+              </span>
 
+              <button
+                onClick={() => currentFrameIndex < frames.length - 1 && setCurrentFrameIndex(currentFrameIndex + 1)}
+                disabled={currentFrameIndex >= frames.length - 1}
+                className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-20 rounded-lg hover:bg-white dark:hover:bg-white/[0.08] transition-colors"
+                title="Next Frame (D or →)"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+
+              <div className="h-4 w-px bg-slate-300 dark:bg-white/[0.1] mx-0.5" />
+
+              <button
+                onClick={handleCopyAllToNextFrame}
+                disabled={currentFrameIndex >= frames.length - 1 || annotations.length === 0}
+                className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#0071e3] dark:hover:text-blue-400 disabled:opacity-20 rounded-lg hover:bg-white dark:hover:bg-white/[0.08] transition-colors"
+                title="Copy all annotations to next frame (Ctrl+Shift+D)"
+              >
+                <CopyPlus className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Quick Shortcuts & Guide Modal Trigger */}
             <button
-              onClick={() => currentFrameIndex < frames.length - 1 && setCurrentFrameIndex(currentFrameIndex + 1)}
-              disabled={currentFrameIndex >= frames.length - 1}
-              className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white disabled:opacity-20 rounded-lg hover:bg-white dark:hover:bg-white/[0.08] transition-colors"
-              title="Next Frame (D or →)"
+              onClick={() => setShowShortcutsModal(true)}
+              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 bg-[#f5f5f7] dark:bg-black/40 hover:bg-slate-200/60 dark:hover:bg-white/[0.08] text-slate-700 dark:text-slate-300 border border-[#e5e5ea] dark:border-white/[0.08] transition-all shadow-xs"
+              title="Keyboard Shortcuts & Operator Guide (?)"
             >
-              <ChevronRight className="w-4 h-4" />
+              <HelpCircle className="w-3.5 h-3.5 text-[#0071e3]" />
+              <span className="hidden sm:inline">Shortcuts</span>
+              <span className="text-[10px] font-mono px-1 py-0.2 bg-white dark:bg-white/10 rounded text-slate-500 dark:text-slate-400 border border-[#e5e5ea] dark:border-white/[0.06]">?</span>
             </button>
           </div>
         </div>
+
+        {/* First-Time Operator Quick-Start Banner */}
+        {showQuickTip && (
+          <div className="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 border-b border-[#0071e3]/20 px-4 py-2 flex items-center justify-between text-xs text-slate-700 dark:text-slate-200 z-20 backdrop-blur-md">
+            <div className="flex items-center gap-2">
+              <span className="p-1 rounded-lg bg-[#0071e3]/15 text-[#0071e3]">
+                <Sparkles className="w-3.5 h-3.5" />
+              </span>
+              <span>
+                <strong>Operator Quick-Start:</strong> Click & drag to draw a <strong>Box (B)</strong>. Press <strong>1-9</strong> to assign classes. Press <strong>F</strong> to approve & advance. Press <strong>?</strong> anytime for the full shortcuts cheat sheet.
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowShortcutsModal(true)}
+                className="text-[11px] font-bold text-[#0071e3] hover:underline flex items-center gap-1"
+              >
+                <Keyboard className="w-3.5 h-3.5" />
+                Shortcuts Cheat Sheet
+              </button>
+              <button
+                onClick={() => {
+                  setShowQuickTip(false);
+                  try {
+                    localStorage.setItem('vf_hide_ann_tip', 'true');
+                  } catch {}
+                }}
+                className="p-1 rounded-md text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.08] transition-colors"
+                title="Dismiss Quick Tip"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Canvas Center Viewport */}
         <div
@@ -1779,6 +1972,24 @@ export const AnnotationView: React.FC = () => {
                 </span>
               </div>
 
+              {/* Quick Class Reassignment Dropdown */}
+              <div className="flex items-center gap-1.5 bg-[#f6f3f5] dark:bg-black/40 px-2 py-1 rounded-xl border border-[#e5e5ea] dark:border-white/[0.06]">
+                <Tag className="w-3 h-3 text-slate-500 dark:text-slate-400" />
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">Class:</span>
+                <select
+                  value={selectedAnnotation.class_id}
+                  onChange={(e) => handleChangeAnnotationClass(selectedAnnotation.id, parseInt(e.target.value))}
+                  className="bg-transparent text-xs font-bold text-[#1d1d1f] dark:text-white outline-none cursor-pointer"
+                  title="Reassign class of selected object (Hotkeys 1-9)"
+                >
+                  {classes.map((c: any) => (
+                    <option key={c.id} value={c.id} className="text-black dark:text-white bg-white dark:bg-[#0c121e]">
+                      {c.hotkey || c.id + 1}. {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Position Nudge D-Pad */}
               {selectedAnnotation.annotation_type === 'bbox' && (
                 <div className="flex items-center gap-1 bg-[#f6f3f5] dark:bg-black/40 px-2 py-1 rounded-xl border border-[#e5e5ea] dark:border-white/[0.06]">
@@ -1888,6 +2099,123 @@ export const AnnotationView: React.FC = () => {
             </div>
           )}
 
+          {/* Floating Canvas Controls (Top-Right of Viewport) */}
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-white/90 dark:bg-[#0c121e]/85 backdrop-blur-xl border border-[#e5e5ea] dark:border-white/[0.08] shadow-md rounded-2xl p-1.5 text-xs select-none">
+            <button
+              onClick={() => setZoom((z) => Math.max(0.2, Number((z - 0.25).toFixed(2))))}
+              className="p-1.5 text-slate-600 dark:text-slate-300 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] rounded-xl transition-colors"
+              title="Zoom Out (Ctrl + Scroll Down)"
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => {
+                setZoom(1.0);
+                setPanOffset({ x: 0, y: 0 });
+              }}
+              className="px-2 py-1 text-[11px] font-mono font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.08] rounded-xl transition-colors"
+              title="Reset View to 100%"
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+            <button
+              onClick={() => setZoom((z) => Math.min(5.0, Number((z + 0.25).toFixed(2))))}
+              className="p-1.5 text-slate-600 dark:text-slate-300 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] rounded-xl transition-colors"
+              title="Zoom In (Ctrl + Scroll Up)"
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
+            <div className="h-4 w-px bg-slate-300 dark:bg-white/[0.1] mx-0.5" />
+            <button
+              onClick={() => setTool(tool === 'pan' ? 'bbox' : 'pan')}
+              className={`p-1.5 rounded-xl transition-all ${
+                tool === 'pan'
+                  ? 'bg-[#0071e3] text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.08]'
+              }`}
+              title="Pan Tool (H or Middle Mouse Drag)"
+            >
+              <Hand className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setShowCrosshairs(!showCrosshairs)}
+              className={`p-1.5 rounded-xl transition-all ${
+                showCrosshairs
+                  ? 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border border-cyan-500/40 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.08]'
+              }`}
+              title="Laser Crosshair Alignment (C)"
+            >
+              <Crosshair className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Floating Mode Status Pill (Bottom-Left of Viewport) */}
+          <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-white/90 dark:bg-[#0c121e]/85 backdrop-blur-xl border border-[#e5e5ea] dark:border-white/[0.08] shadow-md rounded-2xl px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 pointer-events-none select-none">
+            {tool === 'bbox' && (
+              <>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: activeClass.color }} />
+                <span className="font-semibold">Box Tool:</span>
+                <span className="font-mono text-slate-500 dark:text-slate-400">Drawing {activeClass.name} (Drag rectangle)</span>
+              </>
+            )}
+            {tool === 'polygon' && (
+              <>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-semibold">Polygon Tool:</span>
+                <span className="font-mono text-slate-500 dark:text-slate-400">
+                  {polygonPoints.length === 0 ? 'Click image to place first point' : `${polygonPoints.length} vertices (Enter to close, Backspace undo)`}
+                </span>
+              </>
+            )}
+            {tool === 'sam_point' && (
+              <>
+                <Sparkles className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
+                <span className="font-semibold text-indigo-600 dark:text-indigo-400">SAM 2 Point:</span>
+                <span className="font-mono text-slate-500 dark:text-slate-400">Click object center to segment</span>
+              </>
+            )}
+            {tool === 'sam_box' && (
+              <>
+                <Wand2 className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
+                <span className="font-semibold text-indigo-600 dark:text-indigo-400">SAM 2 Box:</span>
+                <span className="font-mono text-slate-500 dark:text-slate-400">Drag box around object to fit contour</span>
+              </>
+            )}
+            {tool === 'select' && (
+              <>
+                <MousePointer className="w-3.5 h-3.5 text-[#0071e3]" />
+                <span className="font-semibold">Select Mode:</span>
+                <span className="font-mono text-slate-500 dark:text-slate-400">Click annotation to inspect & move</span>
+              </>
+            )}
+            {tool === 'pan' && (
+              <>
+                <Hand className="w-3.5 h-3.5 text-[#0071e3]" />
+                <span className="font-semibold">Pan Mode:</span>
+                <span className="font-mono text-slate-500 dark:text-slate-400">Drag canvas to navigate</span>
+              </>
+            )}
+          </div>
+
+          {/* Polygon Drawing In-Progress Guidance Pill */}
+          {tool === 'polygon' && polygonPoints.length > 0 && (
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 bg-[#0f172a]/95 border border-emerald-500/40 px-4 py-1.5 rounded-full shadow-2xl flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs text-emerald-200">
+                Polygon: <strong>{polygonPoints.length}</strong> vertices placed. Press <strong>Enter</strong> or click start point to close.
+              </span>
+              {polygonPoints.length >= 3 && (
+                <button
+                  onClick={handleFinishPolygon}
+                  className="px-2.5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-xs transition-colors"
+                >
+                  Close & Save
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Interactive Tool Banner Hint */}
           {tool === 'sam_point' && (
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 bg-[#0f172a]/95 border border-indigo-500/40 px-4 py-1.5 rounded-full shadow-2xl flex items-center gap-2 pointer-events-none">
@@ -1924,7 +2252,12 @@ export const AnnotationView: React.FC = () => {
                 return (
                   <button
                     key={cls.id}
-                    onClick={() => setActiveClassId(cls.id)}
+                    onClick={() => {
+                      setActiveClassId(cls.id);
+                      if (selectedAnnId) {
+                        handleChangeAnnotationClass(selectedAnnId, cls.id);
+                      }
+                    }}
                     className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium border text-left transition-all ${
                       isCur
                         ? 'border-[#0071e3] bg-blue-50 dark:bg-blue-600/15 text-[#0071e3] dark:text-white shadow-xs ring-1 ring-[#0071e3]/30'
@@ -2544,6 +2877,156 @@ export const AnnotationView: React.FC = () => {
                 className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-950/20 transition-all active:scale-95"
               >
                 Yes, Wipe Everything Clean
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Keyboard Shortcuts & Operator Guide Modal */}
+      {showShortcutsModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setShowShortcutsModal(false)}
+        >
+          <div
+            className="bg-white dark:bg-[#0f172a] border border-[#e5e5ea] dark:border-white/[0.12] rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-4 animate-in zoom-in-95 duration-150 max-h-[88vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e5ea] dark:border-white/[0.08]">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-[#0071e3]/10 text-[#0071e3]">
+                  <Keyboard className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#1d1d1f] dark:text-white">Annotation Studio — Shortcuts & Guide</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Master rapid computer vision labeling with productivity hotkeys</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowShortcutsModal(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+              {/* Drawing Tools */}
+              <div className="space-y-1.5">
+                <h4 className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Square className="w-3.5 h-3.5 text-[#0071e3]" /> Canvas Tools
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Bounding Box Tool</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">B</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Vector Polygon Tool</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">P</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Meta SAM 2 Point (1-Click)</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">S</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Meta SAM 2 Box Contour</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">X</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Select & Move Tool</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">V</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Pan Canvas (or Middle Mouse)</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">H</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Laser Crosshair Guide</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">C</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Quick Class Select / Reclassify</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">1 – 9</kbd>
+                  </div>
+                </div>
+              </div>
+
+              {/* Editing & Precision Nudge */}
+              <div className="space-y-1.5">
+                <h4 className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Move className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" /> Precision Editing & Manipulation
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Precision Nudge Box</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">↑ ↓ ← →</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Resize Dimensions</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">Alt + Arrows</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">5× Coarse Nudge / Resize</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">Shift + Arrows</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Clone Box to Next Frame</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">Ctrl + D</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Copy ALL to Next Frame</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">Ctrl + Shift + D</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Delete / Undo Vertex</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">Delete / Backspace</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Undo / Redo</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">Ctrl + Z / Y</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Deselect / Cancel</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">Escape</kbd>
+                  </div>
+                </div>
+              </div>
+
+              {/* Video Timeline & Review */}
+              <div className="space-y-1.5">
+                <h4 className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Frame Navigation & QA Review
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Previous Video Frame</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">A or ←</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300">Next Video Frame</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-white/10 border border-slate-300 dark:border-white/20 font-mono font-bold shadow-xs">D or →</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300 font-semibold text-emerald-600 dark:text-emerald-400">Approve & Advance</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-mono font-bold shadow-xs">F</kbd>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f6f3f5] dark:bg-black/30 border border-[#e5e5ea] dark:border-white/[0.06]">
+                    <span className="text-slate-700 dark:text-slate-300 font-semibold text-rose-600 dark:text-rose-400">Reject & Advance</span>
+                    <kbd className="px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30 font-mono font-bold shadow-xs">R</kbd>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-[#e5e5ea] dark:border-white/[0.08] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>Press <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 font-mono font-bold">?</kbd> anytime to open this guide.</span>
+              <button
+                onClick={() => setShowShortcutsModal(false)}
+                className="px-4 py-1.5 rounded-xl font-bold bg-[#0071e3] text-white hover:bg-[#0077ed] transition-colors shadow-xs"
+              >
+                Got It
               </button>
             </div>
           </div>
