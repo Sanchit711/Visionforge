@@ -54,12 +54,45 @@ class KaggleCloudService:
             "updated_at": datetime.utcnow().isoformat()
         }
 
+    def _patch_kaggle_sdk(self):
+        """
+        Hotfixes an upstream deserialization bug in official kaggle SDK 2.2.5:
+        When calling Kaggle's newer OAuth IntrospectToken endpoint, the response JSON
+        omits 'active: true', causing SDK to treat valid KGAT tokens as inactive.
+        This patch verifies username presence directly from the OAuth client response.
+        """
+        try:
+            from kaggle.api.kaggle_api_extended import KaggleApi
+            if getattr(KaggleApi, "_vf_patched", False):
+                return
+            orig = getattr(KaggleApi, "_introspect_token", None)
+            def robust_introspect(api_self, access_token: str):
+                u = orig(api_self, access_token) if orig else None
+                if u:
+                    return u
+                try:
+                    with api_self.build_kaggle_client() as client:
+                        from kagglesdk.security.types.oauth_service import IntrospectTokenRequest
+                        req = IntrospectTokenRequest()
+                        req.token = access_token
+                        res = client.security.oauth_client.introspect_token(req)
+                        if getattr(res, "username", None):
+                            return res.username
+                except Exception:
+                    pass
+                return None
+            KaggleApi._introspect_token = robust_introspect
+            KaggleApi._vf_patched = True
+        except Exception:
+            pass
+
     def ensure_kaggle_env(self) -> Dict[str, Any]:
         """
         Ensures that modern Kaggle Personal/Granular Access Tokens (KGAT-...) 
         are properly mapped to KAGGLE_API_TOKEN environment variable so kaggle-api
         uses Bearer OAuth authentication instead of failing on legacy Basic Auth.
         """
+        self._patch_kaggle_sdk()
         k_dir = pathlib.Path.home() / ".kaggle"
         access_token_file = k_dir / "access_token"
         kaggle_json_path = k_dir / "kaggle.json"
@@ -128,7 +161,22 @@ class KaggleCloudService:
 
             username = api.get_config_value("username") or creds.get("username") or os.environ.get("KAGGLE_USERNAME", "kaggle-user")
 
-            # Validate real API permissions by testing a lightweight ping request
+            # 1. Test core API connectivity & dataset permissions
+            can_access_datasets = False
+            try:
+                api.dataset_list(mine=True, page=1)
+                can_access_datasets = True
+            except Exception as ds_err:
+                ds_err_str = str(ds_err).lower()
+                if "401" in ds_err_str or "unauthorized" in ds_err_str:
+                    return {
+                        "authenticated": False,
+                        "requires_verification": False,
+                        "username": username,
+                        "message": f"Kaggle API token rejected (401 Unauthorized). Please verify your API token at https://www.kaggle.com/settings.",
+                    }
+
+            # 2. Test GPU Kernel execution permissions (requires phone verification on Kaggle)
             try:
                 api.kernels_list(mine=True, page_size=1)
                 return {
@@ -141,13 +189,13 @@ class KaggleCloudService:
                 err_str = str(test_err).lower()
                 if "401" in err_str or "unauthorized" in err_str or "forbidden" in err_str:
                     return {
-                        "authenticated": False,
+                        "authenticated": can_access_datasets,
                         "requires_verification": True,
                         "username": username,
-                        "message": f"Kaggle returned 401 Unauthorized for @{username}. Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings before allowing API uploads or GPU jobs.",
+                        "message": f"Authenticated as @{username}. Kaggle strictly requires SMS Phone Verification at https://www.kaggle.com/settings to enable remote GPU execution.",
                     }
                 return {
-                    "authenticated": False,
+                    "authenticated": can_access_datasets,
                     "requires_verification": False,
                     "username": username,
                     "message": f"Kaggle API connectivity error: {str(test_err)}",
