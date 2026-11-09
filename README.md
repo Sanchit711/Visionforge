@@ -38,7 +38,26 @@ VisionForge Studio replaces the fragmented chaos of modern computer vision devel
 * **Leak-Proof Dataset Engineering**: Enforce contiguous chronological/temporal chunk splitting (`split_strategy="temporal"`), preventing consecutive video frames from bleeding between Train and Val sets.
 * **1-Click Headless Cloud Training**: Push training runs directly to remote cloud GPUs (Kaggle Dual Tesla T4s) with live streaming loss curves, learning rate dynamics, and validation mAP50 telemetry—without touching notebooks.
 * **Side-by-Side Model Comparison**: Compare multiple trained checkpoints simultaneously on synchronized video playback, measuring real latency (ms), throughput (FPS), and sub-pixel stability.
-* **1-Click Edge Export**: Download optimized ONNX weights with dynamic batching directly in your browser.
+* **1-Click Edge Export**: Download optimized ONNX and TensorRT weights with dynamic batching directly in your browser.
+* **Enterprise 14-Station Interactive Tour**: Pinpoint visual spotlighting with SVG cutout masks, step-by-step operational lifecycle flows, and immediate live-test triggers for seamless operator onboarding.
+
+---
+
+## 🗺️ Next-Gen Multi-Model Capabilities Roadmap
+
+VisionForge is expanding beyond standard 2D axis-aligned bounding boxes into a full-spectrum industrial computer vision engine.
+
+> 📘 **Full Technical Specification & Roadmap**:  
+> Read the complete architectural document: [**`docs/ROADMAP_SEGMENTATION_POSE_MULTIMODEL.md`**](docs/ROADMAP_SEGMENTATION_POSE_MULTIMODEL.md)
+
+### Multi-Task Architectural Overview
+| Model Capability | Supported Architectures | Annotation Canvas Tools | Industrial Factory Use Case |
+| :--- | :--- | :--- | :--- |
+| **Instance & Semantic Segmentation** | YOLOv8-seg, YOLO11-seg, Meta SAM 2.1, FastSAM | Sub-pixel Polygon Tool (`P`), Bezier curve smoothing, magnetic edge snapping | Surface defect area sizing ($\text{mm}^2$), irregular packaging tears, liquid spill boundaries |
+| **Kinematic Pose Estimation** | YOLOv8-pose, YOLO11-pose, RTMPose | Skeletal Topology Configurator, Joint visibility flags (`v=0,1,2`), Bone graph links | Robotic pick-and-place gripper alignment, operator ergonomic lifting posture & hazard intrusion |
+| **Oriented Bounding Boxes (OBB)** | YOLOv8-obb, YOLO11-obb | Rotated Box Tool (`O`), center-angle handle ($\theta \in [-\pi/2, \pi/2]$), 4-vertex projection | Skewed parcels on high-speed conveyors; eliminates overlapping box NMS dropouts |
+| **Monocular 3D Volumetrics** | Depth Anything v2 (Small/Base) | Automated Conveyor Ground Plane Calibration ($Ax + By + Cz + D = 0$) | Metric parcel dimensioning ($L \times W \times H$) and cubic volume ($\text{cm}^3$) without LiDAR |
+| **NMS-Free Real-Time Transformers** | RT-DETR-L, RT-DETR-X | Transformer Query Visualization | Ultra-dense conveyor item detection with zero heuristic NMS tuning |
 
 ---
 
@@ -58,7 +77,11 @@ VisionForge Studio replaces the fragmented chaos of modern computer vision devel
   - **Tracking Continuity & Dropout Immunity**: Verifies continuous object tracking across high-speed motion without losing IDs.
 - **Synchronized Quad-Split Video Synthesizer**: Generates synchronized multi-pane comparison MP4 videos (1280 × 720 @ 18.85 FPS) with real-time HUD telemetry, per-model bounding boxes, confidence tags, and H.264 web transcoding.
 
-### 3. Unified 13-Stage Workflow Architecture
+### 3. Enterprise Design System & Interactive Spotlight Tour
+- **Apple Light UI Default & Harmonious Dual Mode**: Engineered with Cupertino Blue (`#0071e3`), `#f5f5f7` canvas, `#ffffff` elevated container cards, and subtle ambient shadows. Full toggleable Dark Mode for high-contrast vision lab work.
+- **14-Station Dynamic Spotlight Onboarding**: Custom SVG cutout mask physically spotlights active UI tools, displays precise "Where It Is Located" directions, numbered "How It Works" factory flows, and actionable "Test Now" triggers.
+
+### 4. Unified 14-Stage Workflow Architecture
 1. **Overview**: Mission control with real-time system diagnostics (CPU, RAM, GPU, Disk), active job queue, pipeline progress tracker, and recent experiments.
 2. **Projects & Workspaces**: Multi-tenant RBAC workspaces with configurable classes, stage timeline graphs, and dependency tracking.
 3. **Video Lab**: Drag-and-drop video ingestion, synthetic demo video generator, video player with frame stepping, start/end trimming, interactive normalized ROI crop overlay, and reusable crop presets.
@@ -71,7 +94,7 @@ VisionForge Studio replaces the fragmented chaos of modern computer vision devel
 10. **Validation Lab**: Standalone image and video inference benchmark with confidence/IoU sliders, real latency (ms) and throughput (FPS) measurements, color-coded detection overlays, and **side-by-side model comparison**.
 11. **Compute Runtime Manager**: Multi-runtime pool (Local host, Remote GPU servers, NVIDIA Jetson, Google Colab), automated heartbeat health checks, automated checkpoint failover migration, and custom Google Colab runner notebook (`.ipynb`) generator with Google Drive checkpoint sync.
 12. **Integrations Catalog**: Pluggable adapter registry for video processors (OpenCV), AI annotation backends (YOLO, SAM), compute providers (Local, Colab, Jetson), and storage.
-13. **Settings**: Configurable app branding, theme selector (Dark Graphite vs Clean Light), and keyboard shortcuts cheat sheet.
+13. **Settings**: Multi-tenant organization switching, user profile RBAC switching, color appearance (Clean Light vs Dark Graphite), and global keyboard shortcuts.
 
 ---
 
