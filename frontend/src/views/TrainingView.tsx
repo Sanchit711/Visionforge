@@ -1002,11 +1002,28 @@ export const TrainingView: React.FC = () => {
                   onChange={(e) => setKaggleModel(e.target.value)}
                   className="w-full bg-white dark:bg-slate-800/90 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 >
-                  <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default - Large)</option>
-                  <option value="yolov8s.pt">yolov8s.pt (Small - 11.2M params - Balanced)</option>
-                  <option value="yolov8m.pt">yolov8m.pt (Medium - 25.9M params)</option>
-                  <option value="yolov8x.pt">yolov8x.pt (XLarge - 68.2M params - Maximum Accuracy)</option>
-                  <option value="yolov8n.pt">yolov8n.pt (Nano - 3.2M params - Ultra Fast)</option>
+                  <optgroup label="Pose Estimation (17 COCO Keypoints)">
+                    <option value="yolov8n-pose.pt">yolov8n-pose.pt (Pose Nano - Ultra Fast)</option>
+                    <option value="yolov8s-pose.pt">yolov8s-pose.pt (Pose Small - Accurate)</option>
+                    <option value="yolo11n-pose.pt">yolo11n-pose.pt (YOLO11 Pose - SOTA)</option>
+                  </optgroup>
+                  <optgroup label="Oriented Bounding Boxes (OBB / Rotated Boxes)">
+                    <option value="yolov8n-obb.pt">yolov8n-obb.pt (OBB Nano - Fast)</option>
+                    <option value="yolov8s-obb.pt">yolov8s-obb.pt (OBB Small - Aerial & Conveyor)</option>
+                    <option value="yolo11n-obb.pt">yolo11n-obb.pt (YOLO11 OBB - 5-Param Angle)</option>
+                  </optgroup>
+                  <optgroup label="Instance Segmentation (Masks)">
+                    <option value="yolov8n-seg.pt">yolov8n-seg.pt (Seg Nano - Sub-pixel)</option>
+                    <option value="yolov8s-seg.pt">yolov8s-seg.pt (Seg Small - Sharp Contour)</option>
+                    <option value="yolo11n-seg.pt">yolo11n-seg.pt (YOLO11 Seg - Mask)</option>
+                  </optgroup>
+                  <optgroup label="Standard 2D Object Detection">
+                    <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default - Large)</option>
+                    <option value="yolov8s.pt">yolov8s.pt (Small - 11.2M params - Balanced)</option>
+                    <option value="yolov8m.pt">yolov8m.pt (Medium - 25.9M params)</option>
+                    <option value="yolov8x.pt">yolov8x.pt (XLarge - 68.2M params - Maximum Accuracy)</option>
+                    <option value="yolov8n.pt">yolov8n.pt (Nano - 3.2M params - Ultra Fast)</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -1269,12 +1286,29 @@ export const TrainingView: React.FC = () => {
                   onChange={(e) => setColabModel(e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 >
-                  <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default - Large)</option>
-                  <option value="yolov8n.pt">yolov8n.pt (Nano - 3.2M params - Fast)</option>
-                  <option value="yolov8s.pt">yolov8s.pt (Small - 11.2M params)</option>
-                  <option value="yolov8m.pt">yolov8m.pt (Medium - 25.9M params)</option>
-                  <option value="yolov8x.pt">yolov8x.pt (XLarge - 68.2M params)</option>
-                  <option value="best.pt">Aurelix / Drive Checkpoint (best.pt - Fine-tune)</option>
+                  <optgroup label="Pose Estimation (17 COCO Keypoints)">
+                    <option value="yolov8n-pose.pt">yolov8n-pose.pt (Pose Nano - Ultra Fast)</option>
+                    <option value="yolov8s-pose.pt">yolov8s-pose.pt (Pose Small - Accurate)</option>
+                    <option value="yolo11n-pose.pt">yolo11n-pose.pt (YOLO11 Pose - SOTA)</option>
+                  </optgroup>
+                  <optgroup label="Oriented Bounding Boxes (OBB / Rotated Boxes)">
+                    <option value="yolov8n-obb.pt">yolov8n-obb.pt (OBB Nano - Fast)</option>
+                    <option value="yolov8s-obb.pt">yolov8s-obb.pt (OBB Small - Aerial & Conveyor)</option>
+                    <option value="yolo11n-obb.pt">yolo11n-obb.pt (YOLO11 OBB - 5-Param Angle)</option>
+                  </optgroup>
+                  <optgroup label="Instance Segmentation (Masks)">
+                    <option value="yolov8n-seg.pt">yolov8n-seg.pt (Seg Nano - Sub-pixel)</option>
+                    <option value="yolov8s-seg.pt">yolov8s-seg.pt (Seg Small - Sharp Contour)</option>
+                    <option value="yolo11n-seg.pt">yolo11n-seg.pt (YOLO11 Seg - Mask)</option>
+                  </optgroup>
+                  <optgroup label="Standard 2D Object Detection">
+                    <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default - Large)</option>
+                    <option value="yolov8n.pt">yolov8n.pt (Nano - 3.2M params - Fast)</option>
+                    <option value="yolov8s.pt">yolov8s.pt (Small - 11.2M params)</option>
+                    <option value="yolov8m.pt">yolov8m.pt (Medium - 25.9M params)</option>
+                    <option value="yolov8x.pt">yolov8x.pt (XLarge - 68.2M params)</option>
+                    <option value="best.pt">Aurelix / Drive Checkpoint (best.pt - Fine-tune)</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -1485,11 +1519,28 @@ export const TrainingView: React.FC = () => {
                   onChange={(e) => setModelVariant(e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-[#e5e5ea] dark:border-slate-700 rounded-xl px-3 py-2 text-[#1d1d1f] dark:text-white outline-none font-mono focus:border-[#0071e3] transition-colors"
                 >
-                  <option value="yolo26l_conveyor_best8.pt">yolo26l_conveyor_best8.pt (Production best (8).pt - Fine-tune)</option>
-                  <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default)</option>
-                  <option value="yolov8s.pt">yolov8s.pt (Small - 11.2M params)</option>
-                  <option value="yolov8n.pt">yolov8n.pt (Nano - 3.2M params)</option>
-                  <option value="best.pt">Aurelix Checkpoint (best.pt)</option>
+                  <optgroup label="Pose Estimation (17 COCO Keypoints)">
+                    <option value="yolov8n-pose.pt">yolov8n-pose.pt (Pose Nano - Ultra Fast)</option>
+                    <option value="yolov8s-pose.pt">yolov8s-pose.pt (Pose Small - Accurate)</option>
+                    <option value="yolo11n-pose.pt">yolo11n-pose.pt (YOLO11 Pose - SOTA)</option>
+                  </optgroup>
+                  <optgroup label="Oriented Bounding Boxes (OBB / Rotated Boxes)">
+                    <option value="yolov8n-obb.pt">yolov8n-obb.pt (OBB Nano - Fast)</option>
+                    <option value="yolov8s-obb.pt">yolov8s-obb.pt (OBB Small - Aerial & Conveyor)</option>
+                    <option value="yolo11n-obb.pt">yolo11n-obb.pt (YOLO11 OBB - 5-Param Angle)</option>
+                  </optgroup>
+                  <optgroup label="Instance Segmentation (Masks)">
+                    <option value="yolov8n-seg.pt">yolov8n-seg.pt (Seg Nano - Sub-pixel)</option>
+                    <option value="yolov8s-seg.pt">yolov8s-seg.pt (Seg Small - Sharp Contour)</option>
+                    <option value="yolo11n-seg.pt">yolo11n-seg.pt (YOLO11 Seg - Mask)</option>
+                  </optgroup>
+                  <optgroup label="Standard 2D Object Detection">
+                    <option value="yolo26l_conveyor_best8.pt">yolo26l_conveyor_best8.pt (Production best (8).pt - Fine-tune)</option>
+                    <option value="yolo26l.pt">yolo26l.pt (YOLO Master Default)</option>
+                    <option value="yolov8s.pt">yolov8s.pt (Small - 11.2M params)</option>
+                    <option value="yolov8n.pt">yolov8n.pt (Nano - 3.2M params)</option>
+                    <option value="best.pt">Aurelix Checkpoint (best.pt)</option>
+                  </optgroup>
                 </select>
               </div>
 

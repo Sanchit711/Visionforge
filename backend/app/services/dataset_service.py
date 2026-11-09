@@ -284,6 +284,19 @@ class DatasetService:
                             elif isinstance(ann.coordinates, list) and len(ann.coordinates) == 8:
                                 coords_str = " ".join([f"{v:.6f}" for v in ann.coordinates])
                                 label_lines.append(f"{cid} {coords_str}")
+                            elif isinstance(ann.coordinates, list) and len(ann.coordinates) == 5:
+                                cx, cy, w, h, angle = ann.coordinates
+                                rad = math.radians(float(angle))
+                                cos_a, sin_a = math.cos(rad), math.sin(rad)
+                                hw, hh = float(w) / 2.0, float(h) / 2.0
+                                corners = [
+                                    (cx - hw * cos_a + hh * sin_a, cy - hw * sin_a - hh * cos_a),
+                                    (cx + hw * cos_a + hh * sin_a, cy + hw * sin_a - hh * cos_a),
+                                    (cx + hw * cos_a - hh * sin_a, cy + hw * sin_a + hh * cos_a),
+                                    (cx - hw * cos_a - hh * sin_a, cy - hw * sin_a + hh * cos_a)
+                                ]
+                                coords_str = " ".join([f"{pt[0]:.6f} {pt[1]:.6f}" for pt in corners])
+                                label_lines.append(f"{cid} {coords_str}")
                             elif isinstance(ann.coordinates, dict) and "cx" in ann.coordinates:
                                 cx, cy = ann.coordinates["cx"], ann.coordinates["cy"]
                                 w, h = ann.coordinates["w"], ann.coordinates["h"]

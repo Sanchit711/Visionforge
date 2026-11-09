@@ -161,10 +161,11 @@ class TrainingService:
                 box_l = float(loss_items[0].item()) if loss_items is not None and len(loss_items) > 0 else 0.0
                 cls_l = float(loss_items[1].item()) if loss_items is not None and len(loss_items) > 1 else 0.0
 
-                map50 = float(metrics.get("metrics/mAP50(B)", 0.0))
-                map50_95 = float(metrics.get("metrics/mAP50-95(B)", 0.0))
-                prec = float(metrics.get("metrics/precision(B)", 0.0))
-                rec = float(metrics.get("metrics/recall(B)", 0.0))
+                # Multi-Task Metric Extraction (Box, Pose Keypoints, Seg Masks, OBB)
+                map50 = float(metrics.get("metrics/mAP50(B)") or metrics.get("metrics/mAP50(P)") or metrics.get("metrics/mAP50(M)") or metrics.get("metrics/mAP50") or 0.0)
+                map50_95 = float(metrics.get("metrics/mAP50-95(B)") or metrics.get("metrics/mAP50-95(P)") or metrics.get("metrics/mAP50-95(M)") or metrics.get("metrics/mAP50-95") or 0.0)
+                prec = float(metrics.get("metrics/precision(B)") or metrics.get("metrics/precision(P)") or metrics.get("metrics/precision(M)") or metrics.get("metrics/precision") or 0.0)
+                rec = float(metrics.get("metrics/recall(B)") or metrics.get("metrics/recall(P)") or metrics.get("metrics/recall(M)") or metrics.get("metrics/recall") or 0.0)
 
                 metric_point = {
                     "epoch": epoch_idx,

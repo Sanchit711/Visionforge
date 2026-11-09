@@ -307,6 +307,17 @@ def predict_frame_edge(
                     "points": norm_pts
                 })
 
+        if hasattr(res, "masks") and res.masks is not None:
+            masks_data = res.masks
+            for i in range(len(masks_data)):
+                if hasattr(masks_data, "xy") and len(masks_data.xy) > i:
+                    poly_xy = masks_data.xy[i]
+                    norm_poly = [[round(float(p[0]) / w, 4), round(float(p[1]) / h, 4)] for p in poly_xy]
+                    detections.append({
+                        "type": "segmentation",
+                        "polygon": norm_poly
+                    })
+
     return {
         "status": "success",
         "model_id": model_id,
