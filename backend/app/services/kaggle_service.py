@@ -235,7 +235,9 @@ class KaggleCloudService:
         if not ds.zip_export_path or not os.path.exists(ds.zip_export_path):
             raise ValueError("Dataset version has not been exported to ZIP. Please export in Datasets view first.")
 
-        dataset_slug = f"vf-{self.sanitize_slug(proj.name)}-{self.sanitize_slug(ds.version_name)}"
+        p_slug = self.sanitize_slug(proj.name)[:22]
+        v_slug = self.sanitize_slug(ds.version_name)[:16]
+        dataset_slug = f"vf-{p_slug}-{v_slug}".strip("-")[:45]
         dataset_folder = self.staging_dir / "datasets" / dataset_slug
         dataset_folder.mkdir(parents=True, exist_ok=True)
 
@@ -254,8 +256,10 @@ class KaggleCloudService:
         te_pct = round((ds.test_count / tot) * 100) if ds.test_count else 10
 
         # Generate dataset-metadata.json
+        p_title = proj.name[:20].strip()
+        v_title = ds.version_name[:12].strip()
         metadata = {
-            "title": f"VisionForge - {proj.name} ({ds.version_name})",
+            "title": f"VF - {p_title} {v_title}".strip()[:48],
             "id": f"{username}/{dataset_slug}",
             "licenses": [{"name": "CC0-1.0"}],
             "description": f"Automated industrial dataset export from VisionForge Studio. Project: {proj.name}, Split: {tr_pct}/{va_pct}/{te_pct}."
@@ -329,6 +333,18 @@ class KaggleCloudService:
                         "Please verify your API token or phone verification at https://www.kaggle.com/settings."
                     )
                 raise
+
+        # Wait up to 60s for Kaggle dataset to become ready before kernel dispatch
+        print(f"[*] Waiting for dataset {dataset_full_slug} to be processed and ready on Kaggle...")
+        for _ in range(12):
+            try:
+                st = str(api.dataset_status(dataset_full_slug)).lower()
+                print(f"    - Dataset status: {st}")
+                if "ready" in st:
+                    break
+            except Exception as st_err:
+                pass
+            time.sleep(5)
 
         return {
             "dataset_slug": dataset_slug,
@@ -409,7 +425,9 @@ if zip_files:
 # Locate data.yaml
 yaml_candidates = list(input_root.rglob("data.yaml"))
 if not yaml_candidates:
-    raise FileNotFoundError("Could not find data.yaml in /kaggle/input! Available files: " + str(list(input_root.rglob("*"))[:20]))
+    yaml_candidates = list(dataset_target.rglob("data.yaml"))
+if not yaml_candidates:
+    raise FileNotFoundError("Could not find data.yaml in /kaggle/input or /tmp/vf_dataset! Available files: " + str(list(input_root.rglob("*"))[:20]))
 
 src_yaml_path = yaml_candidates[0]
 dest_yaml_path = dataset_target / "data.yaml"
@@ -546,7 +564,8 @@ print("==================================================================")
         dataset_slug = ds_info["dataset_slug"]
 
         # 2. Prepare Kernel Directory
-        kernel_slug = f"vf-train-{self.sanitize_slug(proj.name)}-{int(time.time())}"
+        k_name = self.sanitize_slug(proj.name)[:22]
+        kernel_slug = f"vf-tr-{k_name}-{int(time.time())}"[:45]
         kernel_folder = self.staging_dir / "kernels" / kernel_slug
         kernel_folder.mkdir(parents=True, exist_ok=True)
 
@@ -681,9 +700,13 @@ print("==================================================================")
             api.authenticate()
 
             res = api.kernels_status(kernel_slug)
-            raw_status = getattr(res, "status", None)
+            if isinstance(res, dict):
+                raw_status = res.get("status")
+                error_msg = res.get("failureMessage") or res.get("failure_message")
+            else:
+                raw_status = getattr(res, "status", None)
+                error_msg = getattr(res, "failure_message", None) or getattr(res, "failureMessage", None)
             status_str = str(raw_status).lower().replace("kernelworkerstatus.", "") if raw_status else "unknown"
-            error_msg = getattr(res, "failure_message", None) or getattr(res, "failureMessage", None)
 
             logs: List[str] = []
             try:

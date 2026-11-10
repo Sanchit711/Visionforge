@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VisionForge 20-Minute Verification Video Player Hub</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .active-tab {
+      border-color: #3b82f6;
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-transparent text-[var(--foreground)] antialiased p-4">
+  <div class="max-w-5xl mx-auto bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-2xl shadow-xl overflow-hidden">
+    
+    <!-- Header -->
+    <div class="p-6 border-b border-[var(--border)] bg-gradient-to-r from-blue-900/20 via-indigo-900/10 to-transparent flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          20-Minute (18,000 Frames) Multi-Chapter Forensic Validation
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight">VisionForge Multi-Task Verification Hub</h1>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">
+          Folder Location: <code class="px-2 py-0.5 rounded bg-[var(--background)] text-blue-400 font-mono text-xs">C:\Users\Sanchit\Projects\VisionForge\verification_media</code>
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a id="browserLink" href="http://localhost:8000/verification_media/complex_pose_ergonomics_20min_verification.mp4" target="_blank" class="px-3 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1.5 shadow">
+          <span>🌐</span> Stream in Browser
+        </a>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-[var(--border)] bg-[var(--background)] px-4 pt-2 gap-2 overflow-x-auto text-sm font-medium">
+      <button onclick="switchTab('kaggle')" id="tab-kaggle" class="active-tab px-4 py-3 rounded-t-lg border-b-2 font-semibold transition flex items-center gap-2">
+        <span>⚡</span> Kaggle Dual-T4 GPU Validation (Live)
+      </button>
+      <button onclick="switchTab('pose')" id="tab-pose" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-2">
+        <span>🏃</span> Project 1: Pose & Ergonomics (20 Min)
+      </button>
+      <button onclick="switchTab('seg')" id="tab-seg" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-2">
+        <span>🚗</span> Project 2: Urban Seg (20 Min)
+      </button>
+      <button onclick="switchTab('obb')" id="tab-obb" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-2">
+        <span>🚢</span> Project 3: Maritime OBB (20 Min)
+      </button>
+      <button onclick="switchTab('workflow')" id="tab-workflow" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-2">
+        <span>🎥</span> Screen Process Recording
+      </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="p-6 space-y-6">
+      
+      <!-- Video Player Card -->
+      <div class="relative rounded-xl overflow-hidden bg-black/90 border border-[var(--border)] shadow-2xl">
+        <video id="mainVideo" controls autoplay loop playsinline class="w-full aspect-video max-h-[520px] mx-auto object-contain bg-black">
+          <source id="videoSource" src="http://localhost:8000/verification_media/complex_pose_ergonomics_20min_verification.mp4" type="video/mp4">
+          Your browser does not support HTML5 video streaming.
+        </video>
+        
+        <!-- Chapter Scrub Bar -->
+        <div class="bg-[var(--card)]/90 backdrop-blur p-3 border-t border-[var(--border)] space-y-2 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[var(--muted-foreground)] font-mono font-semibold">Jump to Chapter:</span>
+            <div id="chapterButtons" class="flex flex-wrap gap-1.5 font-mono">
+              <!-- Dynamically populated -->
+            </div>
+            <span id="videoStatusBadge" class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">HTTP 206 Streaming</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemetry & Details -->
+      <div id="detailsCard" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-1">
+          <div class="text-xs text-[var(--muted-foreground)] uppercase font-semibold">Duration & Scale</div>
+          <div id="statDuration" class="text-lg font-bold text-blue-400">20:00.00 (18,000 Frames)</div>
+          <div id="statFps" class="text-xs text-[var(--muted-foreground)]">15.0 FPS Continuous Stream</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-1">
+          <div class="text-xs text-[var(--muted-foreground)] uppercase font-semibold">Telemetry & Features</div>
+          <div id="statFeatures" class="text-lg font-bold text-emerald-400">Good vs Bad Posture Detection</div>
+          <div id="statSubFeatures" class="text-xs text-[var(--muted-foreground)]">Protractor Arcs & Cervical/Lumbar Strain</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-1">
+          <div class="text-xs text-[var(--muted-foreground)] uppercase font-semibold">Local Storage File</div>
+          <div id="statFile" class="text-xs font-mono font-bold text-amber-400 break-all">complex_pose_ergonomics_20min_verification.mp4</div>
+          <div id="statSize" class="text-xs text-[var(--muted-foreground)]">H.264 / FastStart / 15 FPS</div>
+        </div>
+      </div>
+
+      <!-- Chapter Outline Card -->
+      <div class="p-5 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-3">
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">20-Minute Detailed Chapter Timeline</h3>
+        <div id="chapterList" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div class="flex items-center gap-2">
+          <button onclick="copyPath()" class="px-3 py-2 text-xs font-mono rounded-lg bg-[var(--background)] border border-[var(--border)] hover:bg-blue-600/20 text-[var(--foreground)] transition">
+            📋 Copy Windows Explorer File Path
+          </button>
+        </div>
+        <div class="text-xs text-[var(--muted-foreground)]">
+          Served via VisionForge Backend on <code class="text-blue-400">http://localhost:8000</code>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      kaggle: {
+        video: 'http://localhost:8000/verification_media/kaggle_gpu_verified_lifting_validation.mp4',
+        duration: '03:18.70 (4,763 Frames)',
+        fps: '23.98 FPS Real Industrial Motion Stream',
+        features: 'Trained on Kaggle Dual Tesla T4 GPUs',
+        subFeatures: 'Safe Squat vs Stoop Hazard Detection + Heavy Cargo Box Tracking',
+        filename: 'kaggle_gpu_verified_lifting_validation.mp4',
+        size: '16.63 MB (H.264 FastStart)',
+        chapters: [
+          { time: 0, title: 'Phase 1 (00:00 - 00:45)', desc: 'Worker Approach & Pre-Lift Stance Evaluation (Neutral Spine Base)' },
+          { time: 45, title: 'Phase 2 (00:45 - 01:30)', desc: 'Safe Power Squat Descent & Heavy Box Grip Telemetry (Green BBox)' },
+          { time: 90, title: 'Phase 3 (01:30 - 02:15)', desc: 'Stoop Hazard Detection & Lumbar Spine Overload Alert (Red BBox)' },
+          { time: 135, title: 'Phase 4 (02:15 - 03:18)', desc: 'Controlled Cargo Placement & Full Neural Telemetry Summary' }
+        ]
+      },
+      pose: {
+        video: 'http://localhost:8000/verification_media/complex_pose_ergonomics_20min_verification.mp4',
+        duration: '20:00.00 (18,000 Frames)',
+        fps: '15.0 FPS Continuous Biomechanics Stream',
+        features: 'Good vs Bad Posture Analysis',
+        subFeatures: 'Protractor Arcs & Cervical/Lumbar Strain Detection',
+        filename: 'complex_pose_ergonomics_20min_verification.mp4',
+        size: '~140 MB (H.264 FastStart)',
+        chapters: [
+          { time: 0, title: 'CH 1 (00:00 - 04:00)', desc: 'Cervical Strain & Forward Head Posture ("Text Neck" vs Neutral Spine)' },
+          { time: 240, title: 'CH 2 (04:00 - 08:00)', desc: 'Office VDT Ergonomics (Optimal 90° Sitting vs Slouched Spine)' },
+          { time: 480, title: 'CH 3 (08:00 - 12:00)', desc: 'Manual Handling (Hazardous Stoop Lift vs Safe Power Squat Lift)' },
+          { time: 720, title: 'CH 4 (12:00 - 16:00)', desc: 'Squat Biomechanics (Knee Valgus Fault Collapse vs Proper Tracking)' },
+          { time: 960, title: 'CH 5 (16:00 - 20:00)', desc: 'Gym Deadlift & Functional Movement (Spinal Neutral Alignment)' }
+        ]
+      },
+      seg: {
+        video: 'http://localhost:8000/verification_media/complex_autonomous_seg_20min_verification.mp4',
+        duration: '20:00.00 (18,000 Frames)',
+        fps: '15.0 FPS Continuous Driving Stream',
+        features: 'Multi-Class Scene Segmentation',
+        subFeatures: 'Sub-Pixel Masks (Vehicles, Pedestrians, Drivable Roadway)',
+        filename: 'complex_autonomous_seg_20min_verification.mp4',
+        size: '~130 MB (H.264 FastStart)',
+        chapters: [
+          { time: 0, title: 'CH 1 (00:00 - 04:00)', desc: 'Downtown Metropolis Traffic & Pedestrian Crosswalk Dynamics' },
+          { time: 240, title: 'CH 2 (04:00 - 08:00)', desc: 'Multi-Lane Highway Cruising & High-Speed Overtaking Tracking' },
+          { time: 480, title: 'CH 3 (08:00 - 12:00)', desc: 'Suburban Boulevard Corridors & Curbside Vehicle Segmentation' },
+          { time: 720, title: 'CH 4 (12:00 - 16:00)', desc: 'Inclement Weather & Night Rain Driving (Wet Asphalt Reflections)' },
+          { time: 960, title: 'CH 5 (16:00 - 20:00)', desc: 'High-Density Traffic & Multi-Modal Urban Flow Integration' }
+        ]
+      },
+      obb: {
+        video: 'http://localhost:8000/verification_media/complex_maritime_obb_20min_verification.mp4',
+        duration: '20:00.00 (18,000 Frames)',
+        fps: '15.0 FPS Continuous Aerial Stream',
+        features: '5-Param Oriented Bounding Boxes',
+        subFeatures: 'Rotated Hulls [cx,cy,w,h,θ], Heading Vectors, Zero Water Bleed',
+        filename: 'complex_maritime_obb_20min_verification.mp4',
+        size: '~140 MB (H.264 FastStart)',
+        chapters: [
+          { time: 0, title: 'CH 1 (00:00 - 04:00)', desc: 'Deepwater Industrial Port & Berthed Bulk Cargo Vessels' },
+          { time: 240, title: 'CH 2 (04:00 - 08:00)', desc: 'Container Harbour Gantry Operations & Turning Megaships' },
+          { time: 480, title: 'CH 3 (08:00 - 12:00)', desc: 'Port Terminal Logistics & Tight Diagonal Berthing Slots' },
+          { time: 720, title: 'CH 4 (12:00 - 16:00)', desc: 'Container Ship Turning Maneuvers with Tugboat Escorts' },
+          { time: 960, title: 'CH 5 (16:00 - 20:00)', desc: 'Harbor Tug Maneuvering & Aerial Rotated Traffic Logistics' }
+        ]
+      },
+      workflow: {
+        video: 'http://localhost:8000/verification_media/visionforge_full_pipeline_process_recording.mp4',
+        duration: 'Screen Workflow Walkthrough',
+        fps: 'VisionForge UI Screen Cast',
+        features: 'Video Lab -> Studio -> Kaggle',
+        subFeatures: 'Model Training & Export Telemetry',
+        filename: 'visionforge_full_pipeline_process_recording.mp4',
+        size: '320.5 KB (H.264 FastStart)',
+        chapters: [
+          { time: 0, title: 'Phase 1', desc: 'Video Lab Ingestion & Keyframe Studio Extraction' },
+          { time: 10, title: 'Phase 2', desc: 'Annotation Studio Multi-Task Labeling & ONNX Compilation' },
+          { time: 20, title: 'Phase 3', desc: 'Kaggle Dual-T4 Cloud Training & Master Video Verification' }
+        ]
+      }
+    };
+
+    let currentProject = 'kaggle';
+
+    function switchTab(proj) {
+      currentProject = proj;
+      const tabs = ['kaggle', 'pose', 'seg', 'obb', 'workflow'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (t === proj) {
+          el.className = 'active-tab px-4 py-3 rounded-t-lg border-b-2 font-semibold transition flex items-center gap-2';
+        } else {
+          el.className = 'px-4 py-3 rounded-t-lg border-b-2 border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-2';
+        }
+      });
+
+      const item = data[proj];
+      const video = document.getElementById('mainVideo');
+      const source = document.getElementById('videoSource');
+      source.src = item.video;
+      video.load();
+      video.play().catch(() => {});
+
+      document.getElementById('browserLink').href = item.video;
+      document.getElementById('statDuration').innerText = item.duration;
+      document.getElementById('statFps').innerText = item.fps;
+      document.getElementById('statFeatures').innerText = item.features;
+      document.getElementById('statSubFeatures').innerText = item.subFeatures;
+      document.getElementById('statFile').innerText = item.filename;
+      document.getElementById('statSize').innerText = item.size;
+
+      // Update chapters buttons
+      const btnContainer = document.getElementById('chapterButtons');
+      btnContainer.innerHTML = '';
+      const listContainer = document.getElementById('chapterList');
+      listContainer.innerHTML = '';
+
+      item.chapters.forEach((ch, idx) => {
+        // Scrub button
+        const btn = document.createElement('button');
+        btn.className = 'px-2.5 py-1 rounded bg-[var(--background)] hover:bg-blue-600/20 text-[var(--foreground)] border border-[var(--border)] transition';
+        btn.innerText = `Ch ${idx + 1}`;
+        btn.onclick = () => seekTo(ch.time);
+        btnContainer.appendChild(btn);
+
+        // List item
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-1 hover:border-blue-500/40 transition cursor-pointer';
+        card.onclick = () => seekTo(ch.time);
+        card.innerHTML = `<div class="font-bold text-blue-400">${ch.title}</div><div class="text-[var(--muted-foreground)]">${ch.desc}</div>`;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function seekTo(seconds) {
+      const video = document.getElementById('mainVideo');
+      video.currentTime = seconds;
+      video.play();
+    }
+
+    function copyPath() {
+      const fullPath = 'C:\\Users\\Sanchit\\Projects\\VisionForge\\verification_media\\' + data[currentProject].filename;
+      navigator.clipboard.writeText(fullPath).then(() => {
+        alert('Copied to clipboard:\n' + fullPath);
+      });
+    }
+
+    // Initialize with Kaggle tab
+    switchTab('kaggle');
+  </script>
+</body>
+</html>
