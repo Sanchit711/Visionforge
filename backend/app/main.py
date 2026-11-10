@@ -268,11 +268,11 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 
 # Static Verification Media mounting for instant in-browser playback
-verification_media_dir = pathlib.Path.cwd() / "verification_media"
+verification_media_dir = Path.cwd() / "verification_media"
 if not verification_media_dir.exists():
     verification_media_dir = settings.BASE_DIR / "verification_media"
 if not verification_media_dir.exists():
-    verification_media_dir = pathlib.Path(__file__).resolve().parent.parent.parent / "verification_media"
+    verification_media_dir = Path(__file__).resolve().parent.parent.parent / "verification_media"
 if verification_media_dir.exists():
     app.mount("/verification_media", StaticFiles(directory=str(verification_media_dir)), name="verification_media")
 
