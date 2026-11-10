@@ -30,12 +30,15 @@ VisionForge Studio replaces the fragmented chaos of modern computer vision devel
 [![Cloud Training](https://img.shields.io/badge/Cloud_Compute-Kaggle_Dual--T4_GPU-20BEFF?style=flat-square&logo=kaggle&logoColor=white)](https://github.com/topics/kaggle)
 [![Model Comparison](https://img.shields.io/badge/Validation-Side--by--Side_Model_Comparison-10B981?style=flat-square&logo=speedtest&logoColor=white)](https://github.com/topics/object-detection)
 [![Edge Export Engine](https://img.shields.io/badge/Deployment-ONNX_%7C_OpenVINO_%7C_TensorRT_%7C_CoreML-76B900?style=flat-square&logo=nvidia&logoColor=white)](https://github.com/topics/edge-ai)
+[![20-Min Video Validation](https://img.shields.io/badge/Validation-20--Min_Continuous_Streams_(18K_Frames)-FF4500?style=flat-square&logo=webrtc&logoColor=white)](https://github.com/topics/computer-vision)
 [![Live Webcam HUD](https://img.shields.io/badge/Tester-In--Browser_Live_Webcam_HUD-0071E3?style=flat-square&logo=webrtc&logoColor=white)](https://github.com/topics/computer-vision)
 
 ---
 
 ### 💡 Why VisionForge? The "One-Stop" Developer Experience
 * **Multi-Task AI Suite**: Unified annotation and YOLO training pipeline supporting standard Bounding Boxes (`B`), 5-parameter Oriented Bounding Boxes (`O` with angular heading ray), 17-point Humanoid Pose rigs (`K` with COCO skeletal bones), and sub-pixel polygon masks (`P`).
+* **Biomechanical Kinematics & REBA Ergonomics**: Real-time joint angle protractor trigonometry computing Knee Flexion ($\theta_{\text{knee}}$) and Torso Lean ($\theta_{\text{spine}}$) with automated REBA/RULA posture risk classification (`SAFE_SQUAT`, `SPINAL_STRAIN`, `OVERHEAD_WORK`).
+* **20-Minute Continuous Validation Engine**: Large-scale 1,200-second (18,000 continuous frames @ 15 FPS) validation video synthesizer with running timecode (`00:00:00.00` to `00:20:00.00`), monotonic frame indexing, live HUD telemetry, and broadcast H.264 (`yuv420p`, `+faststart`) encoding for zero-buffering native web/IDE streaming.
 * **Selective Frame Extraction**: Ingest raw video, set an ROI crop, and let automated Laplacian sharpness filters and perceptual hash deduplication curate only the sharp, non-redundant frames (saves up to 90% of storage and labeling time).
 * **AI-Assisted Annotation**: Zero-shot prompt grounding with **Microsoft Florence-2**, pixel-exact boundary masks with **Meta SAM 2**, and **rigid-body keyframe trajectory interpolation** that tracks objects across frames with physical dimensions locked.
 * **Leak-Proof Dataset Engineering**: Enforce contiguous chronological/temporal chunk splitting (`split_strategy="temporal"`), preventing consecutive video frames from bleeding between Train and Val sets. Automatically exports YOLO formats with `kpt_shape: [17, 3]` and `flip_idx`.
