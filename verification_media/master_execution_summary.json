@@ -1,0 +1,47 @@
+{
+  "pose": {
+    "project_name": "worker_pose_ergonomics_f12e38",
+    "project_id": "4cd27920-974b-43d8-84ed-6456187125de",
+    "video_path": "C:\\Users\\Sanchit\\Projects\\VisionForge\\data\\videos\\vid_4cd27920_worker_zone.mp4",
+    "annotations_count": 16,
+    "dataset_version": "v1_pose_prod",
+    "training_time_sec": 96.3,
+    "onnx_model_path": null,
+    "verification_video": "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project1_worker_pose_verification.mp4",
+    "sample_frames": [
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project1_pose_frame_10.png",
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project1_pose_frame_25.png",
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project1_pose_frame_45.png"
+    ]
+  },
+  "seg": {
+    "project_name": "bottling_conveyor_seg_4f5105",
+    "project_id": "83683ece-4d12-403a-a182-a9bd1268b9bf",
+    "video_path": "C:\\Users\\Sanchit\\Projects\\VisionForge\\data\\videos\\vid_83683ece_bottling.mp4",
+    "annotations_count": 52,
+    "dataset_version": "v1_seg_prod",
+    "training_time_sec": 114.9,
+    "onnx_model_path": null,
+    "verification_video": "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project2_bottle_seg_verification.mp4",
+    "sample_frames": [
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project2_seg_frame_10.png",
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project2_seg_frame_25.png",
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project2_seg_frame_45.png"
+    ]
+  },
+  "obb": {
+    "project_name": "traffic_angled_obb_2abcda",
+    "project_id": "0ad59c60-02d8-45bc-9d62-966b4adec84a",
+    "video_path": "C:\\Users\\Sanchit\\Projects\\VisionForge\\data\\videos\\vid_0ad59c60_traffic.mp4",
+    "annotations_count": 20,
+    "dataset_version": "v1_obb_prod",
+    "training_time_sec": 88.5,
+    "onnx_model_path": null,
+    "verification_video": "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project3_traffic_obb_verification.mp4",
+    "sample_frames": [
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project3_obb_frame_10.png",
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project3_obb_frame_25.png",
+      "C:\\Users\\Sanchit\\.gemini\\antigravity\\brain\\fc676da5-36d4-4bc7-b4df-a40507caf830\\verification_media\\project3_obb_frame_45.png"
+    ]
+  }
+}

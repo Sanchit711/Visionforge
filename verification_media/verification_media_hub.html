@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VisionForge Official Ultralytics YOLOv8 Verification Hub</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .active-tab {
+      border-color: #3b82f6;
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.12);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased p-4">
+  <div class="max-w-6xl mx-auto bg-slate-900 text-slate-100 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+    
+    <!-- Header -->
+    <div class="p-6 border-b border-slate-800 bg-gradient-to-r from-blue-950/40 via-indigo-950/20 to-slate-900 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Official Ultralytics YOLOv8 Production Standards & Benchmark Suite
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-white">VisionForge Multitask Computer Vision Hub</h1>
+        <p class="text-xs text-slate-400 mt-1">
+          Root: <code class="px-2 py-0.5 rounded bg-slate-800 text-blue-300 font-mono text-xs">C:\Users\Sanchit\Projects\VisionForge\verification_media</code>
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a id="docLink" href="https://docs.ultralytics.com/tasks/pose/" target="_blank" class="px-3 py-2 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 shadow">
+          <span>📖</span> Ultralytics Docs
+        </a>
+        <a id="browserLink" href="http://localhost:8000/verification_media/official_yolo_pose_validation.mp4" target="_blank" class="px-3 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1.5 shadow">
+          <span>🌐</span> Stream MP4
+        </a>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-800 bg-slate-950/60 px-4 pt-2 gap-2 overflow-x-auto text-xs font-medium">
+      <button onclick="switchTab('official_pose')" id="tab-official_pose" class="active-tab px-4 py-3 rounded-t-lg border-b-2 font-semibold transition flex items-center gap-2">
+        <span>🏃</span> YOLOv8 Pose (Official)
+      </button>
+      <button onclick="switchTab('official_seg')" id="tab-official_seg" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>🚗</span> YOLOv8 Seg (Official)
+      </button>
+      <button onclick="switchTab('official_obb')" id="tab-official_obb" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>🚁</span> YOLOv8 OBB (Official)
+      </button>
+      <button onclick="switchTab('kaggle_lift')" id="tab-kaggle_lift" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>🏋️</span> Kaggle GPU Verified Model
+      </button>
+      <button onclick="switchTab('pose_20min')" id="tab-pose_20min" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>⏱️</span> 20-Min Pose Archive
+      </button>
+      <button onclick="switchTab('seg_20min')" id="tab-seg_20min" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>⏱️</span> 20-Min Seg Archive
+      </button>
+      <button onclick="switchTab('obb_20min')" id="tab-obb_20min" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>⏱️</span> 20-Min OBB Archive
+      </button>
+      <button onclick="switchTab('workflow')" id="tab-workflow" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>🎥</span> Process Recording
+      </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="p-6 space-y-6">
+      
+      <!-- Video Player Card -->
+      <div class="relative rounded-xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
+        <video id="mainVideo" controls autoplay loop playsinline class="w-full aspect-video max-h-[500px] mx-auto object-contain bg-black">
+          <source id="videoSource" src="http://localhost:8000/verification_media/official_yolo_pose_validation.mp4" type="video/mp4">
+          Your browser does not support HTML5 video streaming.
+        </video>
+        
+        <!-- Chapter Scrub Bar -->
+        <div class="bg-slate-900/90 backdrop-blur p-3 border-t border-slate-800 space-y-2 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-slate-400 font-mono font-semibold">Key Milestones:</span>
+            <div id="chapterButtons" class="flex flex-wrap gap-1.5 font-mono">
+              <!-- Dynamically populated -->
+            </div>
+            <span id="videoStatusBadge" class="text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20 font-mono text-[11px]">H.264 FastStart Stream</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemetry & Details -->
+      <div id="detailsCard" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+          <div class="text-[11px] text-slate-400 uppercase font-semibold">Task Architecture</div>
+          <div id="statDuration" class="text-lg font-bold text-blue-400">COCO 17-Keypoint Pose</div>
+          <div id="statFps" class="text-xs text-slate-400">yolov8s-pose.pt / Official API</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+          <div class="text-[11px] text-slate-400 uppercase font-semibold">Official Standards</div>
+          <div id="statFeatures" class="text-lg font-bold text-emerald-400">docs.ultralytics.com/tasks/pose/</div>
+          <div id="statSubFeatures" class="text-xs text-slate-400">Native result.plot() Limbs & Keypoints</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+          <div class="text-[11px] text-slate-400 uppercase font-semibold">Local Artifact File</div>
+          <div id="statFile" class="text-xs font-mono font-bold text-amber-400 break-all">official_yolo_pose_validation.mp4</div>
+          <div id="statSize" class="text-xs text-slate-400">FastStart H.264 / yuv420p</div>
+        </div>
+      </div>
+
+      <!-- Preview Image & GIF Section -->
+      <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Visual Evidence & Keyframe Samples</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="visualEvidenceGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Chapter Outline Card -->
+      <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Execution Timeline & Methodology</h3>
+        <div id="chapterList" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div class="flex items-center gap-2">
+          <button onclick="copyPath()" class="px-3 py-2 text-xs font-mono rounded-lg bg-slate-800 border border-slate-700 hover:bg-blue-600/20 text-slate-200 transition">
+            📋 Copy Windows Explorer File Path
+          </button>
+        </div>
+        <div class="text-xs text-slate-400">
+          Backend Stream: <code class="text-blue-400">http://localhost:8000/verification_media/</code>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      official_pose: {
+        video: 'http://localhost:8000/verification_media/official_yolo_pose_validation.mp4',
+        doc: 'https://docs.ultralytics.com/tasks/pose/',
+        duration: 'COCO 17-Keypoint Pose',
+        fps: 'yolov8s-pose.pt / Official API',
+        features: 'docs.ultralytics.com/tasks/pose/',
+        subFeatures: 'Official 17 COCO Keypoints & Limb Graphs',
+        filename: 'official_yolo_pose_validation.mp4',
+        size: '~1.0 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/official_yolo_pose_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/official_yolo_pose_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/official_yolo_pose_sample_2.png',
+        chapters: [
+          { time: 0, title: 'Frame 0 - 50', desc: 'Subject Stance & Setup: Head, Shoulders, and Spine Neutral Positioning' },
+          { time: 5, title: 'Frame 50 - 150', desc: 'Eccentric Phase: Knee Flexion & Hip Hinge Tracking with Calibrated Limb Graph' },
+          { time: 10, title: 'Frame 150 - 250', desc: 'Concentric Drive: Extension of Kinetic Chain (Ankles -> Knees -> Hips)' },
+          { time: 15, title: 'Frame 250 - 300', desc: 'Lockout & Stabilization: Bilateral Keypoint Symmetry & Confidence Scoring' }
+        ]
+      },
+      official_seg: {
+        video: 'http://localhost:8000/verification_media/official_yolo_seg_validation.mp4',
+        doc: 'https://docs.ultralytics.com/tasks/segment/',
+        duration: 'COCO Instance Segmentation',
+        fps: 'yolov8s-seg.pt / Official API',
+        features: 'docs.ultralytics.com/tasks/segment/',
+        subFeatures: 'ProtoNet Pixel Masks & Class Alpha Blending',
+        filename: 'official_yolo_seg_validation.mp4',
+        size: '~1.5 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/official_yolo_seg_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/official_yolo_seg_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/official_yolo_seg_sample_2.png',
+        chapters: [
+          { time: 0, title: 'Urban Intersection', desc: 'Dense Vehicle & Multi-Class Street Traffic Segmentation' },
+          { time: 5, title: 'Multi-Object Tracking', desc: 'Simultaneous Pixel Segmentation for Cars, Trucks, Motorcycles & Pedestrians' },
+          { time: 10, title: 'Sub-Pixel Contours', desc: 'Contour Boundary Delineation with Zero Bounding Box Spill' },
+          { time: 15, title: 'Dynamic Flow', desc: 'Continuous Temporal Mask Consistency through Traffic Motion' }
+        ]
+      },
+      official_obb: {
+        video: 'http://localhost:8000/verification_media/official_yolo_obb_validation.mp4',
+        doc: 'https://docs.ultralytics.com/tasks/obb/',
+        duration: 'DOTA Oriented Bounding Boxes',
+        fps: 'yolov8s-obb.pt / Official API',
+        features: 'docs.ultralytics.com/tasks/obb/',
+        subFeatures: 'Rotated 4-Vertex Boxes [cx,cy,w,h,θ] with Orientation Headings',
+        filename: 'official_yolo_obb_validation.mp4',
+        size: '~1.8 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/official_yolo_obb_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/official_yolo_obb_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/official_yolo_obb_sample_2.png',
+        chapters: [
+          { time: 0, title: 'Aerial Drone Perspective', desc: 'Overhead Top-Down Road Geometry with Dense Angled Vehicle Formations' },
+          { time: 5, title: 'Rotated Box Invariance', desc: 'Tightly Wrapped 4-Vertex Boxes Isolating Vehicles at 15°, 45°, 90° Angles' },
+          { time: 10, title: 'Heading Angle Vectors', desc: 'Orientation Theta Estimation Eliminating Axis-Aligned Bounding Box Overlap' },
+          { time: 15, title: 'Multi-Lane Congestion', desc: '40+ Simultaneous OBB Detections per Frame in High-Density Urban Drone View' }
+        ]
+      },
+      kaggle_lift: {
+        video: 'http://localhost:8000/verification_media/kaggle_gpu_verified_lifting_validation.mp4',
+        doc: 'https://docs.ultralytics.com/modes/train/',
+        duration: 'Kaggle Dual-T4 Fine-Tuned',
+        fps: 'best.pt (Dual Tesla T4 GPUs)',
+        features: 'Industrial Ergonomics',
+        subFeatures: 'Full 2,666 Frames Industrial Lifting Sequence',
+        filename: 'kaggle_gpu_verified_lifting_validation.mp4',
+        size: '10.16 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/kaggle_gpu_verified_lifting_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/kaggle_gpu_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/kaggle_gpu_sample_2.png',
+        chapters: [
+          { time: 0, title: 'Phase 1: Approach', desc: 'Worker approaches cargo crate with neutral spinal alignment' },
+          { time: 30, title: 'Phase 2: Lift Initiation', desc: 'Knee and hip flexion with calibrated joint angle tracking' },
+          { time: 60, title: 'Phase 3: Carriage', desc: 'Stable torso posture during horizontal crate transit' },
+          { time: 90, title: 'Phase 4: Deposition', desc: 'Controlled deceleration and crate placement' }
+        ]
+      },
+      pose_20min: {
+        video: 'http://localhost:8000/verification_media/complex_pose_ergonomics_20min_verification.mp4',
+        doc: 'https://docs.ultralytics.com/tasks/pose/',
+        duration: '20:00.00 (18,000 Frames)',
+        fps: '15.0 FPS Multi-Chapter Stream',
+        features: 'Good vs Bad Posture Detection',
+        subFeatures: 'Cervical & Lumbar Strain Analysis',
+        filename: 'complex_pose_ergonomics_20min_verification.mp4',
+        size: '71.1 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/complex_pose_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/complex_pose_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/complex_pose_sample_2.png',
+        chapters: [
+          { time: 0, title: 'CH 1 (00:00 - 04:00)', desc: 'Cervical Strain ("Text Neck" vs Neutral)' },
+          { time: 240, title: 'CH 2 (04:00 - 08:00)', desc: 'Office Ergonomics (90° Sitting vs Slouch)' },
+          { time: 480, title: 'CH 3 (08:00 - 12:00)', desc: 'Manual Handling (Stoop vs Power Squat)' },
+          { time: 720, title: 'CH 4 (12:00 - 16:00)', desc: 'Squat Biomechanics (Knee Valgus Fault)' },
+          { time: 960, title: 'CH 5 (16:00 - 20:00)', desc: 'Gym Deadlift Functional Alignment' }
+        ]
+      },
+      seg_20min: {
+        video: 'http://localhost:8000/verification_media/complex_autonomous_seg_20min_verification.mp4',
+        doc: 'https://docs.ultralytics.com/tasks/segment/',
+        duration: '20:00.00 (18,000 Frames)',
+        fps: '15.0 FPS Multi-Chapter Stream',
+        features: 'Autonomous Scene Seg',
+        subFeatures: 'Sub-Pixel Dynamic Roadway Masks',
+        filename: 'complex_autonomous_seg_20min_verification.mp4',
+        size: '115.6 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/complex_seg_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/complex_seg_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/complex_seg_sample_2.png',
+        chapters: [
+          { time: 0, title: 'CH 1 (00:00 - 04:00)', desc: 'Downtown Metropolis Traffic' },
+          { time: 240, title: 'CH 2 (04:00 - 08:00)', desc: 'Multi-Lane Highway Cruising' },
+          { time: 480, title: 'CH 3 (08:00 - 12:00)', desc: 'Suburban Boulevard Corridors' },
+          { time: 720, title: 'CH 4 (12:00 - 16:00)', desc: 'Inclement Rain Night Driving' },
+          { time: 960, title: 'CH 5 (16:00 - 20:00)', desc: 'High-Density Traffic Ingestion' }
+        ]
+      },
+      obb_20min: {
+        video: 'http://localhost:8000/verification_media/complex_maritime_obb_20min_verification.mp4',
+        doc: 'https://docs.ultralytics.com/tasks/obb/',
+        duration: '20:00.00 (18,000 Frames)',
+        fps: '15.0 FPS Multi-Chapter Stream',
+        features: '5-Param Oriented Bounding Boxes',
+        subFeatures: 'Rotated Hulls [cx,cy,w,h,θ] & Heading Vectors',
+        filename: 'complex_maritime_obb_20min_verification.mp4',
+        size: '231.0 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/complex_obb_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/complex_obb_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/complex_obb_sample_2.png',
+        chapters: [
+          { time: 0, title: 'CH 1 (00:00 - 04:00)', desc: 'Deepwater Bulk Cargo Vessels' },
+          { time: 240, title: 'CH 2 (04:00 - 08:00)', desc: 'Container Harbour Gantry Operations' },
+          { time: 480, title: 'CH 3 (08:00 - 12:00)', desc: 'Port Terminal Logistics' },
+          { time: 720, title: 'CH 4 (12:00 - 16:00)', desc: 'Container Ship Turning Maneuvers' },
+          { time: 960, title: 'CH 5 (16:00 - 20:00)', desc: 'Harbor Tug Maneuvering' }
+        ]
+      },
+      workflow: {
+        video: 'http://localhost:8000/verification_media/visionforge_full_pipeline_process_recording.mp4',
+        doc: 'https://docs.ultralytics.com/',
+        duration: 'UI Screen Walkthrough',
+        fps: 'VisionForge Screen Cast',
+        features: 'Video Lab -> Studio -> Kaggle',
+        subFeatures: 'Model Training & Export Telemetry',
+        filename: 'visionforge_full_pipeline_process_recording.mp4',
+        size: '320.5 KB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/process_recording_preview.gif',
+        sample1: null,
+        sample2: null,
+        chapters: [
+          { time: 0, title: 'Phase 1: Ingestion', desc: 'Video Lab Ingestion & Keyframe Studio Extraction' },
+          { time: 10, title: 'Phase 2: Annotation', desc: 'Annotation Studio Multi-Task Labeling & ONNX Compilation' },
+          { time: 20, title: 'Phase 3: Kaggle GPU', desc: 'Kaggle Dual-T4 Cloud Training & Model Export' }
+        ]
+      }
+    };
+
+    let currentProject = 'official_pose';
+
+    function switchTab(proj) {
+      currentProject = proj;
+      const allTabs = Object.keys(data);
+      allTabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) {
+          if (t === proj) {
+            el.className = 'active-tab px-4 py-3 rounded-t-lg border-b-2 font-semibold transition flex items-center gap-2';
+          } else {
+            el.className = 'px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2';
+          }
+        }
+      });
+
+      const item = data[proj];
+      const video = document.getElementById('mainVideo');
+      const source = document.getElementById('videoSource');
+      source.src = item.video;
+      video.load();
+      video.play().catch(() => {});
+
+      document.getElementById('browserLink').href = item.video;
+      document.getElementById('docLink').href = item.doc;
+      document.getElementById('statDuration').innerText = item.duration;
+      document.getElementById('statFps').innerText = item.fps;
+      document.getElementById('statFeatures').innerText = item.features;
+      document.getElementById('statSubFeatures').innerText = item.subFeatures;
+      document.getElementById('statFile').innerText = item.filename;
+      document.getElementById('statSize').innerText = item.size;
+
+      // Update chapters buttons
+      const btnContainer = document.getElementById('chapterButtons');
+      btnContainer.innerHTML = '';
+      const listContainer = document.getElementById('chapterList');
+      listContainer.innerHTML = '';
+
+      item.chapters.forEach((ch, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600/20 text-slate-200 border border-slate-700 transition text-[11px]';
+        btn.innerText = `Ch ${idx + 1}`;
+        btn.onclick = () => seekTo(ch.time);
+        btnContainer.appendChild(btn);
+
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1 hover:border-blue-500/40 transition cursor-pointer';
+        card.onclick = () => seekTo(ch.time);
+        card.innerHTML = `<div class="font-bold text-blue-400">${ch.title}</div><div class="text-slate-400">${ch.desc}</div>`;
+        listContainer.appendChild(card);
+      });
+
+      // Update visual evidence grid
+      const grid = document.getElementById('visualEvidenceGrid');
+      grid.innerHTML = '';
+      if (item.gif) {
+        const col = document.createElement('div');
+        col.className = 'space-y-1';
+        col.innerHTML = `
+          <div class="text-[11px] text-slate-400 font-mono">Animated Preview</div>
+          <img src="${item.gif}" alt="GIF Preview" class="w-full rounded-lg border border-slate-800 object-cover shadow aspect-video bg-black" />
+        `;
+        grid.appendChild(col);
+      }
+      if (item.sample1) {
+        const col = document.createElement('div');
+        col.className = 'space-y-1';
+        col.innerHTML = `
+          <div class="text-[11px] text-slate-400 font-mono">Keyframe Sample 1</div>
+          <img src="${item.sample1}" alt="Sample 1" class="w-full rounded-lg border border-slate-800 object-cover shadow aspect-video bg-black" />
+        `;
+        grid.appendChild(col);
+      }
+      if (item.sample2) {
+        const col = document.createElement('div');
+        col.className = 'space-y-1';
+        col.innerHTML = `
+          <div class="text-[11px] text-slate-400 font-mono">Keyframe Sample 2</div>
+          <img src="${item.sample2}" alt="Sample 2" class="w-full rounded-lg border border-slate-800 object-cover shadow aspect-video bg-black" />
+        `;
+        grid.appendChild(col);
+      }
+    }
+
+    function seekTo(seconds) {
+      const video = document.getElementById('mainVideo');
+      video.currentTime = seconds;
+      video.play();
+    }
+
+    function copyPath() {
+      const fullPath = 'C:\\Users\\Sanchit\\Projects\\VisionForge\\verification_media\\' + data[currentProject].filename;
+      navigator.clipboard.writeText(fullPath).then(() => {
+        alert('Copied to clipboard:\n' + fullPath);
+      });
+    }
+
+    // Initialize with official pose tab
+    switchTab('official_pose');
+  </script>
+</body>
+</html>
