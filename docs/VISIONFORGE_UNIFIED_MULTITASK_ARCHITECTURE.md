@@ -41,12 +41,26 @@ flowchart TD
 
 ---
 
-## 2. Multitask Specification Matrix
+## 2. Architecture Comparison: YOLO26 (NMS-Free) vs YOLOv8 (Standard)
+
+| Feature | YOLO26 Series (`yolo26l.pt` / `yolo26n.pt`) | YOLOv8 Series (`yolov8s.pt`, `-pose`, `-seg`, `-obb`) |
+| :--- | :--- | :--- |
+| **Post-Processing (NMS)** | **0.0 ms (NMS-Free End-to-End)** | Requires Non-Maximum Suppression (5 - 15ms overhead) |
+| **Training Label Assignment** | **Consistent Dual Assignment** (One-to-Many + One-to-One) | Standard One-to-Many Task-Aligned Assigner (TAL) |
+| **Inference Head** | Direct bipartite matching head (one2one branch) | Coupled anchor-free regression head |
+| **Throughput & Latency** | **30% - 50% faster inference** under high object density | High accuracy, standard post-processing pipeline |
+| **Supported Tasks** | Full Object Detection, Production Master Default | Object Detection, Pose, Instance Seg, OBB |
+| **Primary Checkpoint** | [`yolo26l.pt`](file:///c:/Users/Sanchit/Projects/VisionForge/yolo26l.pt) *(53.2 MB)* | [`yolov8s.pt`](file:///c:/Users/Sanchit/Projects/VisionForge/yolov8s.pt), [`yolov8s-pose.pt`](file:///c:/Users/Sanchit/Projects/VisionForge/yolov8s-pose.pt), [`yolov8s-seg.pt`](file:///c:/Users/Sanchit/Projects/VisionForge/yolov8s-seg.pt), [`yolov8s-obb.pt`](file:///c:/Users/Sanchit/Projects/VisionForge/yolov8s-obb.pt) |
+
+---
+
+## 3. Multitask Specification Matrix
 
 | Feature | Object Detection (`detect`) | Pose Estimation (`pose`) | Instance Segmentation (`seg`) | Oriented Bounding Boxes (`obb`) |
 | :--- | :--- | :--- | :--- | :--- |
 | **Official Docs** | [Detect Guide](https://docs.ultralytics.com/tasks/detect/) | [Pose Guide](https://docs.ultralytics.com/tasks/pose/) | [Segment Guide](https://docs.ultralytics.com/tasks/segment/) | [OBB Guide](https://docs.ultralytics.com/tasks/obb/) |
-| **Default Weights** | `yolov8s.pt` | `yolov8s-pose.pt` | `yolov8s-seg.pt` | `yolov8s-obb.pt` |
+| **YOLO26 Model** | `yolo26l.pt` (NMS-Free) | `yolo26` / `yolov8s-pose.pt` | `yolo26` / `yolov8s-seg.pt` | `yolo26` / `yolov8s-obb.pt` |
+| **YOLOv8 Model** | `yolov8s.pt` | `yolov8s-pose.pt` | `yolov8s-seg.pt` | `yolov8s-obb.pt` |
 | **Dataset Standard** | COCO Format | COCO-Pose Format | COCO-Seg Polygon Format | DOTA Format |
 | **Output Representation**| Axis-aligned boxes $[cx, cy, w, h]$ | 17 Keypoints $[x, y, conf]$ | $32\times$ ProtoNet Masks + Contours | Rotated boxes $[cx, cy, w, h, \theta]$ |
 | **Loss Functions** | $\mathcal{L}_{CIoU} + \mathcal{L}_{DFL} + \mathcal{L}_{BCE}$ | $\mathcal{L}_{CIoU} + \mathcal{L}_{OKS} + \mathcal{L}_{BCE}$ | $\mathcal{L}_{CIoU} + \mathcal{L}_{Mask} + \mathcal{L}_{BCE}$ | $\mathcal{L}_{ProbIoU} + \mathcal{L}_{Angle} + \mathcal{L}_{BCE}$ |
@@ -148,16 +162,31 @@ res_obb, _    = hub.predict_and_visualize("obb",    "drone.mp4")
 
 ## 6. Visual Verification Media Catalog
 
-All media are rendered using native Ultralytics inference and encoded in FastStart H.264:
+All media are rendered using native Ultralytics inference and encoded in FastStart H.264 (`yuv420p`):
 
-1. **Human Pose Estimation (COCO 17-Keypoint Standard)**
-   - Video: [`official_yolo_pose_validation.mp4`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_pose_validation.mp4)
-   - Preview GIF: [`official_yolo_pose_preview.gif`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_pose_preview.gif)
-2. **Instance Segmentation (COCO Pixel-Level Masks)**
-   - Video: [`official_yolo_seg_validation.mp4`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_seg_validation.mp4)
-   - Preview GIF: [`official_yolo_seg_preview.gif`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_seg_preview.gif)
-3. **Oriented Bounding Boxes (DOTA Aerial Drone Format)**
-   - Video: [`official_yolo_obb_validation.mp4`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_obb_validation.mp4)
-   - Preview GIF: [`official_yolo_obb_preview.gif`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_obb_preview.gif)
-4. **Interactive Verification Hub**
+1. **Object Detection (YOLO26 Series — NMS-Free End-to-End)**
+   - Video: [`yolo26_object_detection_validation.mp4`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/yolo26_object_detection_validation.mp4) *(FastStart H.264, 1.56 MB)*
+   - Preview GIF: [`yolo26_object_detection_preview.gif`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/yolo26_object_detection_preview.gif) *(1.51 MB)*
+   - Keyframe Sample 1: [`yolo26_detect_sample_1.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/yolo26_detect_sample_1.png)
+   - Keyframe Sample 2: [`yolo26_detect_sample_2.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/yolo26_detect_sample_2.png)
+
+2. **Human Pose Estimation (YOLOv8 Pose — COCO 17-Keypoint Standard)**
+   - Video: [`official_yolo_pose_validation.mp4`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_pose_validation.mp4) *(FastStart H.264, 0.96 MB)*
+   - Preview GIF: [`official_yolo_pose_preview.gif`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_pose_preview.gif) *(878 KB)*
+   - Keyframe Sample 1: [`official_yolo_pose_sample_1.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_pose_sample_1.png)
+   - Keyframe Sample 2: [`official_yolo_pose_sample_2.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_pose_sample_2.png)
+
+3. **Instance Segmentation (YOLOv8 Seg — COCO Pixel-Level Masks)**
+   - Video: [`official_yolo_seg_validation.mp4`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_seg_validation.mp4) *(FastStart H.264, 2.15 MB)*
+   - Preview GIF: [`official_yolo_seg_preview.gif`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_seg_preview.gif) *(1.53 MB)*
+   - Keyframe Sample 1: [`official_yolo_seg_sample_1.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_seg_sample_1.png)
+   - Keyframe Sample 2: [`official_yolo_seg_sample_2.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_seg_sample_2.png)
+
+4. **Oriented Bounding Boxes (YOLOv8 OBB — DOTA Aerial Drone Format)**
+   - Video: [`official_yolo_obb_validation.mp4`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_obb_validation.mp4) *(FastStart H.264, 6.56 MB, 41+ rotated boxes per frame)*
+   - Preview GIF: [`official_yolo_obb_preview.gif`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_obb_preview.gif) *(4.35 MB)*
+   - Keyframe Sample 1: [`official_yolo_obb_sample_1.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_obb_sample_1.png)
+   - Keyframe Sample 2: [`official_yolo_obb_sample_2.png`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/official_yolo_obb_sample_2.png)
+
+5. **Interactive Verification Hub**
    - Web Player: [`verification_media_hub.html`](file:///c:/Users/Sanchit/Projects/VisionForge/verification_media/verification_media_hub.html)

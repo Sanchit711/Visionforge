@@ -39,7 +39,10 @@
 
     <!-- Navigation Tabs -->
     <div class="flex border-b border-slate-800 bg-slate-950/60 px-4 pt-2 gap-2 overflow-x-auto text-xs font-medium">
-      <button onclick="switchTab('official_pose')" id="tab-official_pose" class="active-tab px-4 py-3 rounded-t-lg border-b-2 font-semibold transition flex items-center gap-2">
+      <button onclick="switchTab('yolo26_detect')" id="tab-yolo26_detect" class="active-tab px-4 py-3 rounded-t-lg border-b-2 font-semibold transition flex items-center gap-2">
+        <span>⚡</span> YOLO26 Detect (NMS-Free)
+      </button>
+      <button onclick="switchTab('official_pose')" id="tab-official_pose" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
         <span>🏃</span> YOLOv8 Pose
       </button>
       <button onclick="switchTab('official_seg')" id="tab-official_seg" class="px-4 py-3 rounded-t-lg border-b-2 border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
@@ -172,6 +175,27 @@
 
   <script>
     const data = {
+      yolo26_detect: {
+        video: 'http://localhost:8000/verification_media/yolo26_object_detection_validation.mp4',
+        doc: 'https://docs.ultralytics.com/tasks/detect/',
+        duration: 'YOLO26 Next-Gen Series',
+        fps: 'yolo26l.pt / NMS-Free Dual Assignment',
+        features: '0.0ms NMS Latency (End-to-End)',
+        subFeatures: 'Bipartite One-to-One Matching Head',
+        filename: 'yolo26_object_detection_validation.mp4',
+        size: '1.56 MB (FastStart H.264)',
+        gif: 'http://localhost:8000/verification_media/yolo26_object_detection_preview.gif',
+        sample1: 'http://localhost:8000/verification_media/yolo26_detect_sample_1.png',
+        sample2: 'http://localhost:8000/verification_media/yolo26_detect_sample_2.png',
+        label1: 'YOLO26 NMS-Free Sample 1',
+        label2: 'YOLO26 NMS-Free Sample 2',
+        showTable: false,
+        chapters: [
+          { time: 0, title: 'Frame 0 - 50', desc: 'Urban Traffic Ingestion: Direct one-to-one instance prediction' },
+          { time: 5, title: 'Frame 50 - 150', desc: 'Multi-Vehicle Fleet Tracking: Zero NMS latency under dense occlusions' },
+          { time: 10, title: 'Frame 150 - 250', desc: 'Dynamic Street Flow: High-speed bounding box coordinate regression' }
+        ]
+      },
       official_pose: {
         video: 'http://localhost:8000/verification_media/official_yolo_pose_validation.mp4',
         doc: 'https://docs.ultralytics.com/tasks/pose/',
@@ -457,8 +481,8 @@
       });
     }
 
-    // Initialize with official pose tab
-    switchTab('official_pose');
+    // Initialize with YOLO26 detect tab
+    switchTab('yolo26_detect');
   </script>
 </body>
 </html>

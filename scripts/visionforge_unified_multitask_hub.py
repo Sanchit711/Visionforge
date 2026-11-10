@@ -37,13 +37,38 @@ except ImportError:
 
 
 # ==============================================================================
-# Task Definitions & Official Configurations
+# Architecture Families & Task Configurations
 # ==============================================================================
+SUPPORTED_ARCHITECTURES = {
+    "yolo26": {
+        "name": "YOLO26 Series (Next-Gen NMS-Free)",
+        "description": "End-to-End NMS-Free Dual-Assignment Architecture eliminating NMS post-processing latency.",
+        "nms_free": True,
+        "models": {
+            "detect": "yolo26l.pt",
+            "pose": "yolov8s-pose.pt",
+            "seg": "yolov8s-seg.pt",
+            "obb": "yolov8s-obb.pt"
+        }
+    },
+    "yolov8": {
+        "name": "YOLOv8 Series (Standard Decoupled-Head)",
+        "description": "Gold-standard Ultralytics architecture with Decoupled Heads and Soft-NMS post-processing.",
+        "nms_free": False,
+        "models": {
+            "detect": "yolov8s.pt",
+            "pose": "yolov8s-pose.pt",
+            "seg": "yolov8s-seg.pt",
+            "obb": "yolov8s-obb.pt"
+        }
+    }
+}
+
 SUPPORTED_TASKS = {
     "detect": {
         "name": "Object Detection",
         "doc": "https://docs.ultralytics.com/tasks/detect/",
-        "model": "yolov8s.pt",
+        "model": "yolo26l.pt",  # Defaults to YOLO26 NMS-Free
         "sample_data": "coco8.yaml",
         "imgsz": 640,
         "batch": 16,
@@ -123,14 +148,20 @@ class VisionForgeMultitaskHub:
         self.staging_dir.mkdir(parents=True, exist_ok=True)
         self.runs_dir.mkdir(parents=True, exist_ok=True)
 
-    def get_task_info(self, task: str) -> Dict[str, Any]:
+    def get_task_info(self, task: str, arch: str = "yolo26") -> Dict[str, Any]:
         if task not in SUPPORTED_TASKS:
             raise ValueError(f"Unsupported task '{task}'. Choose from: {list(SUPPORTED_TASKS.keys())}")
-        return SUPPORTED_TASKS[task]
+        info = SUPPORTED_TASKS[task].copy()
+        if arch in SUPPORTED_ARCHITECTURES and task in SUPPORTED_ARCHITECTURES[arch]["models"]:
+            info["model"] = SUPPORTED_ARCHITECTURES[arch]["models"][task]
+            info["arch"] = arch
+            info["nms_free"] = SUPPORTED_ARCHITECTURES[arch]["nms_free"]
+        return info
 
     def train_local(
         self,
         task: str,
+        arch: str = "yolo26",
         data: Optional[str] = None,
         epochs: int = 50,
         imgsz: Optional[int] = None,
@@ -145,7 +176,7 @@ class VisionForgeMultitaskHub:
         if not ULTRALYTICS_AVAILABLE:
             raise RuntimeError("Ultralytics library is not installed in current environment.")
 
-        cfg = self.get_task_info(task)
+        cfg = self.get_task_info(task, arch=arch)
         data_yaml = data or cfg["sample_data"]
         model_weights = weights or cfg["model"]
         img_size = imgsz or cfg["imgsz"]
@@ -154,9 +185,9 @@ class VisionForgeMultitaskHub:
         hp = HIGH_MAP90_HYPERPARAMS.copy() if preset == "high_map90" else STANDARD_HYPERPARAMS.copy()
 
         print("\n" + "=" * 75)
-        print(f"VISIONFORGE MULTITASK HUB — LOCAL TRAINING: {cfg['name'].upper()}")
+        print(f"VISIONFORGE MULTITASK HUB — LOCAL TRAINING: {cfg['name'].upper()} ({arch.upper()})")
         print(f"Docs:        {cfg['doc']}")
-        print(f"Base Model:  {model_weights}")
+        print(f"Base Model:  {model_weights} (NMS-Free: {cfg.get('nms_free', False)})")
         print(f"Dataset:     {data_yaml}")
         print(f"Preset:      {preset} (close_mosaic={hp.get('close_mosaic')}, cos_lr={hp.get('cos_lr')})")
         print(f"Config:      epochs={epochs}, imgsz={img_size}, batch={batch_size}, device={device or 'auto'}")
@@ -398,6 +429,8 @@ def main():
     parser = argparse.ArgumentParser(description="VisionForge Unified Multitask Hub (Detect, Pose, Seg, OBB)")
     parser.add_argument("--task", type=str, default="all", choices=["detect", "pose", "seg", "obb", "all"],
                         help="Vision task: 'detect', 'pose', 'seg', 'obb', or 'all'")
+    parser.add_argument("--arch", type=str, default="yolo26", choices=["yolo26", "yolov8"],
+                        help="Architecture family: 'yolo26' (NMS-Free Dual Assignment) or 'yolov8' (Standard)")
     parser.add_argument("--mode", type=str, default="info", choices=["info", "train", "val", "predict", "kaggle_submit"],
                         help="Operation mode")
     parser.add_argument("--backend", type=str, default="local", choices=["local", "kaggle"],
