@@ -1,0 +1,147 @@
+{
+  "system_name": "VisionForge Enterprise Multitask Studio",
+  "version": "2.0.0-enterprise",
+  "architecture": "FastAPI Backend + React 18 / TypeScript Frontend + YOLO26/v8 Multitask Engine",
+  "generated_at": "2026-11-13T19:25:00+05:30",
+  "components": {
+    "backend": {
+      "description": "FastAPI high-performance computer vision backend",
+      "entrypoint": "backend/run_backend.py",
+      "app_dir": "backend/app",
+      "requirements": "requirements.txt"
+    },
+    "frontend": {
+      "description": "React 18 + TypeScript + Tailwind CSS VisionForge Studio UI",
+      "package_json": "frontend/package.json",
+      "src_dir": "frontend/src",
+      "vite_config": "frontend/vite.config.ts"
+    },
+    "models_and_weights": {
+      "trained_kaggle_precision": "weights/best_kaggle_dual_t4_precision.pt",
+      "yolo26_detect": "yolo26l.pt",
+      "yolo_pose": "yolov8s-pose.pt",
+      "yolo_seg": "yolov8s-seg.pt",
+      "yolo_obb": "yolov8s-obb.pt"
+    },
+    "sample_offline_clips": {
+      "detect_clip": "sample_clips/enterprise_traffic_ipcam.mp4",
+      "pose_clip": "sample_clips/test_posture_avc.mp4",
+      "seg_clip": "sample_clips/seg_highway_day.mp4",
+      "obb_clip": "sample_clips/enterprise_drone_overhead_obb.mp4"
+    },
+    "temporal_and_render_engines": {
+      "temporal_smoother": "scripts/enterprise_temporal_engine.py",
+      "showcase_renderer": "scripts/render_smooth_enterprise_showcase.py"
+    },
+    "verification_hub": {
+      "interactive_html": "verification_media/verification_media_hub.html"
+    },
+    "launchers": {
+      "windows_launcher": "replicate_and_run.bat",
+      "linux_launcher": "replicate_and_run.sh",
+      "guide": "README_REPLICATION.md"
+    }
+  },
+  "file_registry": {
+    "requirements.txt": {
+      "size_bytes": 719,
+      "sha256": "61687809bf8ae4a09920e705d52f46f52732dce6cb0db82fab311a501943f00a"
+    },
+    "backend/requirements.txt": {
+      "size_bytes": 715,
+      "sha256": "03452668bb323838dcadfc053bca09b431cf28186c46630d132d4e6102568430"
+    },
+    "backend/run_backend.py": {
+      "size_bytes": 1078,
+      "sha256": "e9efbc5c20675aa813fe33ef361e5d088a9e727ccca23f8428c7924e0943fcee"
+    },
+    "backend/app/main.py": {
+      "size_bytes": 12047,
+      "sha256": "4dc49adc2aa6a9b75fb94920efceaa913e96e15e04ed127147464e57d8e14bcf"
+    },
+    "backend/app/config.py": {
+      "size_bytes": 2545,
+      "sha256": "4adbc1f966c74bad24011878b3b8045567d98096154faeb3838f56de24ead25a"
+    },
+    "backend/app/database.py": {
+      "size_bytes": 2177,
+      "sha256": "6ef19559d77d6c49079ef371460698aa5cbd29a2f11c7be1601f07ba87df7640"
+    },
+    "frontend/package.json": {
+      "size_bytes": 730,
+      "sha256": "73529009c733372f2b486990261995fbee590917938fe34283a87577f29847db"
+    },
+    "frontend/vite.config.ts": {
+      "size_bytes": 531,
+      "sha256": "f61dd7268c61cf90fa00329274f0c9d53f23de3bd0fd00e437bb103e759595dc"
+    },
+    "frontend/src/App.tsx": {
+      "size_bytes": 5597,
+      "sha256": "829fca0ea5306242621c91893c639b978f4d4c4a64c957f26cde1425099c9cc8"
+    },
+    "frontend/src/main.tsx": {
+      "size_bytes": 240,
+      "sha256": "79faf095f462c11b5dc445dac9043c06809247d25c47f6693fccd656d1a1d35a"
+    },
+    "scripts/enterprise_temporal_engine.py": {
+      "size_bytes": 6350,
+      "sha256": "cd2c32ce79d8d025cb8c6401254efdbb9106a33611042674e4b8075ede2c5b05"
+    },
+    "scripts/render_smooth_enterprise_showcase.py": {
+      "size_bytes": 29088,
+      "sha256": "61db35b6f97350d8751e722e47d222a2ea6bf6d5ef7f9806d177c3658e5c1585"
+    },
+    "sample_clips/enterprise_traffic_ipcam.mp4": {
+      "size_bytes": 6991567,
+      "sha256": "b1d86482b8cdada4c0b6ff03564a954ca1d5b22cda77cbc254bee029708b3a9d"
+    },
+    "sample_clips/test_posture_avc.mp4": {
+      "size_bytes": 40648504,
+      "sha256": "df778aa89f524e29fbeba48562975e8468629a88779ec4f953487aec67654b07"
+    },
+    "sample_clips/seg_highway_day.mp4": {
+      "size_bytes": 48833721,
+      "sha256": "7ecd60fcd174688aaf4ae6bb0afcc13db2947ee856223971a2a78aa7e34100ba"
+    },
+    "sample_clips/enterprise_drone_overhead_obb.mp4": {
+      "size_bytes": 1466025,
+      "sha256": "4f79fe2544532b64c5c18d625e2f2ac23e62f734619fd0f6ff981118d1cc35af"
+    },
+    "verification_media/verification_media_hub.html": {
+      "size_bytes": 31039,
+      "sha256": "7643df046bf467487b8104241e36d15dcfff8fda1f8cc8f8c6e939073e1544b7"
+    },
+    "yolo26l.pt": {
+      "size_bytes": 53211173,
+      "sha256": "9fe3c544f2b19bebad7ea41e76d7ad3d88b7c2f10d11d24430c5311f6b32db26"
+    },
+    "yolov8s-pose.pt": {
+      "size_bytes": 23513657,
+      "sha256": "234314cd8baf62616791aceb9ea6ad5c19f26cf6c0d8f3a1bfce1e23b186cfb3"
+    },
+    "yolov8s-seg.pt": {
+      "size_bytes": 23914764,
+      "sha256": "0bac0770b55e5eb5b76a61bc535673288dcec36c2bc0cd25ee0d584c632f3413"
+    },
+    "yolov8s-obb.pt": {
+      "size_bytes": 23267238,
+      "sha256": "9e2827cf8a8182c1f68f7e01f5f6ce8601b7c92f497ede923ffbb567e772b819"
+    },
+    "data/kaggle_staging/outputs/precision_run/best.pt": {
+      "size_bytes": 22494186,
+      "sha256": "0a95639fc1d197ef5e620afa34c32260f714f80d4c3e7692dfb8449f56c3105c"
+    },
+    "replicate_and_run.bat": {
+      "size_bytes": 2332,
+      "sha256": "276a4655bf3ad11e41b817997b1ba2df6028eb0db8d050af002647d297c8a874"
+    },
+    "replicate_and_run.sh": {
+      "size_bytes": 1976,
+      "sha256": "d22211eece12db5a924e82144d1df34b683221141103e3828f702cc702b77f7f"
+    },
+    "README_REPLICATION.md": {
+      "size_bytes": 2119,
+      "sha256": "bd74cdc4a13c2e2f8817da65f750173a35856b6271edf87f870e07b9af04fefd"
+    }
+  }
+}
