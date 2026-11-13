@@ -218,7 +218,9 @@ def render_smooth_detect(max_frames: int = 750):
     print(f"[1/4] RENDERING SMOOTH & CONSISTENT YOLO26 OBJECT DETECTION ({max_frames} FRAMES)")
     print("="*70)
 
-    video_path = WORKSPACE_ROOT / "scratch/enterprise_raw_clips/enterprise_traffic_ipcam.mp4"
+    video_path = WORKSPACE_ROOT / "sample_clips/enterprise_traffic_ipcam.mp4"
+    if not video_path.exists():
+        video_path = WORKSPACE_ROOT / "scratch/enterprise_raw_clips/enterprise_traffic_ipcam.mp4"
     model = YOLO(str(WORKSPACE_ROOT / "yolo26l.pt"))
     tracker = TemporalBBoxTracker(iou_thresh=0.30, max_lost=4, alpha=0.65)
 
@@ -330,7 +332,9 @@ def render_smooth_pose(max_frames: int = 1200):
     print(f"[2/4] RENDERING SMOOTH & CONSISTENT YOLO POSE KINEMATICS ({max_frames} FRAMES)")
     print("="*70)
 
-    video_path = WORKSPACE_ROOT / "scratch/test_dl/test_posture_avc.mp4"
+    video_path = WORKSPACE_ROOT / "sample_clips/test_posture_avc.mp4"
+    if not video_path.exists():
+        video_path = WORKSPACE_ROOT / "scratch/test_dl/test_posture_avc.mp4"
     model = YOLO(str(WORKSPACE_ROOT / "yolov8s-pose.pt"))
     smoother = TemporalPoseSmoother(alpha=0.55)
 
@@ -455,7 +459,9 @@ def render_smooth_seg(max_frames: int = 1200):
     print(f"[3/4] RENDERING SMOOTH & CONSISTENT YOLO INSTANCE SEGMENTATION ({max_frames} FRAMES)")
     print("="*70)
 
-    video_path = WORKSPACE_ROOT / "scratch/curated_clips/seg_highway_day.mp4"
+    video_path = WORKSPACE_ROOT / "sample_clips/seg_highway_day.mp4"
+    if not video_path.exists():
+        video_path = WORKSPACE_ROOT / "scratch/curated_clips/seg_highway_day.mp4"
     model = YOLO(str(WORKSPACE_ROOT / "yolov8s-seg.pt"))
     tracker = TemporalBBoxTracker(iou_thresh=0.30, max_lost=4, alpha=0.65)
 
@@ -531,7 +537,9 @@ def render_smooth_obb(max_frames: int = 1000):
     print(f"[4/4] RENDERING SMOOTH & CONSISTENT YOLO ROTATED BOXES (OBB) ({max_frames} FRAMES)")
     print("="*70)
 
-    video_path = WORKSPACE_ROOT / "scratch/enterprise_raw_clips/enterprise_drone_overhead_obb.mp4"
+    video_path = WORKSPACE_ROOT / "sample_clips/enterprise_drone_overhead_obb.mp4"
+    if not video_path.exists():
+        video_path = WORKSPACE_ROOT / "scratch/enterprise_raw_clips/enterprise_drone_overhead_obb.mp4"
     model = YOLO(str(WORKSPACE_ROOT / "yolov8s-obb.pt"))
 
     cap = cv2.VideoCapture(str(video_path))
